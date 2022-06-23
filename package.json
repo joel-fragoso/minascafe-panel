@@ -1,7 +1,7 @@
 {
   "name": "minascafe-panel",
   "license": "proprietary",
-  "description": "Painel do Minas Café",
+  "description": "Minas Café - Painel do Cardápio",
   "private": true,
   "version": "0.0.0",
   "scripts": {
