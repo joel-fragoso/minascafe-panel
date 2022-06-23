@@ -1,5 +1,6 @@
 {
   "name": "minascafe-panel",
+  "description": "Minas Café - Painel do Cardápio",
   "private": true,
   "version": "0.0.0",
   "scripts": {
