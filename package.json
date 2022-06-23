@@ -1,5 +1,7 @@
 {
   "name": "minascafe-panel",
+  "license": "proprietary",
+  "description": "Painel do Minas Café",
   "private": true,
   "version": "0.0.0",
   "scripts": {
