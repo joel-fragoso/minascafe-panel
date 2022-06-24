@@ -1,15 +1,7 @@
 import { createGlobalStyle } from 'styled-components';
+import { lighten } from 'polished';
 
 const GlobalStyle = createGlobalStyle`
-  :root {
-    --color-light-salmon: #e9c6af;
-    --color-gray: #a7a5a4;
-    --color-dark-brown: #241f1c;
-    --color-gray-brown: #35312e;
-    --color-white-yellow: #eeeede;
-    --color-orange-brown: #d7986f;
-  }
-
   *,
   ::before,
   ::after {
@@ -37,7 +29,8 @@ const GlobalStyle = createGlobalStyle`
 
   body {
     line-height: 1.5;
-    background-color: var(--color-dark-brown);
+    background-color: ${({ theme }) => lighten(0.04, theme.colors.background)};
+    color: ${({ theme }) => theme.colors.white};
   }
 
   input,
