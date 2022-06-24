@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { darken } from 'polished';
 
 export const Container = styled.header`
   width: 100%;
@@ -8,4 +9,6 @@ export const Container = styled.header`
   align-items: center;
   justify-content: space-between;
   background-color: ${({ theme }) => theme.background.default};
+  border-bottom: 1px solid
+    ${({ theme }) => darken(0.05, theme.background.default)};
 `;

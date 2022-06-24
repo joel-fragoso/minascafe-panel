@@ -1,4 +1,6 @@
 import { FC, ReactNode } from 'react';
+import Header from '../Header';
+import Sidebar from '../Sidebar';
 import { Wrapper, Container, Content } from './styles';
 
 interface IMainLayout {
@@ -8,7 +10,9 @@ interface IMainLayout {
 const MainLayout: FC<IMainLayout> = ({ children }: IMainLayout) => {
   return (
     <Wrapper>
+      <Header />
       <Container>
+        <Sidebar />
         <Content>{children}</Content>
       </Container>
     </Wrapper>
