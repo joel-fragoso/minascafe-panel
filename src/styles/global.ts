@@ -29,8 +29,8 @@ const GlobalStyle = createGlobalStyle`
 
   body {
     line-height: 1.5;
-    background-color: ${({ theme }) => lighten(0.04, theme.colors.background)};
-    color: ${({ theme }) => theme.colors.white};
+    background-color: ${({ theme }) => lighten(0.04, theme.background.default)};
+    color: ${({ theme }) => theme.common.white};
   }
 
   input,
