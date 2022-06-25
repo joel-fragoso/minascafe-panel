@@ -1,4 +1,5 @@
 import { FC, ReactNode } from 'react';
+import Footer from '../Footer';
 import Header from '../Header';
 import Sidebar from '../Sidebar';
 import { Wrapper, Container, Content } from './styles';
@@ -15,6 +16,7 @@ const MainLayout: FC<IMainLayout> = ({ children }: IMainLayout) => {
         <Sidebar />
         <Content>{children}</Content>
       </Container>
+      <Footer />
     </Wrapper>
   );
 };
