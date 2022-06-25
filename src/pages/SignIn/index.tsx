@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { Link } from 'react-router-dom';
 import { Container } from './styles';
 
 const SignIn: FC = () => {
@@ -9,6 +10,7 @@ const SignIn: FC = () => {
         <input type="password" placeholder="Senha" />
         <button type="submit">Entrar</button>
       </div>
+      <Link to="/dashboard">Ir para o Dashboard</Link>
     </Container>
   );
 };
