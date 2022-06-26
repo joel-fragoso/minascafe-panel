@@ -24,7 +24,10 @@ declare module 'styled-components' {
     common: ICommonColor;
     pallete: {
       primary: IPalleteColor;
-      secondary: IPalleteColor;
+      secondary?: IPalleteColor;
+      danger?: IPalleteColor;
+      success?: IPalleteColor;
+      warning?: IPalleteColor;
     };
     background: IBackgroundColor;
   }
