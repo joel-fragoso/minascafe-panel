@@ -28,6 +28,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   body {
+    font-size: 1.6rem;
     line-height: 1.5;
     background-color: ${({ theme }) => lighten(0.04, theme.background.default)};
     color: ${({ theme }) => theme.common.white};

@@ -14,6 +14,9 @@ export const theme: DefaultTheme = {
     secondary: {
       main: '#a7a5a4',
     },
+    danger: {
+      main: '#c53030',
+    },
   },
   background: {
     default: '#241f1c',
