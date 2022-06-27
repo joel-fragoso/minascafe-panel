@@ -9,7 +9,7 @@ import {
 import { IconName } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useField } from '@unform/core';
-import { Container } from './styles';
+import { Container, Error } from './styles';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   name: string;
@@ -66,6 +66,14 @@ const Input: FC<InputProps> = ({
         ref={inputRef}
         {...rest}
       />
+      {error && (
+        <Error title={error}>
+          <FontAwesomeIcon
+            icon={{ prefix: 'fas', iconName: 'circle-exclamation' }}
+            size="1x"
+          />
+        </Error>
+      )}
     </Container>
   );
 };

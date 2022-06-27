@@ -28,9 +28,10 @@ const SignIn: FC = () => {
 
   return (
     <Container>
-      <Form ref={formRef} onSubmit={handleSubmit}>
+      <Form ref={formRef} onSubmit={handleSubmit} noValidate>
         <h1>Faça seu logon</h1>
         <Input
+          spellCheck={false}
           name="username"
           type="email"
           placeholder="Usuário"
