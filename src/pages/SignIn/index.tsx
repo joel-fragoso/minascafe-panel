@@ -1,12 +1,13 @@
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
+import Button from '../../components/Button';
 import Input from '../../components/Input';
 import { Container } from './styles';
 
 const SignIn: FC = () => {
   return (
     <Container>
-      <div>
+      <form>
         <Input
           name="username"
           type="email"
@@ -19,8 +20,8 @@ const SignIn: FC = () => {
           placeholder="Senha"
           iconName="lock"
         />
-        <button type="submit">Entrar</button>
-      </div>
+        <Button type="submit">Entrar</Button>
+      </form>
       <Link to="/dashboard">Ir para o Dashboard</Link>
     </Container>
   );
