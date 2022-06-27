@@ -8,6 +8,7 @@ import {
 } from 'react';
 import { IconName } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useField } from '@unform/core';
 import { Container } from './styles';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -27,15 +28,15 @@ const Input: FC<InputProps> = ({
   const [isFocused, setIsFocused] = useState(false);
   const [isFilled, setIsFilled] = useState(false);
 
-  // const { fieldName, defaultValue, error, registerField } = useField(name);
+  const { fieldName, defaultValue, error, registerField } = useField(name);
 
-  // useEffect(() => {
-  //   registerField({
-  //     name: fieldName,
-  //     ref: inputRef.current,
-  //     path: 'value',
-  //   });
-  // }, [fieldName, registerField]);
+  useEffect(() => {
+    registerField({
+      name: fieldName,
+      ref: inputRef.current,
+      path: 'value',
+    });
+  }, [fieldName, registerField]);
 
   const handleInputFocus = useCallback(() => {
     setIsFocused(true);
@@ -50,7 +51,7 @@ const Input: FC<InputProps> = ({
   return (
     <Container
       style={containerStyle}
-      isErrored={false} // {!!error}
+      isErrored={!!error}
       isFocused={isFocused}
       isFilled={isFilled}
       data-testid="input-container"
@@ -61,7 +62,7 @@ const Input: FC<InputProps> = ({
       <input
         onFocus={handleInputFocus}
         onBlur={handleInputBlur}
-        // defaultValue={defaultValue}
+        defaultValue={defaultValue}
         ref={inputRef}
         {...rest}
       />

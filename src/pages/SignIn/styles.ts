@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { shade } from 'polished';
 
 export const Container = styled.div`
   display: flex;
@@ -10,6 +11,22 @@ export const Container = styled.div`
 
   form {
     width: 100%;
+    text-align: center;
+
+    h1 {
+      margin-bottom: 2.4rem;
+    }
+
+    a {
+      color: ${({ theme }) => theme.common.white};
+      display: block;
+      margin-top: 2.4rem;
+      transition: color 0.2s linear;
+
+      &:hover {
+        color: ${({ theme }) => shade(0.2, theme.common.white)};
+      }
+    }
 
     @media (min-width: 380px) {
       width: 28rem;
