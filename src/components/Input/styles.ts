@@ -1,5 +1,6 @@
 import styled, { css } from 'styled-components';
 import { darken } from 'polished';
+import Tooltip from '../Tooltip';
 
 interface ContainerProps {
   isFocused: boolean;
@@ -51,5 +52,24 @@ export const Container = styled.div<ContainerProps>`
 
   svg {
     margin-right: 1.6rem;
+  }
+`;
+
+export const Error = styled(Tooltip)`
+  height: 2rem;
+  margin-left: 1.6rem;
+
+  svg {
+    color: ${({ theme }) => theme.pallete.danger?.main};
+    margin: 0;
+  }
+
+  span {
+    background-color: ${({ theme }) => theme.pallete.danger?.main};
+    color: ${({ theme }) => theme.common.white};
+
+    &::before {
+      border-color: ${({ theme }) => theme.pallete.danger?.main} transparent;
+    }
   }
 `;
