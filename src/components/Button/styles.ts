@@ -3,7 +3,7 @@ import { lighten, shade } from 'polished';
 
 export const Container = styled.button`
   background-color: ${({ theme }) => theme.pallete.primary.main};
-  height: 5.6rem;
+  height: 5.8rem;
   border-radius: 0.8rem;
   padding: 0 1.6rem;
   color: ${({ theme }) => theme.background.default};
