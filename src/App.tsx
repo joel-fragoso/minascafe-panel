@@ -6,17 +6,20 @@ import { BrowserRouter } from 'react-router-dom';
 import GlobalStyle from './styles/global';
 import { theme } from './styles/theme';
 import Routes from './routes';
+import AppProvider from './hooks';
 
 library.add(fas);
 
 const App: FC = () => {
   return (
-    <BrowserRouter>
-      <ThemeProvider theme={theme}>
-        <Routes />
-        <GlobalStyle />
-      </ThemeProvider>
-    </BrowserRouter>
+    <AppProvider>
+      <BrowserRouter>
+        <ThemeProvider theme={theme}>
+          <Routes />
+          <GlobalStyle />
+        </ThemeProvider>
+      </BrowserRouter>
+    </AppProvider>
   );
 };
 
