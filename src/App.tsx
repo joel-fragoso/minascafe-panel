@@ -12,14 +12,14 @@ library.add(fas);
 
 const App: FC = () => {
   return (
-    <AppProvider>
-      <BrowserRouter>
-        <ThemeProvider theme={theme}>
+    <BrowserRouter>
+      <ThemeProvider theme={theme}>
+        <AppProvider>
           <Routes />
-          <GlobalStyle />
-        </ThemeProvider>
-      </BrowserRouter>
-    </AppProvider>
+        </AppProvider>
+        <GlobalStyle />
+      </ThemeProvider>
+    </BrowserRouter>
   );
 };
 
