@@ -44,6 +44,7 @@ export const Container = styled.div<ContainerProps>`
   input {
     flex: 1;
     color: ${({ theme }) => theme.common.white};
+    width: 100%;
 
     &::placeholder {
       color: ${({ theme }) => theme.pallete.secondary?.main};
