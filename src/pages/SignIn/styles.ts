@@ -10,9 +10,15 @@ export const Container = styled.div`
   padding: 0 1.6rem;
 
   img {
-    width: 5.6rem;
-    height: 5.6rem;
+    width: 6.4rem;
+    height: 6.4rem;
     border-radius: 0.8rem;
+    margin-bottom: 2.4rem;
+
+    @media (min-width: 767px) {
+      width: 8rem;
+      height: 8rem;
+    }
   }
 
   form {
@@ -20,7 +26,12 @@ export const Container = styled.div`
     text-align: center;
 
     h1 {
+      font-size: 2.4rem;
       margin-bottom: 2.4rem;
+
+      @media (min-width: 767px) {
+        font-size: 3.2rem;
+      }
     }
 
     a {
