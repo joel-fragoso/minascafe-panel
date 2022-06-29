@@ -15,8 +15,8 @@ export const Container = styled.div`
     transition: opacity 0.4s linear;
     position: absolute;
     bottom: calc(100% + 12px);
-    left: 50%;
-    transform: translateX(-50%);
+    right: -180%;
+
     color: ${({ theme }) => theme.background.default};
 
     &::before {
@@ -26,6 +26,16 @@ export const Container = styled.div`
       border-width: 6px 6px 0 6px;
       position: absolute;
       top: 100%;
+      left: 73%;
+
+      @media (min-width: 767px) {
+        left: 50%;
+        transform: translateX(-50%);
+      }
+    }
+
+    @media (min-width: 767px) {
+      right: unset;
       left: 50%;
       transform: translateX(-50%);
     }
