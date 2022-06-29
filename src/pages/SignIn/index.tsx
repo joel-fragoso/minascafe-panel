@@ -5,6 +5,7 @@ import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
+import LogoImg from '../../assets/img/perfil.png';
 import { Container } from './styles';
 
 interface SignInFormData {
@@ -53,6 +54,7 @@ const SignIn: FC = () => {
 
   return (
     <Container>
+      <img src={LogoImg} alt="Minas Café" />
       <Form ref={formRef} onSubmit={handleSubmit} noValidate>
         <h1>Faça seu logon</h1>
         <Input

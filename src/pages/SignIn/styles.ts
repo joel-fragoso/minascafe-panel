@@ -9,6 +9,12 @@ export const Container = styled.div`
   height: 100%;
   padding: 0 1.6rem;
 
+  img {
+    width: 5.6rem;
+    height: 5.6rem;
+    border-radius: 0.8rem;
+  }
+
   form {
     width: 100%;
     text-align: center;
