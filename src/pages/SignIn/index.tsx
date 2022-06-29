@@ -1,12 +1,14 @@
-import { FC, useCallback, useRef } from 'react';
+import { FC, useCallback, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import LogoImg from '../../assets/img/perfil.png';
 import { Container } from './styles';
+import { useLoading } from '../../hooks/loading';
 
 interface SignInFormData {
   email: string;
@@ -19,6 +21,12 @@ interface Errors {
 const SignIn: FC = () => {
   const formRef = useRef<FormHandles>(null);
   const navigate = useNavigate();
+  const { loading, handleLoading } = useLoading();
+
+  // FixMe: Apenas Teste
+  useEffect(() => {
+    handleLoading(true);
+  }, [handleLoading]);
 
   const handleSubmit = useCallback(
     async (data: SignInFormData) => {
@@ -36,7 +44,13 @@ const SignIn: FC = () => {
           abortEarly: false,
         });
 
-        navigate('/dashboard');
+        // FixMe: Apenas Teste
+        handleLoading(false);
+
+        // FixMe: Apenas Teste
+        setTimeout(() => {
+          navigate('/dashboard');
+        }, 1000);
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
           const validationErrors: Errors = {};
@@ -49,7 +63,7 @@ const SignIn: FC = () => {
         }
       }
     },
-    [navigate],
+    [navigate, handleLoading],
   );
 
   return (
@@ -70,7 +84,17 @@ const SignIn: FC = () => {
           placeholder="Senha"
           iconName="lock"
         />
-        <Button type="submit">Entrar</Button>
+        <Button type="submit">
+          {/* FixME: Apenas Testes */}
+          {!loading ? (
+            <FontAwesomeIcon
+              pulse
+              icon={{ prefix: 'fas', iconName: 'spinner' }}
+            />
+          ) : (
+            'Entrar'
+          )}
+        </Button>
         <Link to="/dashboard">Esqueci minha senha</Link>
       </Form>
     </Container>
