@@ -1,5 +1,6 @@
 import { FC, useCallback, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import * as Yup from 'yup';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import Button from '../../components/Button';
@@ -10,18 +11,42 @@ interface SignInFormData {
   email: string;
   password: string;
 }
+interface Errors {
+  [key: string]: string;
+}
 
 const SignIn: FC = () => {
   const formRef = useRef<FormHandles>(null);
   const navigate = useNavigate();
 
   const handleSubmit = useCallback(
-    (data: SignInFormData) => {
-      formRef.current?.setErrors({});
+    async (data: SignInFormData) => {
+      try {
+        formRef.current?.setErrors({});
 
-      console.log(data);
+        const schema = Yup.object().shape({
+          email: Yup.string()
+            .required('E-mail obrigatório')
+            .email('Digite um e-mail válido'),
+          password: Yup.string().required('Senha obrigatória'),
+        });
 
-      navigate('/dashboard');
+        await schema.validate(data, {
+          abortEarly: false,
+        });
+
+        navigate('/dashboard');
+      } catch (err) {
+        if (err instanceof Yup.ValidationError) {
+          const validationErrors: Errors = {};
+
+          err.inner.forEach(error => {
+            validationErrors[error.path as string] = error.message;
+          });
+
+          formRef.current?.setErrors(validationErrors);
+        }
+      }
     },
     [navigate],
   );
@@ -32,7 +57,7 @@ const SignIn: FC = () => {
         <h1>Faça seu logon</h1>
         <Input
           spellCheck={false}
-          name="username"
+          name="email"
           type="email"
           placeholder="Usuário"
           iconName="user"
