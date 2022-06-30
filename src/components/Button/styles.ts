@@ -10,6 +10,9 @@ export const Container = styled.button`
   width: 100%;
   font-weight: 700;
   transition: background-color 0.2s linear;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   &:hover {
     background-color: ${({ theme }) => shade(0.2, theme.pallete.primary.main)};
