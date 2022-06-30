@@ -3,12 +3,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useLoading } from '../../hooks/loading';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
+import Loading from '../../components/Loading';
 import LogoImg from '../../assets/img/perfil.png';
 import { Container } from './styles';
-import { useLoading } from '../../hooks/loading';
 
 interface SignInFormData {
   email: string;
@@ -23,9 +23,8 @@ const SignIn: FC = () => {
   const navigate = useNavigate();
   const { loading, handleLoading } = useLoading();
 
-  // FixMe: Apenas Teste
   useEffect(() => {
-    handleLoading(true);
+    handleLoading(false);
   }, [handleLoading]);
 
   const handleSubmit = useCallback(
@@ -44,13 +43,9 @@ const SignIn: FC = () => {
           abortEarly: false,
         });
 
-        // FixMe: Apenas Teste
-        handleLoading(false);
+        handleLoading(true);
 
-        // FixMe: Apenas Teste
-        setTimeout(() => {
-          navigate('/dashboard');
-        }, 1000);
+        navigate('/dashboard');
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
           const validationErrors: Errors = {};
@@ -84,16 +79,8 @@ const SignIn: FC = () => {
           placeholder="Senha"
           iconName="lock"
         />
-        <Button type="submit">
-          {/* FixME: Apenas Testes */}
-          {!loading ? (
-            <FontAwesomeIcon
-              pulse
-              icon={{ prefix: 'fas', iconName: 'spinner' }}
-            />
-          ) : (
-            'Entrar'
-          )}
+        <Button type="submit" disabled={loading}>
+          {loading ? <Loading /> : 'Entrar'}
         </Button>
         <Link to="/dashboard">Esqueci minha senha</Link>
       </Form>
