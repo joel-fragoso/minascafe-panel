@@ -1,14 +1,8 @@
-import { render, screen } from '@testing-library/react';
-import { ThemeProvider } from 'styled-components';
+import { render, screen } from 'test-utils';
 import Button from '../../components/Button';
-import { theme } from '../../styles/theme';
 
 test('renders Entrar button', () => {
-  render(
-    <ThemeProvider theme={theme}>
-      <Button type="submit">Entrar</Button>
-    </ThemeProvider>,
-  );
+  render(<Button type="submit">Entrar</Button>);
   const buttonElement = screen.getByText(/Entrar/i);
   expect(buttonElement).toBeInTheDocument();
 });
