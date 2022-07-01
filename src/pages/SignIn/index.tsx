@@ -6,7 +6,6 @@ import { Form } from '@unform/web';
 import { useLoading } from '../../hooks/loading';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
-import Loading from '../../components/Loading';
 import LogoImg from '../../assets/img/perfil.png';
 import { Container } from './styles';
 
@@ -79,8 +78,8 @@ const SignIn: FC = () => {
           placeholder="Senha"
           iconName="lock"
         />
-        <Button type="submit" disabled={loading}>
-          {loading ? <Loading /> : 'Entrar'}
+        <Button type="submit" disabled={loading} loading={loading}>
+          Entrar
         </Button>
         <Link to="/dashboard">Esqueci minha senha</Link>
       </Form>
