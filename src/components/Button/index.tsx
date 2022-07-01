@@ -1,4 +1,5 @@
 import { ButtonHTMLAttributes, FC } from 'react';
+import Loading from '../Loading';
 import { Container } from './styles';
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
@@ -8,7 +9,7 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 const Button: FC<ButtonProps> = ({ children, loading, ...rest }) => {
   return (
     <Container type="button" {...rest}>
-      {loading ? 'Carregando...' : children}
+      {loading ? <Loading /> : children}
     </Container>
   );
 };
