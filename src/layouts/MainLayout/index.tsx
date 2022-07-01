@@ -14,9 +14,11 @@ const MainLayout: FC<IMainLayout> = ({ children }: IMainLayout) => {
       <Header />
       <Container>
         <Sidebar />
-        <Content>{children}</Content>
+        <Content>
+          {children}
+          <Footer />
+        </Content>
       </Container>
-      <Footer />
     </Wrapper>
   );
 };
