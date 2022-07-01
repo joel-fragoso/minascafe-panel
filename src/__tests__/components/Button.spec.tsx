@@ -9,7 +9,11 @@ describe('Componente Button', () => {
   });
 
   it('verifica se componente Loading renderiza', () => {
-    render(<Button type="submit" disabled loading>Entrar</Button>);
+    render(
+      <Button type="submit" disabled loading>
+        Entrar
+      </Button>,
+    );
     const buttonElement = screen.getByRole('button');
 
     expect(buttonElement).not.toHaveTextContent(/Entrar/i);
