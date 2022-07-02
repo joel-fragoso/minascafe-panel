@@ -45,15 +45,17 @@ const SignIn: FC = () => {
           abortEarly: false,
         });
 
+        handleLoading(true);
+
         await signIn({
           email: data.email,
           password: data.password,
         });
 
-        handleLoading(true);
-
         navigate('/dashboard');
       } catch (err) {
+        handleLoading(false);
+
         if (err instanceof Yup.ValidationError) {
           const validationErrors: Errors = {};
 
