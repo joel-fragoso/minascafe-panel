@@ -8,6 +8,7 @@ import Button from '../../components/Button';
 import Input from '../../components/Input';
 import LogoImg from '../../assets/img/perfil.png';
 import { Container } from './styles';
+import { useAuth } from '../../hooks/auth';
 
 interface SignInFormData {
   email: string;
@@ -21,6 +22,8 @@ const SignIn: FC = () => {
   const formRef = useRef<FormHandles>(null);
   const navigate = useNavigate();
   const { loading, handleLoading } = useLoading();
+
+  const { signIn } = useAuth();
 
   useEffect(() => {
     handleLoading(false);
@@ -42,6 +45,11 @@ const SignIn: FC = () => {
           abortEarly: false,
         });
 
+        await signIn({
+          email: data.email,
+          password: data.password,
+        });
+
         handleLoading(true);
 
         navigate('/dashboard');
@@ -57,7 +65,7 @@ const SignIn: FC = () => {
         }
       }
     },
-    [navigate, handleLoading],
+    [signIn, handleLoading, navigate],
   );
 
   return (
