@@ -1,4 +1,4 @@
-import { render, screen, within } from 'test-utils';
+import { render, screen, within } from '../../utils/test-utils';
 import Button from '../../components/Button';
 
 describe('Componente Button', () => {

@@ -15,4 +15,3 @@ const customRender = (
 
 export * from '@testing-library/react';
 export { customRender as render };
-// eslint-disable-next-line prettier/prettier
