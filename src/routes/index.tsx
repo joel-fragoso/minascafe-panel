@@ -14,11 +14,30 @@ const Routes: FC = () => {
   return (
     <ReactRouterDomRoutes>
       <Route path="/" element={<PublicRoute />} />
-      <Route path="/" element={<PrivateRoute />}>
-        <Route path="dashboard" element={<Dashboard />} />
-        <Route path="categorias" element={<Category />} />
-        <Route path="produtos" element={<Product />} />
-      </Route>
+      <Route
+        path="dashboard"
+        element={
+          <PrivateRoute>
+            <Dashboard />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="categorias"
+        element={
+          <PrivateRoute>
+            <Category />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="produtos"
+        element={
+          <PrivateRoute>
+            <Product />
+          </PrivateRoute>
+        }
+      />
       <Route path="*" element={<Navigate to="/" />} />
     </ReactRouterDomRoutes>
   );
