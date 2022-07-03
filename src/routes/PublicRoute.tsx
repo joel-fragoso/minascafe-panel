@@ -1,12 +1,10 @@
 import { FC } from 'react';
 import { Navigate } from 'react-router-dom';
-// import { useAuth } from '../hooks/auth';
+import { useAuth } from '../hooks/auth';
 import SignIn from '../pages/SignIn';
 
 const PublicRoute: FC = () => {
-  // const { user } = useAuth();
-
-  const user = localStorage.getItem('@MinasCafe:user');
+  const { user } = useAuth();
 
   if (!user) {
     return <SignIn />;
