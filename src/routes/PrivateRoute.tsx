@@ -1,16 +1,18 @@
-import { FC } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../hooks/auth';
-import OutletContainer from '../pages/OutletContainer';
 
-const PrivateRoute: FC = () => {
+interface IPrivateRoute {
+  children: JSX.Element;
+}
+
+const PrivateRoute = ({ children }: IPrivateRoute) => {
   const { user } = useAuth();
 
   if (!user) {
     return <Navigate to="/" />;
   }
 
-  return <OutletContainer />;
+  return children;
 };
 
 export default PrivateRoute;

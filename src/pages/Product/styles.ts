@@ -1,8 +1,13 @@
 import styled from 'styled-components';
 
-export const Container = styled.table`
-  width: 100%;
-  border-spacing: 0.2rem 0px;
+export const Container = styled.div`
+  padding: 1.6rem;
+  flex: 1;
+
+  table {
+    width: 100%;
+    border-spacing: 0.2rem 0px;
+  }
 
   td,
   th {
