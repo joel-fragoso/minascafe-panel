@@ -1,8 +1,30 @@
-import { FC } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import MainLayout from '../../layouts/MainLayout';
+import api from '../../services/api';
 import { Container } from './styles';
 
+interface IProductPros {
+  id: string;
+  name: string;
+  price: number;
+  active: boolean;
+  createAt: string;
+  updateAt: string;
+}
+
 const Product: FC = () => {
+  const [products, setProducts] = useState<IProductPros[]>([]);
+
+  const getProducts = useCallback(async () => {
+    const response = await api.get('/produtos');
+
+    setProducts(response.data.data);
+  }, []);
+
+  useEffect(() => {
+    getProducts();
+  }, [getProducts]);
+
   return (
     <MainLayout>
       <Container>
@@ -15,18 +37,13 @@ const Product: FC = () => {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>Produtos 1</td>
-              <td>Opçao</td>
-            </tr>
-            <tr>
-              <td>Produtos 2</td>
-              <td>Opçao</td>
-            </tr>
-            <tr>
-              <td>Produtos 2</td>
-              <td>Opçao</td>
-            </tr>
+            {products &&
+              products.map((product: IProductPros) => (
+                <tr key={product.id}>
+                  <td>{product.name}</td>
+                  <td>Opção</td>
+                </tr>
+              ))}
           </tbody>
           <tfoot>
             <tr>
