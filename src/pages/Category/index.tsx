@@ -7,15 +7,13 @@ import {
   useState,
 } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  findIconDefinition,
-  IconLookup,
-  IconName,
-} from '@fortawesome/fontawesome-svg-core';
+import { IconName } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
+import { Link } from 'react-router-dom';
 import api from '../../services/api';
 import MainLayout from '../../layouts/MainLayout';
 import { Container } from './styles';
+import isIconName from '../../utils/getIconsNames';
 
 type KeyOfId = keyof MutableRefObject<HTMLInputElement | null>;
 interface IDate {
@@ -36,18 +34,11 @@ interface ICategoryProps {
 const Category: FC = () => {
   const iconNameList = [...new Set(Object.values(fas))];
   const [categories, setCategories] = useState<ICategoryProps[]>([]);
-  const [iconName, setIconName] = useState<string>();
-  const nameRef = useRef<HTMLInputElement | null>();
-  const iconRef = useRef<HTMLInputElement | null>();
-  const activeRef = useRef<HTMLInputElement | null>();
-  const [modify, setModify] = useState('');
-
-  function isIconName(name: string | undefined): name is IconName {
-    return (
-      findIconDefinition({ prefix: 'fas', iconName: name } as IconLookup) !==
-      undefined
-    );
-  }
+  const [iconName, setIconName] = useState<string | undefined>(undefined);
+  const nameRef = useRef<HTMLInputElement | null>(null);
+  const iconRef = useRef<HTMLInputElement | null>(null);
+  const activeRef = useRef<HTMLInputElement | null>(null);
+  const [modify, setModify] = useState<string>('');
 
   const getCategories = useCallback(async () => {
     const response = await api.get('/categorias');
@@ -103,6 +94,12 @@ const Category: FC = () => {
   return (
     <MainLayout>
       <Container>
+        <div>
+          <Link to="adicionar">
+            <FontAwesomeIcon icon={{ prefix: 'fas', iconName: 'plus' }} />
+            Adicionar
+          </Link>
+        </div>
         <table>
           <caption>Configurar Categorias</caption>
           <thead>
@@ -122,6 +119,13 @@ const Category: FC = () => {
                   {category.id === modify ? (
                     <>
                       <td>
+                        {isIconName(iconName) ? (
+                          <FontAwesomeIcon icon={{ prefix: 'fas', iconName }} />
+                        ) : (
+                          <FontAwesomeIcon
+                            icon={{ prefix: 'fas', iconName: category.icon }}
+                          />
+                        )}
                         <input
                           list="iconNames"
                           ref={e => {
@@ -130,13 +134,6 @@ const Category: FC = () => {
                           defaultValue={category.icon}
                           onChange={e => setIconName(e.target.value)}
                         />
-                        {isIconName(iconName) ? (
-                          <FontAwesomeIcon icon={{ prefix: 'fas', iconName }} />
-                        ) : (
-                          <FontAwesomeIcon
-                            icon={{ prefix: 'fas', iconName: category.icon }}
-                          />
-                        )}
                       </td>
                       <td>
                         <input
@@ -203,7 +200,6 @@ const Category: FC = () => {
                         icon={{ prefix: 'fas', iconName: 'pen-to-square' }}
                       />
                     </button>
-                    <span>--</span>
                     <button
                       type="button"
                       onClick={() => deleteCategory(category.id)}

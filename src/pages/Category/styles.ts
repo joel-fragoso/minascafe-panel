@@ -5,9 +5,27 @@ export const Container = styled.div`
   flex: 1;
   color: ${({ theme }) => theme.pallete.primary.main};
 
+  div {
+    display: flex;
+
+    a {
+      color: ${({ theme }) => theme.background.default};
+      background-color: ${({ theme }) => theme.pallete.primary.main};
+      border-radius: 0.8rem;
+      padding: 0.8rem 1.2rem;
+      font-weight: 700;
+      margin-left: auto;
+
+      svg {
+        padding-right: 1rem;
+      }
+    }
+  }
+
   table {
     width: 100%;
     border-spacing: 2px 0px;
+    display: table;
 
     td,
     th {
@@ -28,14 +46,21 @@ export const Container = styled.div`
         font-size: 1.2rem;
 
         input {
-          display: block;
-          margin: auto;
+          color: ${({ theme }) => theme.pallete.primary.main};
+          width: 100%;
         }
       }
 
       td:first-child {
+        display: flex;
+        align-items: center;
+        justify-content: center;
         font-size: 2.4rem;
         text-align: center;
+
+        input {
+          margin-left: 2rem;
+        }
       }
 
       td:last-child {
@@ -43,12 +68,11 @@ export const Container = styled.div`
         text-align: center;
 
         button:first-child {
-          float: left;
+          margin-right: 2rem;
           color: limegreen;
         }
 
         button:last-child {
-          float: right;
           color: ${({ theme }) => theme.pallete.danger?.main};
         }
       }
