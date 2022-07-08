@@ -13,7 +13,7 @@ interface IProductProps {
 }
 
 const Product: FC = () => {
-  const [products, setProducts] = useState<IProductPros[]>([]);
+  const [products, setProducts] = useState<IProductProps[]>([]);
 
   const getProducts = useCallback(async () => {
     const response = await api.get('/produtos');
