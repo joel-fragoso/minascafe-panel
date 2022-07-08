@@ -3,7 +3,7 @@ import MainLayout from '../../layouts/MainLayout';
 import api from '../../services/api';
 import { Container } from './styles';
 
-interface IProductPros {
+interface IProductProps {
   id: string;
   name: string;
   price: number;
