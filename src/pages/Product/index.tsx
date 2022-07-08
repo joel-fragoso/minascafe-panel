@@ -38,7 +38,7 @@ const Product: FC = () => {
           </thead>
           <tbody>
             {products &&
-              products.map((product: IProductPros) => (
+              products.map((product: IProductProps) => (
                 <tr key={product.id}>
                   <td>{product.name}</td>
                   <td>Opção</td>
