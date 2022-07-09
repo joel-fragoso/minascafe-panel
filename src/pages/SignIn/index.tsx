@@ -9,6 +9,7 @@ import Input from '../../components/Input';
 import LogoImg from '../../assets/img/perfil.png';
 import { Container } from './styles';
 import { useAuth } from '../../hooks/auth';
+import { useToast } from '../../hooks/toast';
 
 interface SignInFormData {
   email: string;
@@ -24,6 +25,7 @@ const SignIn: FC = () => {
   const { loading, handleLoading } = useLoading();
 
   const { signIn } = useAuth();
+  const { addToast } = useToast();
 
   useEffect(() => {
     handleLoading(false);
@@ -64,10 +66,18 @@ const SignIn: FC = () => {
           });
 
           formRef.current?.setErrors(validationErrors);
+
+          return;
         }
+
+        addToast({
+          type: 'error',
+          title: 'Erro na autenticação',
+          description: 'Ocorreu um erro ao fazer login, cheque as credenciais',
+        });
       }
     },
-    [signIn, handleLoading, navigate],
+    [handleLoading, signIn, navigate, addToast],
   );
 
   return (
