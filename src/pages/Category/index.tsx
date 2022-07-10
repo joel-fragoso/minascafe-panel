@@ -170,13 +170,7 @@ const Category: FC = () => {
                         />
                       </td>
                       <td>{category.name}</td>
-                      <td>
-                        <input
-                          type="checkbox"
-                          disabled
-                          defaultChecked={category.active}
-                        />
-                      </td>
+                      <td>{category.active ? 'Sim' : 'Não'}</td>
                       <td>
                         {category.createdAt?.date &&
                           new Date(category.createdAt.date).toLocaleString()}
