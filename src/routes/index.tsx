@@ -6,6 +6,7 @@ import {
 } from 'react-router-dom';
 import Category from '../pages/Category';
 import Dashboard from '../pages/Dashboard';
+import FormProduct from '../pages/FormProduct';
 import Product from '../pages/Product';
 import PrivateRoute from './PrivateRoute';
 import PublicRoute from './PublicRoute';
@@ -35,6 +36,14 @@ const Routes: FC = () => {
         element={
           <PrivateRoute>
             <Product />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="produtos/adicionar"
+        element={
+          <PrivateRoute>
+            <FormProduct />
           </PrivateRoute>
         }
       />
