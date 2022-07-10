@@ -1,32 +1,11 @@
-import {
-  FC,
-  MutableRefObject,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
-import { Link } from 'react-router-dom';
+import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconName } from '@fortawesome/fontawesome-svg-core';
+import { Link } from 'react-router-dom';
 import api from '../../services/api';
 import MainLayout from '../../layouts/MainLayout';
+import { ICategoryProps, IDate, KeyOfId } from '../Category';
 import { Container } from './styles';
-
-type KeyOfId = keyof MutableRefObject<HTMLInputElement | null>;
-interface IDate {
-  date: string;
-  timezoneType: string;
-  timezone: string;
-}
-interface ICategoryProps {
-  id: string;
-  name: string;
-  icon: IconName;
-  active: boolean;
-  createdAt?: IDate;
-  updatedAt?: IDate;
-}
 
 interface IProductProps {
   category: ICategoryProps;
@@ -40,13 +19,13 @@ interface IProductProps {
 
 const Product: FC = () => {
   const [products, setProducts] = useState<IProductProps[]>([]);
-  const [modify, setModify] = useState<string>('');
   const [categories, setCategories] = useState<ICategoryProps[]>([]);
   const [iconName, setIconName] = useState<IconName | undefined>(undefined);
   const categoryRef = useRef<HTMLSelectElement | null>(null);
   const nameRef = useRef<HTMLInputElement | null>(null);
   const priceRef = useRef<HTMLInputElement | null>(null);
   const activeRef = useRef<HTMLInputElement | null>(null);
+  const [modify, setModify] = useState<string>('');
 
   const getProducts = useCallback(async () => {
     const response = await api.get('/produtos');
@@ -69,7 +48,7 @@ const Product: FC = () => {
       if (action === 'apply') {
         const categoryId = categoryRef[id]?.value;
         const name = nameRef[id]?.value;
-        const price = priceRef[id]?.value;
+        const price = parseFloat(priceRef[id]?.value as string);
         const active = activeRef[id]?.checked;
 
         if (name) {

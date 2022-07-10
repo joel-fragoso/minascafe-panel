@@ -9,27 +9,14 @@ import Button from '../../components/Button';
 import Input from '../../components/Input';
 import { useLoading } from '../../hooks/loading';
 import MainLayout from '../../layouts/MainLayout';
-import { Container } from './styles';
 import api from '../../services/api';
-
-interface IDate {
-  date: string;
-  timezoneType: string;
-  timezone: string;
-}
-
-interface ICategoryProps {
-  id: string;
-  name: string;
-  icon: IconName;
-  active: boolean;
-  createdAt?: IDate;
-  updatedAt?: IDate;
-}
+import { ICategoryProps } from '../Category';
+import { Container } from './styles';
 
 interface Errors {
   [key: string]: string;
 }
+
 interface IProductFormData {
   categoryId: string;
   name: string;
