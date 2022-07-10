@@ -1,30 +1,43 @@
 import { FC } from 'react';
-import { Link } from 'react-router-dom';
-import { useAuth } from '../../hooks/auth';
+import { useLocation } from 'react-router-dom';
+import { IconName } from '@fortawesome/fontawesome-svg-core';
+import MenuItem from '../MenuItem';
 import { Container } from './styles';
 
+const menuItems = [
+  {
+    to: '/dashboard',
+    iconName: 'dashboard',
+    title: 'Dashboard',
+  },
+  {
+    to: '/categorias',
+    iconName: 'tags',
+    title: 'Categorias',
+  },
+  {
+    to: '/produtos',
+    iconName: 'box',
+    title: 'Produtos',
+  },
+];
+
 const Menu: FC = () => {
-  const { signOut } = useAuth();
+  const location = useLocation();
+
   return (
     <Container>
       <ul>
-        <li>
-          <Link to="/dashboard">Ir para Home</Link>
-        </li>
-        <li>
-          <Link to="/categorias">Ir para Categorais</Link>
-        </li>
-        <li>
-          <Link to="/produtos">Ir para Produtos</Link>
-        </li>
-        <li>
-          <a href="/">Menu Item</a>
-        </li>
-        <li>
-          <button type="button" onClick={signOut}>
-            Logout
-          </button>
-        </li>
+        {menuItems.map(menu => (
+          <MenuItem
+            key={menu.title}
+            active={menu.to === location.pathname}
+            to={menu.to}
+            iconName={menu.iconName as IconName}
+          >
+            {menu.title}
+          </MenuItem>
+        ))}
       </ul>
     </Container>
   );
