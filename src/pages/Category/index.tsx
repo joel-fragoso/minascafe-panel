@@ -12,17 +12,18 @@ import { fas } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import api from '../../services/api';
 import MainLayout from '../../layouts/MainLayout';
-import { Container } from './styles';
 import isIconName from '../../utils/getIconsNames';
+import { Container } from './styles';
 
-type KeyOfId = keyof MutableRefObject<HTMLInputElement | null>;
-interface IDate {
+export type KeyOfId = keyof MutableRefObject<HTMLInputElement | null>;
+
+export interface IDate {
   date: string;
   timezoneType: string;
   timezone: string;
 }
 
-interface ICategoryProps {
+export interface ICategoryProps {
   id: KeyOfId;
   name: string;
   icon: IconName;
@@ -59,7 +60,6 @@ const Category: FC = () => {
 
         if (name && isIconName(icon)) {
           const formData = {
-            id,
             name,
             icon,
             active,
