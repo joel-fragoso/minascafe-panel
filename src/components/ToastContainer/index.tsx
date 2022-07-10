@@ -13,9 +13,9 @@ const ToastContainer: FC<IToastContainerProps> = ({
 }: IToastContainerProps) => {
   const messagesWithTransition = useTransition(messages, {
     keys: message => message.id,
-    from: { right: '-120%', opacity: 0 },
-    enter: { right: '0', opacity: 1 },
-    leave: { right: '-120%', opacity: 0 },
+    from: { right: '-120%', opacity: 0, visibility: 'hidden' },
+    enter: { right: '0', opacity: 1, visibility: 'visible' },
+    leave: { right: '-120%', opacity: 0, visibility: 'hidden' },
   });
 
   return (

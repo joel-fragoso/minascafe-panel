@@ -8,11 +8,11 @@ import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
 import { useLoading } from '../../hooks/loading';
 import isIconName from '../../utils/getIconsNames';
+import MainLayout from '../../layouts/MainLayout';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
-import MainLayout from '../../layouts/MainLayout';
-import { Container } from './style';
 import Checkbox from '../../components/Checkbox';
+import { Container } from './style';
 
 interface Errors {
   [key: string]: string;
