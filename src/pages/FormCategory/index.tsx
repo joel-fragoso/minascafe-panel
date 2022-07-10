@@ -12,6 +12,7 @@ import Input from '../../components/Input';
 import Button from '../../components/Button';
 import MainLayout from '../../layouts/MainLayout';
 import { Container } from './style';
+import Checkbox from '../../components/Checkbox';
 
 interface Errors {
   [key: string]: string;
@@ -88,10 +89,7 @@ const FormCategory: FC = () => {
             onChange={e => setIconName(e.target.value)}
           />
           <Input name="name" type="text" placeholder="Nome" />
-          <label htmlFor="active">
-            Ativo:
-            <input id="active" name="active" type="checkbox" defaultChecked />
-          </label>
+          <Checkbox name="active" label="Ativo:" defaultChecked />
           <Button type="submit" disabled={loading} loading={loading}>
             Salvar
           </Button>

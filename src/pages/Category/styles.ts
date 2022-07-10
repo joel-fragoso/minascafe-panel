@@ -29,6 +29,7 @@ export const Container = styled.div`
 
     td,
     th {
+      text-align: center;
       padding: 0.8rem 1.6rem;
       border: 3px solid ${({ theme }) => theme.common.black};
     }
