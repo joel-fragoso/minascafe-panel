@@ -7,6 +7,7 @@ import {
 import Category from '../pages/Category';
 import Dashboard from '../pages/Dashboard';
 import FormProduct from '../pages/FormProduct';
+import FormCategory from '../pages/FormCategory';
 import Product from '../pages/Product';
 import PrivateRoute from './PrivateRoute';
 import PublicRoute from './PublicRoute';
@@ -28,6 +29,14 @@ const Routes: FC = () => {
         element={
           <PrivateRoute>
             <Category />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="categorias/adicionar"
+        element={
+          <PrivateRoute>
+            <FormCategory />
           </PrivateRoute>
         }
       />
