@@ -4,13 +4,14 @@ import {
   Route,
   Routes as ReactRouterDomRoutes,
 } from 'react-router-dom';
+import PublicRoute from './PublicRoute';
+import PrivateRoute from './PrivateRoute';
 import Category from '../pages/Category';
 import Dashboard from '../pages/Dashboard';
 import FormProduct from '../pages/FormProduct';
 import FormCategory from '../pages/FormCategory';
 import Product from '../pages/Product';
-import PrivateRoute from './PrivateRoute';
-import PublicRoute from './PublicRoute';
+import ForgotPassword from '../pages/ForgotPassword';
 
 const Routes: FC = () => {
   return (
@@ -24,6 +25,7 @@ const Routes: FC = () => {
           </PrivateRoute>
         }
       />
+      <Route path="senha/esqueci" element={<ForgotPassword />} />
       <Route
         path="categorias"
         element={

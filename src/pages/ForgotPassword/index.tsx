@@ -3,26 +3,24 @@ import { Link, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
+import api from '../../services/api';
 import { useLoading } from '../../hooks/loading';
-import { useAuth } from '../../hooks/auth';
 import { useToast } from '../../hooks/toast';
 import { Errors } from '../../utils/getValidationErrors';
-import LogoImg from '../../assets/img/perfil.png';
-import Button from '../../components/Button';
 import Input from '../../components/Input';
+import Button from '../../components/Button';
+import Icon from '../../components/Icon';
 import { Container } from './styles';
 
-interface SignInFormData {
+interface IForgotPassword {
   email: string;
-  password: string;
 }
 
-const SignIn: FC = () => {
+const ForgotPassword: FC = () => {
   const formRef = useRef<FormHandles>(null);
   const navigate = useNavigate();
   const { loading, handleLoading } = useLoading();
 
-  const { signIn } = useAuth();
   const { addToast } = useToast();
 
   useEffect(() => {
@@ -30,7 +28,7 @@ const SignIn: FC = () => {
   }, [handleLoading]);
 
   const handleSubmit = useCallback(
-    async (data: SignInFormData) => {
+    async (data: IForgotPassword) => {
       try {
         formRef.current?.setErrors({});
 
@@ -38,7 +36,6 @@ const SignIn: FC = () => {
           email: Yup.string()
             .required('E-mail obrigatório')
             .email('Digite um e-mail válido'),
-          password: Yup.string().required('Senha obrigatória'),
         });
 
         await schema.validate(data, {
@@ -47,15 +44,19 @@ const SignIn: FC = () => {
 
         handleLoading(true);
 
-        await signIn({
+        await api.post('/senha/esqueci', {
           email: data.email,
-          password: data.password,
         });
 
-        navigate('/dashboard');
-      } catch (err) {
-        handleLoading(false);
+        addToast({
+          type: 'success',
+          title: 'E-mail de recuperação enviado',
+          description:
+            'Enviamos um e-mail para confirmar a recuperação de senha, cheque a sua caixa de entrada',
+        });
 
+        navigate('/');
+      } catch (err) {
         if (err instanceof Yup.ValidationError) {
           const validationErrors: Errors = {};
 
@@ -70,19 +71,21 @@ const SignIn: FC = () => {
 
         addToast({
           type: 'error',
-          title: 'Erro na autenticação',
-          description: 'Ocorreu um erro ao fazer login, cheque as credenciais',
+          title: 'Erro na recuperação de senha',
+          description:
+            'Ocorreu um erro ao tentar realizar a recuperação de senha, tente novamente',
         });
+      } finally {
+        handleLoading(false);
       }
     },
-    [handleLoading, signIn, navigate, addToast],
+    [handleLoading, navigate, addToast],
   );
 
   return (
     <Container>
-      <img src={LogoImg} alt="Minas Café" />
       <Form ref={formRef} onSubmit={handleSubmit} noValidate>
-        <h1>Faça seu logon</h1>
+        <h1>Recuperar senha</h1>
         <Input
           spellCheck={false}
           name="email"
@@ -90,19 +93,16 @@ const SignIn: FC = () => {
           placeholder="Usuário"
           iconName="user"
         />
-        <Input
-          name="password"
-          type="password"
-          placeholder="Senha"
-          iconName="lock"
-        />
         <Button type="submit" disabled={loading} loading={loading}>
-          Entrar
+          Enviar
         </Button>
-        <Link to="/senha/esqueci">Esqueci minha senha</Link>
+        <Link to="/">
+          <Icon iconName="arrow-left-long" />
+          Voltar para o login
+        </Link>
       </Form>
     </Container>
   );
 };
 
-export default SignIn;
+export default ForgotPassword;
