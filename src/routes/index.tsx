@@ -12,6 +12,7 @@ import FormProduct from '../pages/FormProduct';
 import FormCategory from '../pages/FormCategory';
 import Product from '../pages/Product';
 import ForgotPassword from '../pages/ForgotPassword';
+import ResetPassword from '../pages/ResetPassword';
 
 const Routes: FC = () => {
   return (
@@ -26,6 +27,7 @@ const Routes: FC = () => {
         }
       />
       <Route path="senha/esqueci" element={<ForgotPassword />} />
+      <Route path="senha/reseta" element={<ResetPassword />} />
       <Route
         path="categorias"
         element={
