@@ -3,14 +3,14 @@ import * as Yup from 'yup';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import { useNavigate } from 'react-router-dom';
-import { IconName } from '@fortawesome/fontawesome-svg-core';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Button from '../../components/Button';
-import Input from '../../components/Input';
 import { useLoading } from '../../hooks/loading';
 import MainLayout from '../../layouts/MainLayout';
 import api from '../../services/api';
 import { ICategoryProps } from '../Category';
+import Button from '../../components/Button';
+import Input from '../../components/Input';
+import Select from '../../components/Select';
+import Checkbox from '../../components/Checkbox';
 import { Container } from './styles';
 
 interface Errors {
@@ -20,27 +20,26 @@ interface Errors {
 interface IProductFormData {
   categoryId: string;
   name: string;
-  price: number;
+  price: string;
   active: boolean;
 }
 
 const FormProduct: FC = () => {
   const formRef = useRef<FormHandles>(null);
   const [categories, setCategories] = useState<ICategoryProps[]>([]);
-  const [iconName, setIconName] = useState<IconName | undefined>(undefined);
   const { loading, handleLoading } = useLoading();
   const navigate = useNavigate();
 
-  const getCategories = useCallback(async () => {
-    const response = await api.get('/categorias');
-
-    setCategories(response.data.data);
-  }, []);
-
   useEffect(() => {
-    handleLoading(false);
+    async function getCategories() {
+      const response = await api.get('/categorias');
+
+      setCategories(response.data.data);
+      handleLoading(false);
+    }
+
     getCategories();
-  }, [getCategories, handleLoading]);
+  }, [setCategories, handleLoading]);
 
   const handleSubmit = useCallback(
     async (data: IProductFormData) => {
@@ -59,6 +58,7 @@ const FormProduct: FC = () => {
 
         await api.post('/produtos', {
           ...data,
+          price: parseFloat(data.price),
           active: data.active ?? false,
         });
 
@@ -86,42 +86,20 @@ const FormProduct: FC = () => {
     <MainLayout>
       <Container>
         <Form ref={formRef} onSubmit={handleSubmit}>
-          {(iconName ||
-            categories.find(category => category !== undefined)?.icon) && (
-            <FontAwesomeIcon
-              icon={{
-                prefix: 'fas',
-                iconName:
-                  iconName ||
-                  (categories.find(category => category !== undefined)
-                    ?.icon as IconName),
-              }}
-            />
-          )}
-          <select
+          <Select
             name="categoryId"
-            onChange={e =>
-              setIconName(
-                categories.find(category => category.id === e.target.value)
-                  ?.icon,
-              )
+            options={
+              categories &&
+              categories.map(category => ({
+                label: category.name,
+                value: category.id,
+                iconName: category.icon,
+              }))
             }
-          >
-            {categories &&
-              categories.map(category => (
-                <option
-                  key={category.id}
-                  value={category.id}
-                  label={category.name}
-                />
-              ))}
-          </select>
+          />
           <Input name="name" type="text" placeholder="Nome" />
           <Input name="price" type="text" placeholder="Preço" />
-          <label htmlFor="active">
-            Ativo:
-            <input id="active" name="active" type="checkbox" defaultChecked />
-          </label>
+          <Checkbox name="active" label="Ativo:" defaultChecked />
           <Button type="submit" disabled={loading} loading={loading}>
             Salvar
           </Button>

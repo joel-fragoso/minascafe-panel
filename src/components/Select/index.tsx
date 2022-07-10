@@ -6,10 +6,10 @@ import {
   useRef,
   useState,
 } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconName } from '@fortawesome/fontawesome-svg-core';
 import { useField } from '@unform/core';
 import { Container, Error } from './styles';
+import Icon from '../Icon';
 
 interface IOption {
   value: string | number;
@@ -68,16 +68,7 @@ const Select: FC<ISelectProps> = ({
       isFilled={isFilled}
       data-testid="select-container"
     >
-      {iconName && (
-        <FontAwesomeIcon
-          icon={{
-            prefix: 'fas',
-            iconName,
-          }}
-          fixedWidth
-          size="1x"
-        />
-      )}
+      {iconName && <Icon iconName={iconName} fixedWidth />}
       <select
         onFocus={handleInputFocus}
         onBlur={handleInputBlur}
@@ -98,10 +89,7 @@ const Select: FC<ISelectProps> = ({
       </select>
       {error && (
         <Error title={error}>
-          <FontAwesomeIcon
-            icon={{ prefix: 'fas', iconName: 'circle-exclamation' }}
-            size="1x"
-          />
+          <Icon iconName="circle-exclamation" />
         </Error>
       )}
     </Container>
