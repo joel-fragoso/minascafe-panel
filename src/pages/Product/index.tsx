@@ -87,7 +87,7 @@ const Product: FC = () => {
       deleteIdRef.current = id;
 
       showModal({
-        type: 'danger',
+        type: 'error',
         title: 'Excluir item',
         description: 'Você deseja excluir esse item?',
         onConfirmation: deleteConfirmed,
@@ -105,13 +105,13 @@ const Product: FC = () => {
     <MainLayout>
       <Container>
         <div>
+          <h1>Produtos</h1>
           <Link to="adicionar">
             <FontAwesomeIcon icon={{ prefix: 'fas', iconName: 'plus' }} />
             Adicionar
           </Link>
         </div>
         <table>
-          <caption>Configurar Produtos</caption>
           <thead>
             <tr>
               <th>Categoria</th>

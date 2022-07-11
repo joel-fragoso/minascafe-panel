@@ -1,47 +1,24 @@
 import styled, { css } from 'styled-components';
 import { animated } from 'react-spring';
-import { lighten, shade, transparentize } from 'polished';
+import { shade, transparentize } from 'polished';
 
 interface IContainerProps {
-  type?: 'info' | 'success' | 'error' | 'danger';
+  type?: 'info' | 'success' | 'error';
 }
 
-const toastTypeVariations = {
+const modalTypeVariations = {
   info: css`
-    background-color: ${({ theme }) => theme.background.paper};
-    color: ${({ theme }) => theme.common.white};
+    color: ${({ theme }) => theme.pallete.info?.main};
   `,
   success: css`
-    background-color: ${({ theme }) => theme.background.paper};
-    color: ${({ theme }) => theme.common.white};
+    color: ${({ theme }) => theme.pallete.success?.main};
   `,
   error: css`
-    background-color: ${({ theme }) => theme.pallete.danger?.main};
-    color: ${({ theme }) => theme.pallete.danger?.contrastText};
-  `,
-  danger: css`
-    background-color: ${({ theme }) => theme.background.paper};
     color: ${({ theme }) => theme.pallete.danger?.main};
-
-    footer {
-      button:last-of-type {
-        background-color: ${({ theme }) => theme.pallete.danger?.main};
-
-        &:hover {
-          background-color: ${({ theme }) =>
-            shade(0.2, theme.pallete.danger?.main as string)};
-        }
-
-        &:active {
-          background-color: ${({ theme }) =>
-            lighten(0.1, theme.pallete.danger?.main as string)};
-        }
-      }
-    }
   `,
 };
 
-export const Container = styled(animated.div)<IContainerProps>`
+export const Container = styled(animated.div)`
   width: 42rem;
   position: relative;
   border-radius: 0.8rem;
@@ -49,8 +26,7 @@ export const Container = styled(animated.div)<IContainerProps>`
     ${({ theme }) => transparentize(0.8, theme.common.black)};
   display: flex;
   flex-direction: column;
-
-  ${({ type }) => toastTypeVariations[type || 'info']}
+  background-color: ${({ theme }) => theme.background.paper};
 
   > button {
     position: absolute;
@@ -60,7 +36,13 @@ export const Container = styled(animated.div)<IContainerProps>`
     opacity: 0.6;
     border: 0;
     background: transparent;
-    color: inherit;
+    color: ${({ theme }) => theme.pallete.secondary?.main};
+    transition: color 0.2s linear;
+
+    &:hover {
+      color: ${({ theme }) =>
+        shade(0.2, theme.pallete.secondary?.main as string)};
+    }
   }
 `;
 
@@ -70,21 +52,27 @@ export const Body = styled.div<IContainerProps>`
 
   > svg {
     margin: 0.4rem 1.2rem 0 0;
+    ${({ type }) => modalTypeVariations[type || 'info']};
   }
 
   div {
     flex: 1;
 
+    strong {
+      ${({ type }) => modalTypeVariations[type || 'info']};
+    }
+
     p {
-      margin-top: 0.4rem;
+      margin-top: 0.8rem;
       font-size: 1.4rem;
+      color: ${({ theme }) => theme.pallete.secondary?.main};
       opacity: 0.8;
       line-height: 2rem;
     }
   }
 `;
 
-export const Footer = styled.footer<IContainerProps>`
+export const Footer = styled.footer`
   display: flex;
   align-items: center;
   padding: 1.6rem;

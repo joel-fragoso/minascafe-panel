@@ -5,7 +5,8 @@ export const Container = styled.div`
 
   span {
     width: 16rem;
-    background-color: ${({ theme }) => theme.pallete.primary.main};
+    background-color: ${({ theme }) => theme.pallete.danger?.main};
+    color: ${({ theme }) => theme.pallete.danger?.contrastText} !important;
     padding: 0.8rem;
     border-radius: 0.4rem;
     font-size: 1.4rem;
@@ -22,7 +23,7 @@ export const Container = styled.div`
     &::before {
       content: '';
       border-style: solid;
-      border-color: ${({ theme }) => theme.pallete.primary.main} transparent;
+      border-color: ${({ theme }) => theme.pallete.danger?.main} transparent;
       border-width: 6px 6px 0 6px;
       position: absolute;
       top: 100%;

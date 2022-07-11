@@ -1,27 +1,13 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FC, useEffect } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IToastMessage, useToast } from '../../../hooks/toast';
+import Icon from '../../Icon';
 import { Container } from './styles';
 
 const icons = {
-  info: (
-    <FontAwesomeIcon
-      icon={{ prefix: 'fas', iconName: 'circle-info' }}
-      size="1x"
-    />
-  ),
-  success: (
-    <FontAwesomeIcon
-      icon={{ prefix: 'fas', iconName: 'circle-check' }}
-      size="1x"
-    />
-  ),
-  error: (
-    <FontAwesomeIcon
-      icon={{ prefix: 'fas', iconName: 'circle-exclamation' }}
-      size="1x"
-    />
-  ),
+  info: <Icon iconName="circle-info" />,
+  success: <Icon iconName="circle-check" />,
+  error: <Icon iconName="circle-exclamation" />,
 };
 
 interface IToastProps {
@@ -33,7 +19,7 @@ const Toast: FC<IToastProps> = ({ message, style }: IToastProps) => {
   const { removeToast } = useToast();
 
   useEffect(() => {
-    const timer = setTimeout(() => removeToast(message.id), 3000);
+    const timer = setTimeout(() => removeToast(message.id), 5000);
 
     return () => clearTimeout(timer);
   }, [message.id, removeToast]);
@@ -50,7 +36,7 @@ const Toast: FC<IToastProps> = ({ message, style }: IToastProps) => {
         {message.description && <p>{message.description}</p>}
       </div>
       <button type="button" onClick={() => removeToast(message.id)}>
-        <FontAwesomeIcon icon={{ prefix: 'fas', iconName: 'xmark' }} />
+        <Icon iconName="xmark" />
       </button>
     </Container>
   );

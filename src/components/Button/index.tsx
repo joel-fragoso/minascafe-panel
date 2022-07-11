@@ -4,11 +4,19 @@ import { Container } from './styles';
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   loading?: boolean;
+  color?: 'primary' | 'secondary' | 'info' | 'success' | 'danger';
+  size?: 'default' | 'small' | 'large';
 };
 
-const Button: FC<ButtonProps> = ({ children, loading, ...rest }) => {
+const Button: FC<ButtonProps> = ({
+  children,
+  loading,
+  color,
+  size,
+  ...rest
+}) => {
   return (
-    <Container type="button" {...rest}>
+    <Container type="button" color={color} size={size} {...rest}>
       {loading ? <Loading /> : children}
     </Container>
   );

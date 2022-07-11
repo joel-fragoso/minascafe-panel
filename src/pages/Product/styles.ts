@@ -7,6 +7,12 @@ export const Container = styled.div`
 
   div {
     display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    h1 {
+      margin: 0;
+    }
 
     a {
       color: ${({ theme }) => theme.background.default};
@@ -14,7 +20,6 @@ export const Container = styled.div`
       border-radius: 0.8rem;
       padding: 0.8rem 1.2rem;
       font-weight: 700;
-      margin-left: auto;
 
       svg {
         padding-right: 1rem;
@@ -23,6 +28,7 @@ export const Container = styled.div`
   }
 
   table {
+    margin-top: 1.6rem;
     width: 100%;
     border-spacing: 2px 0px;
     display: table;

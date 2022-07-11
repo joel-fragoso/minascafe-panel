@@ -4,12 +4,12 @@ import { transparentize } from 'polished';
 
 const toastTypeVariations = {
   info: css`
-    background-color: ${({ theme }) => theme.pallete.danger?.main};
-    color: ${({ theme }) => theme.pallete.danger?.contrastText};
+    background-color: ${({ theme }) => theme.pallete.info?.main};
+    color: ${({ theme }) => theme.pallete.info?.contrastText};
   `,
   success: css`
-    background-color: ${({ theme }) => theme.pallete.danger?.main};
-    color: ${({ theme }) => theme.pallete.danger?.contrastText};
+    background-color: ${({ theme }) => theme.pallete.success?.main};
+    color: ${({ theme }) => theme.pallete.success?.contrastText};
   `,
   error: css`
     background-color: ${({ theme }) => theme.pallete.danger?.main};
@@ -26,7 +26,7 @@ export const Container = styled(animated.div)<IContainerProps>`
   width: 36rem;
   position: relative;
   padding: 1.6rem 3rem 1.6rem 1.6rem;
-  border-radius: 1rem;
+  border-radius: 0.8rem;
   box-shadow: 2px 2px 8px
     ${({ theme }) => transparentize(0.8, theme.common.black)};
   display: flex;

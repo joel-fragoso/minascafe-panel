@@ -10,7 +10,7 @@ import {
 import Modal from '../components/Modal';
 
 export interface IModalMessage {
-  type?: 'info' | 'success' | 'error' | 'danger';
+  type?: 'info' | 'success' | 'error';
   title: string;
   description?: string;
   onConfirmation(): void;

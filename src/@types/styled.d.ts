@@ -25,9 +25,9 @@ declare module 'styled-components' {
     pallete: {
       primary: IPalleteColor;
       secondary?: IPalleteColor;
-      danger?: IPalleteColor;
+      info?: IPalleteColor;
       success?: IPalleteColor;
-      warning?: IPalleteColor;
+      danger?: IPalleteColor;
     };
     background: IBackgroundColor;
   }
