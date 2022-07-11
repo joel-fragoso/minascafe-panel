@@ -1,22 +1,19 @@
-import { FC, useCallback, useEffect, useRef, useState } from 'react';
+import { FC, useCallback, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { fas } from '@fortawesome/free-solid-svg-icons';
-import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
 import { useLoading } from '../../hooks/loading';
 import isIconName from '../../utils/getIconsNames';
+import { Errors } from '../../utils/getValidationErrors';
 import MainLayout from '../../layouts/MainLayout';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import Checkbox from '../../components/Checkbox';
 import { Container } from './style';
 
-interface Errors {
-  [key: string]: string;
-}
 interface ICategoryFormData {
   name: string;
   icon: string;
@@ -27,16 +24,14 @@ const FormCategory: FC = () => {
   const [iconName, setIconName] = useState<string | undefined>(undefined);
   const formRef = useRef<FormHandles>(null);
   const iconNameList = [...new Set(Object.values(fas))];
-  const { loading, handleLoading } = useLoading();
+  const { loading, setLoading } = useLoading();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    handleLoading(false);
-  }, [handleLoading]);
 
   const handleSubmit = useCallback(
     async (data: ICategoryFormData) => {
       try {
+        setLoading(true);
+
         formRef.current?.setErrors({});
 
         const schema = Yup.object().shape({
@@ -55,12 +50,8 @@ const FormCategory: FC = () => {
           active: data.active ?? false,
         });
 
-        handleLoading(true);
-
         navigate('/categorias');
       } catch (err) {
-        handleLoading(false);
-
         if (err instanceof Yup.ValidationError) {
           const validationErrors: Errors = {};
 
@@ -70,23 +61,24 @@ const FormCategory: FC = () => {
 
           formRef.current?.setErrors(validationErrors);
         }
+      } finally {
+        setLoading(false);
       }
     },
-    [handleLoading, navigate],
+    [setLoading, navigate],
   );
 
   return (
     <MainLayout>
       <Container>
         <Form ref={formRef} onSubmit={handleSubmit}>
-          {isIconName(iconName) && (
-            <FontAwesomeIcon icon={{ prefix: 'fas', iconName }} />
-          )}
+          {}
           <Input
             name="icon"
             list="iconNames"
             placeholder="Nome ícone"
             onChange={e => setIconName(e.target.value)}
+            iconName={isIconName(iconName) ? iconName : undefined}
           />
           <Input name="name" type="text" placeholder="Nome" />
           <Checkbox name="active" label="Ativo:" defaultChecked />

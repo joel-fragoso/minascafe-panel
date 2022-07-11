@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconName } from '@fortawesome/fontawesome-svg-core';
 import { Link } from 'react-router-dom';
 import api from '../../services/api';
+import { useModal } from '../../hooks/modal';
 import MainLayout from '../../layouts/MainLayout';
 import { ICategoryProps, IDate, KeyOfId } from '../Category';
 import { Container } from './styles';
@@ -26,6 +27,10 @@ const Product: FC = () => {
   const priceRef = useRef<HTMLInputElement | null>(null);
   const activeRef = useRef<HTMLInputElement | null>(null);
   const [modify, setModify] = useState<string>('');
+
+  const { showModal, hideModal } = useModal();
+
+  const deleteIdRef = useRef<string>('');
 
   const getProducts = useCallback(async () => {
     const response = await api.get('/produtos');
@@ -69,16 +74,26 @@ const Product: FC = () => {
     [getProducts],
   );
 
-  const deleteProduct = useCallback(
-    async (id: string) => {
-      // eslint-disable-next-line no-restricted-globals
-      if (confirm('Você tem certeza que quer excluir?')) {
-        await api.delete(`/produtos/${id}`);
+  const deleteConfirmed = useCallback(async () => {
+    await api.delete(`/produtos/${deleteIdRef.current}`);
 
-        getProducts();
-      }
+    getProducts();
+
+    hideModal();
+  }, [getProducts, hideModal]);
+
+  const deleteProduct = useCallback(
+    (id: string) => {
+      deleteIdRef.current = id;
+
+      showModal({
+        type: 'danger',
+        title: 'Excluir item',
+        description: 'Você deseja excluir esse item?',
+        onConfirmation: deleteConfirmed,
+      });
     },
-    [getProducts],
+    [deleteConfirmed, showModal],
   );
 
   useEffect(() => {

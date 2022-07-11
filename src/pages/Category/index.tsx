@@ -6,13 +6,14 @@ import {
   useRef,
   useState,
 } from 'react';
+import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconName } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
 import api from '../../services/api';
-import MainLayout from '../../layouts/MainLayout';
+import { useModal } from '../../hooks/modal';
 import isIconName from '../../utils/getIconsNames';
+import MainLayout from '../../layouts/MainLayout';
 import { Container } from './styles';
 
 export type KeyOfId = keyof MutableRefObject<HTMLInputElement | null>;
@@ -40,6 +41,10 @@ const Category: FC = () => {
   const iconRef = useRef<HTMLInputElement | null>(null);
   const activeRef = useRef<HTMLInputElement | null>(null);
   const [modify, setModify] = useState<string>('');
+
+  const { showModal, hideModal } = useModal();
+
+  const deleteIdRef = useRef<string>('');
 
   const getCategories = useCallback(async () => {
     const response = await api.get('/categorias');
@@ -75,16 +80,26 @@ const Category: FC = () => {
     [getCategories],
   );
 
-  const deleteCategory = useCallback(
-    async (id: string) => {
-      // eslint-disable-next-line no-restricted-globals
-      if (confirm('Você tem certeza que quer excluir?')) {
-        await api.delete(`/categorias/${id}`);
+  const deleteConfirmed = useCallback(async () => {
+    await api.delete(`/categorias/${deleteIdRef.current}`);
 
-        getCategories();
-      }
+    getCategories();
+
+    hideModal();
+  }, [getCategories, hideModal]);
+
+  const deleteCategory = useCallback(
+    (id: string) => {
+      deleteIdRef.current = id;
+
+      showModal({
+        type: 'danger',
+        title: 'Excluir item',
+        description: 'Você deseja excluir esse item?',
+        onConfirmation: deleteConfirmed,
+      });
     },
-    [getCategories],
+    [deleteConfirmed, showModal],
   );
 
   useEffect(() => {

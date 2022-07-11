@@ -1,5 +1,6 @@
 import styled, { css } from 'styled-components';
 import { animated } from 'react-spring';
+import { transparentize } from 'polished';
 
 const toastTypeVariations = {
   info: css`
@@ -26,7 +27,8 @@ export const Container = styled(animated.div)<IContainerProps>`
   position: relative;
   padding: 1.6rem 3rem 1.6rem 1.6rem;
   border-radius: 1rem;
-  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 2px 2px 8px
+    ${({ theme }) => transparentize(0.8, theme.common.black)};
   display: flex;
 
   & + div {
