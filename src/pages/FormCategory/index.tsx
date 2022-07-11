@@ -11,7 +11,7 @@ import { Errors } from '../../utils/getValidationErrors';
 import MainLayout from '../../layouts/MainLayout';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
-import Checkbox from '../../components/Checkbox';
+import Switch from '../../components/Switch';
 import { Container } from './style';
 
 interface ICategoryFormData {
@@ -81,7 +81,7 @@ const FormCategory: FC = () => {
             iconName={isIconName(iconName) ? iconName : undefined}
           />
           <Input name="name" type="text" placeholder="Nome" />
-          <Checkbox name="active" label="Ativo:" defaultChecked />
+          <Switch name="active" label="Ativo:" defaultChecked />
           <Button type="submit" disabled={loading} loading={loading}>
             Salvar
           </Button>

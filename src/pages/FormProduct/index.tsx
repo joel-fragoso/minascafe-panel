@@ -11,7 +11,7 @@ import { ICategoryProps } from '../Category';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Select from '../../components/Select';
-import Checkbox from '../../components/Checkbox';
+import Switch from '../../components/Switch';
 import { Container } from './styles';
 
 interface IProductFormData {
@@ -95,7 +95,7 @@ const FormProduct: FC = () => {
           />
           <Input name="name" type="text" placeholder="Nome" />
           <Input name="price" type="text" placeholder="Preço" />
-          <Checkbox name="active" label="Ativo:" defaultChecked />
+          <Switch name="active" label="Ativo:" defaultChecked />
           <Button type="submit" disabled={loading} loading={loading}>
             Salvar
           </Button>
