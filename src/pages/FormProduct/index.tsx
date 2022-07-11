@@ -1,21 +1,18 @@
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
-import { useNavigate } from 'react-router-dom';
-import { useLoading } from '../../hooks/loading';
-import MainLayout from '../../layouts/MainLayout';
 import api from '../../services/api';
+import { useLoading } from '../../hooks/loading';
+import { Errors } from '../../utils/getValidationErrors';
+import MainLayout from '../../layouts/MainLayout';
 import { ICategoryProps } from '../Category';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Select from '../../components/Select';
 import Checkbox from '../../components/Checkbox';
 import { Container } from './styles';
-
-interface Errors {
-  [key: string]: string;
-}
 
 interface IProductFormData {
   categoryId: string;
@@ -27,7 +24,7 @@ interface IProductFormData {
 const FormProduct: FC = () => {
   const formRef = useRef<FormHandles>(null);
   const [categories, setCategories] = useState<ICategoryProps[]>([]);
-  const { loading, handleLoading } = useLoading();
+  const { loading, setLoading } = useLoading();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -35,15 +32,16 @@ const FormProduct: FC = () => {
       const response = await api.get('/categorias');
 
       setCategories(response.data.data);
-      handleLoading(false);
     }
 
     getCategories();
-  }, [setCategories, handleLoading]);
+  }, [setCategories]);
 
   const handleSubmit = useCallback(
     async (data: IProductFormData) => {
       try {
+        setLoading(true);
+
         formRef.current?.setErrors({});
 
         const schema = Yup.object().shape({
@@ -62,12 +60,8 @@ const FormProduct: FC = () => {
           active: data.active ?? false,
         });
 
-        handleLoading(true);
-
         navigate('/produtos');
       } catch (err) {
-        handleLoading(false);
-
         if (err instanceof Yup.ValidationError) {
           const validationErrors: Errors = {};
 
@@ -77,9 +71,11 @@ const FormProduct: FC = () => {
 
           formRef.current?.setErrors(validationErrors);
         }
+      } finally {
+        setLoading(false);
       }
     },
-    [handleLoading, navigate],
+    [setLoading, navigate],
   );
 
   return (

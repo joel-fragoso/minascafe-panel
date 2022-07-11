@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useRef } from 'react';
+import { FC, useCallback, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { FormHandles } from '@unform/core';
@@ -20,18 +20,16 @@ interface IResetPassword {
 const ResetPassword: FC = () => {
   const formRef = useRef<FormHandles>(null);
   const navigate = useNavigate();
-  const { loading, handleLoading } = useLoading();
   const location = useLocation();
 
+  const { loading, setLoading } = useLoading();
   const { addToast } = useToast();
-
-  useEffect(() => {
-    handleLoading(false);
-  }, [handleLoading]);
 
   const handleSubmit = useCallback(
     async (data: IResetPassword) => {
       try {
+        setLoading(true);
+
         formRef.current?.setErrors({});
 
         const schema = Yup.object().shape({
@@ -45,8 +43,6 @@ const ResetPassword: FC = () => {
         await schema.validate(data, {
           abortEarly: false,
         });
-
-        handleLoading(true);
 
         const token = location.search.replace('?token=', '');
 
@@ -87,10 +83,10 @@ const ResetPassword: FC = () => {
           description: 'Ocorreu um erro ao resetar a senha, tente novamente',
         });
       } finally {
-        handleLoading(false);
+        setLoading(false);
       }
     },
-    [handleLoading, location.search, addToast, navigate],
+    [setLoading, location.search, addToast, navigate],
   );
 
   return (

@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useRef } from 'react';
+import { FC, useCallback, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { FormHandles } from '@unform/core';
@@ -20,18 +20,16 @@ interface SignInFormData {
 const SignIn: FC = () => {
   const formRef = useRef<FormHandles>(null);
   const navigate = useNavigate();
-  const { loading, handleLoading } = useLoading();
 
+  const { loading, setLoading } = useLoading();
   const { signIn } = useAuth();
   const { addToast } = useToast();
-
-  useEffect(() => {
-    handleLoading(false);
-  }, [handleLoading]);
 
   const handleSubmit = useCallback(
     async (data: SignInFormData) => {
       try {
+        setLoading(true);
+
         formRef.current?.setErrors({});
 
         const schema = Yup.object().shape({
@@ -45,8 +43,6 @@ const SignIn: FC = () => {
           abortEarly: false,
         });
 
-        handleLoading(true);
-
         await signIn({
           email: data.email,
           password: data.password,
@@ -54,8 +50,6 @@ const SignIn: FC = () => {
 
         navigate('/dashboard');
       } catch (err) {
-        handleLoading(false);
-
         if (err instanceof Yup.ValidationError) {
           const validationErrors: Errors = {};
 
@@ -73,9 +67,11 @@ const SignIn: FC = () => {
           title: 'Erro na autenticação',
           description: 'Ocorreu um erro ao fazer login, cheque as credenciais',
         });
+      } finally {
+        setLoading(false);
       }
     },
-    [handleLoading, signIn, navigate, addToast],
+    [setLoading, signIn, navigate, addToast],
   );
 
   return (

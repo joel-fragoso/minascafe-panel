@@ -10,7 +10,7 @@ import {
 
 interface ILoadingContext {
   loading: boolean;
-  handleLoading(value: boolean): void;
+  setLoading(value: boolean): void;
 }
 
 interface ILoadingProviderProps {
@@ -22,15 +22,15 @@ const LoadingContext = createContext<ILoadingContext>({} as ILoadingContext);
 export const LoadingProvider: FC<ILoadingProviderProps> = ({
   children,
 }: ILoadingProviderProps) => {
-  const [loading, setLoading] = useState<boolean>(true);
+  const [data, setData] = useState<boolean>(false);
 
-  const handleLoading = useCallback((value: boolean) => {
-    setLoading(value);
+  const setLoading = useCallback((value: boolean) => {
+    setData(value);
   }, []);
 
   const loadingMemo = useMemo(
-    () => ({ loading, handleLoading }),
-    [loading, handleLoading],
+    () => ({ loading: data, setLoading }),
+    [data, setLoading],
   );
 
   return (
@@ -42,6 +42,10 @@ export const LoadingProvider: FC<ILoadingProviderProps> = ({
 
 export function useLoading(): ILoadingContext {
   const context = useContext(LoadingContext);
+
+  if (!context) {
+    throw new Error('useLoading deve ser utilizado dentro de LoadingProvider');
+  }
 
   return context;
 }
