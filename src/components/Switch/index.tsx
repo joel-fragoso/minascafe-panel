@@ -16,7 +16,7 @@ interface ICheckboxProps extends InputHTMLAttributes<HTMLInputElement> {
   containerStyle?: object;
 }
 
-const Checkbox: FC<ICheckboxProps> = ({
+const Switch: FC<ICheckboxProps> = ({
   name,
   label,
   containerStyle = {},
@@ -26,6 +26,7 @@ const Checkbox: FC<ICheckboxProps> = ({
 
   const [isFocused, setIsFocused] = useState(false);
   const [isFilled, setIsFilled] = useState(false);
+  const [isChecked, setIsChecked] = useState(rest.defaultChecked || false);
 
   const { fieldName, defaultValue, error, registerField } = useField(name);
 
@@ -36,6 +37,10 @@ const Checkbox: FC<ICheckboxProps> = ({
       path: 'checked',
     });
   }, [fieldName, registerField]);
+
+  const handleChecked = useCallback(() => {
+    setIsChecked(!isChecked);
+  }, [isChecked]);
 
   const handleCheckboxFocus = useCallback(() => {
     setIsFocused(true);
@@ -53,13 +58,20 @@ const Checkbox: FC<ICheckboxProps> = ({
       isErrored={!!error}
       isFocused={isFocused}
       isFilled={isFilled}
-      data-testid="checkbox-container"
+      isChecked={isChecked}
+      data-testid="switch-container"
     >
-      <label htmlFor={name}>{label}</label>
+      <label htmlFor={name}>
+        {label}
+        <div>
+          <Icon iconName={isChecked ? 'toggle-on' : 'toggle-off'} />
+        </div>
+      </label>
       <input
         id={name}
         name={name}
         type="checkbox"
+        onChange={handleChecked}
         onFocus={handleCheckboxFocus}
         onBlur={handleCheckboxBlur}
         defaultValue={defaultValue}
@@ -75,4 +87,4 @@ const Checkbox: FC<ICheckboxProps> = ({
   );
 };
 
-export default Checkbox;
+export default Switch;
