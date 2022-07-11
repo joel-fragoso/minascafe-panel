@@ -9,17 +9,17 @@ interface IModalProps {
 }
 
 const Modal: FC<IModalProps> = ({ message }: IModalProps) => {
-  const { isOpen } = useModal();
+  const { isOpen, hideModal } = useModal();
 
   const messageWithTransition = useTransition(message, {
     key: message?.title,
     from: { top: '-50%', opacity: 0, visibility: 'hidden' },
     enter: { top: '0', opacity: 1, visibility: 'visible' },
-    leave: { top: '-50%', opacity: 0, visibility: 'hidden' },
+    leave: { top: '-50%', opacity: 0 },
   });
 
   return (
-    <Container isOpen={isOpen}>
+    <Container isOpen={isOpen} onClick={hideModal}>
       {messageWithTransition(
         (style, item) => item && <ModalItem style={style} message={item} />,
       )}
