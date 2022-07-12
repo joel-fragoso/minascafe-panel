@@ -93,7 +93,7 @@ const Category: FC = () => {
       deleteIdRef.current = id;
 
       showModal({
-        type: 'danger',
+        type: 'error',
         title: 'Excluir item',
         description: 'Você deseja excluir esse item?',
         onConfirmation: deleteConfirmed,
@@ -110,13 +110,13 @@ const Category: FC = () => {
     <MainLayout>
       <Container>
         <div>
+          <h1>Categorias</h1>
           <Link to="adicionar">
             <FontAwesomeIcon icon={{ prefix: 'fas', iconName: 'plus' }} />
             Adicionar
           </Link>
         </div>
         <table>
-          <caption>Configurar Categorias</caption>
           <thead>
             <tr>
               <th>Icon</th>
@@ -221,13 +221,6 @@ const Category: FC = () => {
                 </tr>
               ))}
           </tbody>
-          <tfoot>
-            <tr>
-              <td colSpan={6}>
-                Dados Atualizado: {new Date().toLocaleString()}
-              </td>
-            </tr>
-          </tfoot>
         </table>
         <datalist id="iconNames">
           {iconNameList.map(fasIcon => (

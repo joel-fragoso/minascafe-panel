@@ -8,7 +8,6 @@ const icons = {
   info: <Icon iconName="circle-info" />,
   success: <Icon iconName="circle-check" />,
   error: <Icon iconName="circle-exclamation" />,
-  danger: <Icon iconName="triangle-exclamation" />,
 };
 
 interface IModalItemProps {
@@ -23,7 +22,7 @@ const ModalItem: FC<IModalItemProps> = ({
   const { hideModal } = useModal();
 
   return (
-    <Container type={message.type} style={style}>
+    <Container style={style}>
       <button type="button" onClick={hideModal}>
         <Icon iconName="xmark" />
       </button>
@@ -34,9 +33,13 @@ const ModalItem: FC<IModalItemProps> = ({
           {message.description && <p>{message.description}</p>}
         </div>
       </Body>
-      <Footer type={message.type}>
-        <Button onClick={hideModal}>Cancelar</Button>
-        <Button onClick={message.onConfirmation}>Confirmar</Button>
+      <Footer>
+        <Button size="small" onClick={hideModal}>
+          Cancelar
+        </Button>
+        <Button color="danger" size="small" onClick={message.onConfirmation}>
+          Confirmar
+        </Button>
       </Footer>
     </Container>
   );
