@@ -7,7 +7,6 @@ import {
   useState,
 } from 'react';
 import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconName } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import api from '../../services/api';
@@ -15,6 +14,8 @@ import { useModal } from '../../hooks/modal';
 import isIconName from '../../utils/getIconsNames';
 import MainLayout from '../../layouts/MainLayout';
 import { Container } from './styles';
+import Icon from '../../components/Icon';
+import { useToast } from '../../hooks/toast';
 
 export type KeyOfId = keyof MutableRefObject<HTMLInputElement | null>;
 
@@ -43,14 +44,23 @@ const Category: FC = () => {
   const [modify, setModify] = useState<string>('');
 
   const { showModal, hideModal } = useModal();
+  const { addToast } = useToast();
 
   const deleteIdRef = useRef<string>('');
 
   const getCategories = useCallback(async () => {
-    const response = await api.get('/categorias');
+    try {
+      const response = await api.get('/categorias');
 
-    setCategories(response.data.data);
-  }, []);
+      setCategories(response.data.data);
+    } catch (error) {
+      addToast({
+        type: 'error',
+        title: 'Erro ao carregar',
+        description: 'Ocorreu um erro ao tentar carregar as categorias',
+      });
+    }
+  }, [addToast]);
 
   const modifyCategory = useCallback(
     async (id: KeyOfId, action: string) => {
@@ -81,12 +91,19 @@ const Category: FC = () => {
   );
 
   const deleteConfirmed = useCallback(async () => {
-    await api.delete(`/categorias/${deleteIdRef.current}`);
+    try {
+      await api.delete(`/categorias/${deleteIdRef.current}`);
+    } catch (error) {
+      addToast({
+        type: 'error',
+        title: 'Erro ao exluir',
+        description: 'Ocorreu um erro ao tentar excluir o registro',
+      });
+    }
 
     getCategories();
-
     hideModal();
-  }, [getCategories, hideModal]);
+  }, [addToast, getCategories, hideModal]);
 
   const deleteCategory = useCallback(
     (id: string) => {
@@ -112,7 +129,7 @@ const Category: FC = () => {
         <div>
           <h1>Categorias</h1>
           <Link to="adicionar">
-            <FontAwesomeIcon icon={{ prefix: 'fas', iconName: 'plus' }} />
+            <Icon iconName="plus" />
             Adicionar
           </Link>
         </div>
@@ -135,11 +152,9 @@ const Category: FC = () => {
                     <>
                       <td>
                         {isIconName(iconName) ? (
-                          <FontAwesomeIcon icon={{ prefix: 'fas', iconName }} />
+                          <Icon iconName={iconName} />
                         ) : (
-                          <FontAwesomeIcon
-                            icon={{ prefix: 'fas', iconName: category.icon }}
-                          />
+                          <Icon iconName={category.icon} />
                         )}
                         <input
                           list="iconNames"
@@ -180,9 +195,7 @@ const Category: FC = () => {
                   ) : (
                     <>
                       <td>
-                        <FontAwesomeIcon
-                          icon={{ prefix: 'fas', iconName: category.icon }}
-                        />
+                        <Icon iconName={category.icon} />
                       </td>
                       <td>{category.name}</td>
                       <td>{category.active ? 'Sim' : 'Não'}</td>
@@ -205,17 +218,13 @@ const Category: FC = () => {
                           : modifyCategory(category.id, 'start');
                       }}
                     >
-                      <FontAwesomeIcon
-                        icon={{ prefix: 'fas', iconName: 'pen-to-square' }}
-                      />
+                      <Icon iconName="pencil" />
                     </button>
                     <button
                       type="button"
                       onClick={() => deleteCategory(category.id)}
                     >
-                      <FontAwesomeIcon
-                        icon={{ prefix: 'fas', iconName: 'trash-can' }}
-                      />
+                      <Icon iconName="trash" />
                     </button>
                   </td>
                 </tr>

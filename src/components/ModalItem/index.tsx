@@ -34,10 +34,15 @@ const ModalItem: FC<IModalItemProps> = ({
         </div>
       </Body>
       <Footer>
-        <Button size="small" onClick={hideModal}>
+        <Button size="small" isResponsive onClick={hideModal}>
           Cancelar
         </Button>
-        <Button color="danger" size="small" onClick={message.onConfirmation}>
+        <Button
+          color="danger"
+          size="small"
+          isResponsive
+          onClick={message.onConfirmation}
+        >
           Confirmar
         </Button>
       </Footer>

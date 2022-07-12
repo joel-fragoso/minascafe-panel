@@ -6,6 +6,7 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   loading?: boolean;
   color?: 'primary' | 'secondary' | 'info' | 'success' | 'danger';
   size?: 'default' | 'small' | 'large';
+  isResponsive?: boolean;
 };
 
 const Button: FC<ButtonProps> = ({
@@ -13,10 +14,17 @@ const Button: FC<ButtonProps> = ({
   loading,
   color,
   size,
+  isResponsive,
   ...rest
 }) => {
   return (
-    <Container type="button" color={color} size={size} {...rest}>
+    <Container
+      type="button"
+      color={color}
+      size={size}
+      isResponsive={isResponsive}
+      {...rest}
+    >
       {loading ? <Loading /> : children}
     </Container>
   );
