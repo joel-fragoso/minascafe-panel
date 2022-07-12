@@ -1,5 +1,4 @@
 import { FC, useEffect } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IToastMessage, useToast } from '../../../hooks/toast';
 import Icon from '../../Icon';
 import { Container } from './styles';
