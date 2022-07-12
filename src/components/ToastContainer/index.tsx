@@ -15,7 +15,7 @@ const ToastContainer: FC<IToastContainerProps> = ({
     keys: message => message.id,
     from: { right: '-120%', opacity: 0, visibility: 'hidden' },
     enter: { right: '0', opacity: 1, visibility: 'visible' },
-    leave: { right: '-120%', opacity: 0, visibility: 'hidden' },
+    leave: { right: '-120%', opacity: 0 },
   });
 
   return (

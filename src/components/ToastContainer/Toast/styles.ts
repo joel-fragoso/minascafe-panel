@@ -54,8 +54,9 @@ export const Container = styled(animated.div)<IContainerProps>`
 
   button {
     position: absolute;
-    top: 1.9rem;
-    right: 1.6rem;
+    top: 0;
+    right: 0;
+    padding: 1.6rem;
     opacity: 0.6;
     border: 0;
     background: transparent;
