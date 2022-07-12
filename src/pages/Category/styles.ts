@@ -1,11 +1,12 @@
-import styled from 'styled-components';
+import { shade } from 'polished';
+import styled, { css } from 'styled-components';
 
 export const Container = styled.div`
   padding: 1.6rem;
   flex: 1;
   color: ${({ theme }) => theme.pallete.primary.main};
 
-  div {
+  > div {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -14,7 +15,7 @@ export const Container = styled.div`
       margin: 0;
     }
 
-    a {
+    > a {
       color: ${({ theme }) => theme.background.default};
       background-color: ${({ theme }) => theme.pallete.primary.main};
       border-radius: 0.8rem;
@@ -26,72 +27,128 @@ export const Container = styled.div`
       }
     }
   }
+`;
 
-  table {
-    margin-top: 1.6rem;
-    width: 100%;
-    border-spacing: 2px 0px;
-    display: table;
+export const Table = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch !important;
+  justify-content: center;
+  margin-top: 1.6rem;
+`;
 
-    td,
-    th {
-      text-align: center;
-      padding: 0.8rem 1.6rem;
-      border: 3px solid ${({ theme }) => theme.common.black};
-    }
+export const Head = styled.div`
+  padding: 1.6rem;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: ${({ theme }) => theme.pallete.secondary?.main};
+`;
 
-    thead {
-      th {
-        padding: 1rem 1rem;
-        font-size: 1.2rem;
-        font-weight: 700;
-      }
-    }
+export const Body = styled.div`
+  font-size: 1.4rem;
 
-    tbody {
-      td {
-        font-size: 1.2rem;
+  > div {
+    flex: 1;
+    padding: 1.6rem;
+    border-radius: 0.8rem;
+    background-color: ${({ theme }) => theme.background.paper};
+    transition: background-color 0.2s linear;
 
-        input {
-          color: ${({ theme }) => theme.pallete.primary.main};
-          width: 100%;
-        }
-      }
-
-      td:first-child {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2.4rem;
-        text-align: center;
-
-        input {
-          margin-left: 2rem;
-        }
-      }
-
-      td:last-child {
-        font-size: 1.6rem;
-        text-align: center;
-
-        button:first-child {
-          margin-right: 2rem;
-          color: limegreen;
-        }
-
-        button:last-child {
-          color: ${({ theme }) => theme.pallete.danger?.main};
-        }
-      }
-    }
-
-    tfoot {
-      text-align: center;
-
-      td {
-        font-size: 1.6rem;
-        font-weight: 700;
-      }
+    &:hover {
+      background-color: ${({ theme }) =>
+        shade(0.2, theme.background.paper as string)};
     }
   }
+`;
+
+export const Row = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &:not(:last-child) {
+    margin-bottom: 0.8rem;
+  }
+`;
+
+interface IColumnProps {
+  size?: string;
+}
+
+export const Column = styled.div<IColumnProps>`
+  text-align: center;
+
+  ${({ size }) =>
+    size
+      ? css`
+          width: ${size};
+        `
+      : css`
+          width: 100%;
+        `};
+
+  input {
+    color: ${({ theme }) => theme.pallete.primary.main};
+    width: 100%;
+  }
+
+  > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    > div {
+      margin-right: 0.8rem;
+    }
+  }
+`;
+
+interface IActionProps {
+  color?: 'primary' | 'secondary' | 'info' | 'success' | 'danger';
+}
+
+const colorVariations = {
+  primary: css`
+    color: ${({ theme }) => theme.pallete.primary.main};
+  `,
+  secondary: css`
+    color: ${({ theme }) => theme.pallete.secondary?.main};
+  `,
+  info: css`
+    color: ${({ theme }) => theme.pallete.info?.main};
+  `,
+  success: css`
+    color: ${({ theme }) => theme.pallete.success?.main};
+  `,
+  danger: css`
+    color: ${({ theme }) => theme.pallete.danger?.main};
+  `,
+};
+
+export const Action = styled.button<IActionProps>`
+  ${({ color }) => colorVariations[color || 'primary']};
+
+  &:not(:last-child) {
+    margin-right: 1.6rem;
+  }
+`;
+
+interface IBadgeProps {
+  active?: boolean;
+}
+
+export const Badge = styled.div<IBadgeProps>`
+  width: 1rem;
+  height: 1rem;
+  border-radius: 0.5rem;
+
+  ${({ active }) =>
+    active
+      ? css`
+          background-color: ${({ theme }) => theme.pallete.success?.main};
+        `
+      : css`
+          background-color: ${({ theme }) => theme.pallete.danger?.main};
+        `};
 `;
