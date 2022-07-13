@@ -1,5 +1,3 @@
-import { IconName } from '@fortawesome/fontawesome-svg-core';
-import { fas } from '@fortawesome/free-solid-svg-icons';
 import {
   FC,
   MutableRefObject,
@@ -9,27 +7,29 @@ import {
   useState,
 } from 'react';
 import { Link } from 'react-router-dom';
-import Icon from '../../components/Icon';
+import { IconName } from '@fortawesome/fontawesome-svg-core';
+import { fas } from '@fortawesome/free-solid-svg-icons';
+import api from '../../services/api';
 import { useModal } from '../../hooks/modal';
 import { useToast } from '../../hooks/toast';
-import MainLayout from '../../layouts/MainLayout';
-import api from '../../services/api';
 import isIconName from '../../utils/getIconsNames';
-import {
-  Action,
-  Badge,
-  Body,
-  Column,
-  Container,
-  Head,
-  Row,
-  Table,
-} from './styles';
+import { dateToString } from '../../utils';
+import MainLayout from '../../layouts/MainLayout';
+import Icon from '../../components/Icon';
+import Table from '../../components/Table';
+import Head from '../../components/Table/Head';
+import Body from '../../components/Table/Body';
+import Row from '../../components/Table/Row';
+import Column from '../../components/Table/Row/Column';
+import ActionButton from '../../components/Table/Row/Column/ActionButton';
+import ActionLink from '../../components/Table/Row/Column/ActionLink';
+import Badge from '../../components/Badge';
+import { Container } from './styles';
 
 export type KeyOfId = keyof MutableRefObject<HTMLInputElement | null>;
 
 export interface IDate {
-  date: string;
+  date: Date;
   timezoneType: string;
   timezone: string;
 }
@@ -145,12 +145,12 @@ const Category: FC = () => {
         <Table>
           <Head>
             <Row>
-              <Column size="40%">Ícone</Column>
+              <Column>Ícone</Column>
               <Column>Nome</Column>
-              <Column size="50%">Ativo</Column>
+              <Column>Ativo</Column>
               <Column>Data de criação</Column>
               <Column>Data de atualização</Column>
-              <Column size="40%">Ações</Column>
+              <Column>Ações</Column>
             </Row>
           </Head>
           <Body>
@@ -159,7 +159,7 @@ const Category: FC = () => {
                 <Row key={category.id}>
                   {category.id === modify ? (
                     <>
-                      <Column size="40%">
+                      <Column>
                         {isIconName(iconName) ? (
                           <Icon iconName={iconName} />
                         ) : (
@@ -183,7 +183,7 @@ const Category: FC = () => {
                           defaultValue={category.name}
                         />
                       </Column>
-                      <Column size="50%">
+                      <Column>
                         <input
                           ref={e => {
                             activeRef[category.id] = e;
@@ -195,11 +195,11 @@ const Category: FC = () => {
                     </>
                   ) : (
                     <>
-                      <Column size="40%">
+                      <Column>
                         <Icon iconName={category.icon} />
                       </Column>
                       <Column>{category.name}</Column>
-                      <Column size="50%">
+                      <Column>
                         {category.active ? (
                           <div>
                             <Badge active />
@@ -214,17 +214,15 @@ const Category: FC = () => {
                       </Column>
                     </>
                   )}
-                  <Column>
-                    {new Date(category.createdAt.date).toLocaleString()}
-                  </Column>
+                  <Column>{dateToString(category.createdAt.date)}</Column>
                   <Column>
                     {category.updatedAt?.date
-                      ? new Date(category.updatedAt.date).toLocaleString()
+                      ? dateToString(category.updatedAt.date)
                       : 'N/D'}
                   </Column>
-                  <Column size="40%">
-                    <Action
-                      type="button"
+                  <Column>
+                    <ActionLink
+                      to="/"
                       onClick={() => {
                         modify === category.id
                           ? modifyCategory(category.id, 'apply')
@@ -232,14 +230,14 @@ const Category: FC = () => {
                       }}
                     >
                       <Icon iconName="pencil" />
-                    </Action>
-                    <Action
+                    </ActionLink>
+                    <ActionButton
                       type="button"
                       color="danger"
                       onClick={() => deleteCategory(category.id)}
                     >
                       <Icon iconName="trash" />
-                    </Action>
+                    </ActionButton>
                   </Column>
                 </Row>
               ))}
