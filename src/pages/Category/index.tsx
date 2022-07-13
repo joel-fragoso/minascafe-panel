@@ -1,6 +1,5 @@
 import { IconName } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   FC,
   MutableRefObject,
@@ -12,6 +11,7 @@ import {
 import { Link } from 'react-router-dom';
 import Icon from '../../components/Icon';
 import { useModal } from '../../hooks/modal';
+import { useToast } from '../../hooks/toast';
 import MainLayout from '../../layouts/MainLayout';
 import api from '../../services/api';
 import isIconName from '../../utils/getIconsNames';
@@ -30,7 +30,6 @@ export type KeyOfId = keyof MutableRefObject<HTMLInputElement | null>;
 
 export interface IDate {
   date: string;
-  timezoneType: string;
   timezone: string;
 }
 
@@ -53,14 +52,23 @@ const Category: FC = () => {
   const [modify, setModify] = useState<string>('');
 
   const { showModal, hideModal } = useModal();
+  const { addToast } = useToast();
 
   const deleteIdRef = useRef<string>('');
 
   const getCategories = useCallback(async () => {
-    const response = await api.get('/categorias');
+    try {
+      const response = await api.get('/categorias');
 
-    setCategories(response.data.data);
-  }, []);
+      setCategories(response.data.data);
+    } catch (error) {
+      addToast({
+        type: 'error',
+        title: 'Erro ao carregar',
+        description: 'Ocorreu um erro ao tentar carregar as categorias',
+      });
+    }
+  }, [addToast]);
 
   const modifyCategory = useCallback(
     async (id: KeyOfId, action: string) => {
@@ -91,12 +99,19 @@ const Category: FC = () => {
   );
 
   const deleteConfirmed = useCallback(async () => {
-    await api.delete(`/categorias/${deleteIdRef.current}`);
+    try {
+      await api.delete(`/categorias/${deleteIdRef.current}`);
+    } catch (error) {
+      addToast({
+        type: 'error',
+        title: 'Erro ao exluir',
+        description: 'Ocorreu um erro ao tentar excluir o registro',
+      });
+    }
 
     getCategories();
-
     hideModal();
-  }, [getCategories, hideModal]);
+  }, [addToast, getCategories, hideModal]);
 
   const deleteCategory = useCallback(
     (id: string) => {
@@ -122,7 +137,7 @@ const Category: FC = () => {
         <div>
           <h1>Categorias</h1>
           <Link to="adicionar">
-            <FontAwesomeIcon icon={{ prefix: 'fas', iconName: 'plus' }} />
+            <Icon iconName="plus" />
             Adicionar
           </Link>
         </div>
@@ -145,11 +160,9 @@ const Category: FC = () => {
                     <>
                       <Column size="40%">
                         {isIconName(iconName) ? (
-                          <FontAwesomeIcon icon={{ prefix: 'fas', iconName }} />
+                          <Icon iconName={iconName} />
                         ) : (
-                          <FontAwesomeIcon
-                            icon={{ prefix: 'fas', iconName: category.icon }}
-                          />
+                          <Icon iconName={category.icon} />
                         )}
                         <input
                           list="iconNames"

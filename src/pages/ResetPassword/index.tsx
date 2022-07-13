@@ -105,7 +105,7 @@ const ResetPassword: FC = () => {
           placeholder="Confirmação de senha"
           iconName="lock"
         />
-        <Button type="submit" disabled={loading} loading={loading}>
+        <Button type="submit" isResponsive disabled={loading} loading={loading}>
           Enviar
         </Button>
         <Link to="/">

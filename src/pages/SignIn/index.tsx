@@ -92,7 +92,7 @@ const SignIn: FC = () => {
           placeholder="Senha"
           iconName="lock"
         />
-        <Button type="submit" disabled={loading} loading={loading}>
+        <Button type="submit" isResponsive disabled={loading} loading={loading}>
           Entrar
         </Button>
         <Link to="/senha/esqueci">Esqueci minha senha</Link>

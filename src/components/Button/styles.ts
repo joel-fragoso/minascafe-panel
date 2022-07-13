@@ -4,6 +4,7 @@ import { lighten, shade } from 'polished';
 interface IContainerProps {
   color?: 'primary' | 'secondary' | 'info' | 'success' | 'danger';
   size?: 'default' | 'small' | 'large';
+  isResponsive?: boolean;
 }
 
 const colorVariations = {
@@ -150,7 +151,6 @@ const sizeVariations = {
 };
 
 export const Container = styled.button<IContainerProps>`
-  width: 100%;
   font-size: 1.6rem;
   font-weight: 700;
   border-radius: 0.8rem;
@@ -158,6 +158,16 @@ export const Container = styled.button<IContainerProps>`
   align-items: center;
   justify-content: center;
   transition: background-color 0.2s linear;
+
+  ${({ isResponsive }) =>
+    isResponsive
+      ? css`
+          width: 100%;
+        `
+      : css`
+          width: unset;
+          align-self: flex-start;
+        `}
 
   ${({ color }) => colorVariations[color || 'primary']};
 

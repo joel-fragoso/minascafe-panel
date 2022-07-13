@@ -1,5 +1,4 @@
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconName } from '@fortawesome/fontawesome-svg-core';
 import { Link } from 'react-router-dom';
 import api from '../../services/api';
@@ -7,6 +6,8 @@ import { useModal } from '../../hooks/modal';
 import MainLayout from '../../layouts/MainLayout';
 import { ICategoryProps, IDate, KeyOfId } from '../Category';
 import { Container } from './styles';
+import { useToast } from '../../hooks/toast';
+import Icon from '../../components/Icon';
 
 interface IProductProps {
   category: ICategoryProps;
@@ -29,20 +30,37 @@ const Product: FC = () => {
   const [modify, setModify] = useState<string>('');
 
   const { showModal, hideModal } = useModal();
+  const { addToast } = useToast();
 
   const deleteIdRef = useRef<string>('');
 
   const getProducts = useCallback(async () => {
-    const response = await api.get('/produtos');
+    try {
+      const response = await api.get('/produtos');
 
-    setProducts(response.data.data);
-  }, []);
+      setProducts(response.data.data);
+    } catch (error) {
+      addToast({
+        type: 'error',
+        title: 'Erro ao carregar',
+        description: 'Ocorreu um erro ao tentar carregar os produtos',
+      });
+    }
+  }, [addToast]);
 
   const getCategories = useCallback(async () => {
-    const response = await api.get('/categorias');
+    try {
+      const response = await api.get('/categorias');
 
-    setCategories(response.data.data);
-  }, []);
+      setCategories(response.data.data);
+    } catch (error) {
+      addToast({
+        type: 'error',
+        title: 'Erro ao carregar',
+        description: 'Ocorreu um erro ao tentar carregar as categorias',
+      });
+    }
+  }, [addToast]);
 
   const modifyProduct = useCallback(
     async (id: KeyOfId, action: string) => {
@@ -75,12 +93,19 @@ const Product: FC = () => {
   );
 
   const deleteConfirmed = useCallback(async () => {
-    await api.delete(`/produtos/${deleteIdRef.current}`);
+    try {
+      await api.delete(`/produtos/${deleteIdRef.current}`);
+    } catch (error) {
+      addToast({
+        type: 'error',
+        title: 'Erro ao excluir',
+        description: 'Ocorreu um erro ao tentar excluir o registro',
+      });
+    }
 
     getProducts();
-
     hideModal();
-  }, [getProducts, hideModal]);
+  }, [addToast, getProducts, hideModal]);
 
   const deleteProduct = useCallback(
     (id: string) => {
@@ -107,15 +132,15 @@ const Product: FC = () => {
         <div>
           <h1>Produtos</h1>
           <Link to="adicionar">
-            <FontAwesomeIcon icon={{ prefix: 'fas', iconName: 'plus' }} />
+            <Icon iconName="plus" />
             Adicionar
           </Link>
         </div>
         <table>
           <thead>
             <tr>
-              <th>Categoria</th>
               <th>Produtos</th>
+              <th>Categoria</th>
               <th>Preço</th>
               <th>Ativo</th>
               <th>Data Criação</th>
@@ -130,12 +155,16 @@ const Product: FC = () => {
                   {product.id === modify ? (
                     <>
                       <td>
-                        <FontAwesomeIcon
-                          icon={{
-                            prefix: 'fas',
-                            iconName: iconName || product.category.icon,
+                        <input
+                          type="text"
+                          ref={e => {
+                            nameRef[product.id] = e;
                           }}
+                          defaultValue={product.name}
                         />
+                      </td>
+                      <td>
+                        <Icon iconName={iconName || product.category.icon} />
                         <select
                           ref={e => {
                             categoryRef[product.id] = e;
@@ -158,15 +187,6 @@ const Product: FC = () => {
                               />
                             ))}
                         </select>
-                      </td>
-                      <td>
-                        <input
-                          type="text"
-                          ref={e => {
-                            nameRef[product.id] = e;
-                          }}
-                          defaultValue={product.name}
-                        />
                       </td>
                       <td>
                         <input
@@ -198,16 +218,11 @@ const Product: FC = () => {
                     </>
                   ) : (
                     <>
+                      <td>{product.name}</td>
                       <td>
-                        <FontAwesomeIcon
-                          icon={{
-                            prefix: 'fas',
-                            iconName: product.category.icon,
-                          }}
-                        />
+                        <Icon iconName={product.category.icon} />
                         {product.category.name}
                       </td>
-                      <td>{product.name}</td>
                       <td>{product.price}</td>
                       <td>
                         <input
@@ -235,17 +250,13 @@ const Product: FC = () => {
                           : modifyProduct(product.id, 'start');
                       }}
                     >
-                      <FontAwesomeIcon
-                        icon={{ prefix: 'fas', iconName: 'pen-to-square' }}
-                      />
+                      <Icon iconName="pencil" />
                     </button>
                     <button
                       type="button"
                       onClick={() => deleteProduct(product.id)}
                     >
-                      <FontAwesomeIcon
-                        icon={{ prefix: 'fas', iconName: 'trash-can' }}
-                      />
+                      <Icon iconName="trash" />
                     </button>
                   </td>
                 </tr>

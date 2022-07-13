@@ -82,7 +82,12 @@ const FormCategory: FC = () => {
           />
           <Input name="name" type="text" placeholder="Nome" />
           <Switch name="active" label="Ativo:" defaultChecked />
-          <Button type="submit" disabled={loading} loading={loading}>
+          <Button
+            type="submit"
+            isResponsive
+            disabled={loading}
+            loading={loading}
+          >
             Salvar
           </Button>
         </Form>

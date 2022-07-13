@@ -89,7 +89,7 @@ const ForgotPassword: FC = () => {
           placeholder="Usuário"
           iconName="user"
         />
-        <Button type="submit" disabled={loading} loading={loading}>
+        <Button type="submit" isResponsive disabled={loading} loading={loading}>
           Enviar
         </Button>
         <Link to="/">
