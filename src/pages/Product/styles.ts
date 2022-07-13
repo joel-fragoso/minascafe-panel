@@ -49,7 +49,7 @@ export const Container = styled.div`
 
     tbody {
       td {
-        font-size: 1.2rem;
+        font-size: 1.4rem;
 
         input,
         select {
@@ -58,8 +58,7 @@ export const Container = styled.div`
         }
       }
 
-      td:first-child {
-        font-size: 2.4rem;
+      td:nth-child(2) {
         text-align: center;
 
         input,
@@ -69,12 +68,11 @@ export const Container = styled.div`
       }
 
       td:last-child {
-        font-size: 1.6rem;
         text-align: center;
 
         button:first-child {
+          color: ${({ theme }) => theme.pallete.primary.main};
           margin-right: 2rem;
-          color: limegreen;
         }
 
         button:last-child {

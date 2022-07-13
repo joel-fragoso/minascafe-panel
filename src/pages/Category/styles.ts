@@ -15,10 +15,14 @@ export const Container = styled.div`
     }
 
     a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
       color: ${({ theme }) => theme.background.default};
       background-color: ${({ theme }) => theme.pallete.primary.main};
       border-radius: 0.8rem;
-      padding: 0.8rem 1.2rem;
+      height: 4.2rem;
+      padding: 0 1.6rem;
       font-weight: 700;
 
       svg {
@@ -50,7 +54,7 @@ export const Container = styled.div`
 
     tbody {
       td {
-        font-size: 1.2rem;
+        font-size: 1.4rem;
 
         input {
           color: ${({ theme }) => theme.pallete.primary.main};
@@ -62,7 +66,6 @@ export const Container = styled.div`
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 2.4rem;
         text-align: center;
 
         input {
@@ -71,12 +74,11 @@ export const Container = styled.div`
       }
 
       td:last-child {
-        font-size: 1.6rem;
         text-align: center;
 
         button:first-child {
+          color: ${({ theme }) => theme.pallete.primary.main};
           margin-right: 2rem;
-          color: limegreen;
         }
 
         button:last-child {
