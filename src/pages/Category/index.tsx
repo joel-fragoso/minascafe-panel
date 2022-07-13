@@ -1,3 +1,5 @@
+import { IconName } from '@fortawesome/fontawesome-svg-core';
+import { fas } from '@fortawesome/free-solid-svg-icons';
 import {
   FC,
   MutableRefObject,
@@ -7,15 +9,22 @@ import {
   useState,
 } from 'react';
 import { Link } from 'react-router-dom';
-import { IconName } from '@fortawesome/fontawesome-svg-core';
-import { fas } from '@fortawesome/free-solid-svg-icons';
-import api from '../../services/api';
-import { useModal } from '../../hooks/modal';
-import isIconName from '../../utils/getIconsNames';
-import MainLayout from '../../layouts/MainLayout';
-import { Container } from './styles';
 import Icon from '../../components/Icon';
+import { useModal } from '../../hooks/modal';
 import { useToast } from '../../hooks/toast';
+import MainLayout from '../../layouts/MainLayout';
+import api from '../../services/api';
+import isIconName from '../../utils/getIconsNames';
+import {
+  Action,
+  Badge,
+  Body,
+  Column,
+  Container,
+  Head,
+  Row,
+  Table,
+} from './styles';
 
 export type KeyOfId = keyof MutableRefObject<HTMLInputElement | null>;
 
@@ -30,7 +39,7 @@ export interface ICategoryProps {
   name: string;
   icon: IconName;
   active: boolean;
-  createdAt?: IDate;
+  createdAt: IDate;
   updatedAt?: IDate;
 }
 
@@ -133,24 +142,24 @@ const Category: FC = () => {
             Adicionar
           </Link>
         </div>
-        <table>
-          <thead>
-            <tr>
-              <th>Icon</th>
-              <th>Categorias</th>
-              <th>Ativo</th>
-              <th>Data Criação</th>
-              <th>Data Atualizado</th>
-              <th>Opções</th>
-            </tr>
-          </thead>
-          <tbody>
+        <Table>
+          <Head>
+            <Row>
+              <Column size="40%">Ícone</Column>
+              <Column>Nome</Column>
+              <Column size="50%">Ativo</Column>
+              <Column>Data de criação</Column>
+              <Column>Data de atualização</Column>
+              <Column size="40%">Ações</Column>
+            </Row>
+          </Head>
+          <Body>
             {categories &&
               categories.map(category => (
-                <tr key={category.id}>
+                <Row key={category.id}>
                   {category.id === modify ? (
                     <>
-                      <td>
+                      <Column size="40%">
                         {isIconName(iconName) ? (
                           <Icon iconName={iconName} />
                         ) : (
@@ -164,8 +173,8 @@ const Category: FC = () => {
                           defaultValue={category.icon}
                           onChange={e => setIconName(e.target.value)}
                         />
-                      </td>
-                      <td>
+                      </Column>
+                      <Column>
                         <input
                           type="text"
                           ref={e => {
@@ -173,8 +182,8 @@ const Category: FC = () => {
                           }}
                           defaultValue={category.name}
                         />
-                      </td>
-                      <td>
+                      </Column>
+                      <Column size="50%">
                         <input
                           ref={e => {
                             activeRef[category.id] = e;
@@ -182,35 +191,39 @@ const Category: FC = () => {
                           type="checkbox"
                           defaultChecked={category.active}
                         />
-                      </td>
-                      <td>
-                        {category.createdAt?.date &&
-                          new Date(category.createdAt.date).toLocaleString()}
-                      </td>
-                      <td>
-                        {category.updatedAt?.date &&
-                          new Date(category.updatedAt.date).toLocaleString()}
-                      </td>
+                      </Column>
                     </>
                   ) : (
                     <>
-                      <td>
+                      <Column size="40%">
                         <Icon iconName={category.icon} />
-                      </td>
-                      <td>{category.name}</td>
-                      <td>{category.active ? 'Sim' : 'Não'}</td>
-                      <td>
-                        {category.createdAt?.date &&
-                          new Date(category.createdAt.date).toLocaleString()}
-                      </td>
-                      <td>
-                        {category.updatedAt?.date &&
-                          new Date(category.updatedAt.date).toLocaleString()}
-                      </td>
+                      </Column>
+                      <Column>{category.name}</Column>
+                      <Column size="50%">
+                        {category.active ? (
+                          <div>
+                            <Badge active />
+                            Sim
+                          </div>
+                        ) : (
+                          <div>
+                            <Badge />
+                            Não
+                          </div>
+                        )}
+                      </Column>
                     </>
                   )}
-                  <td>
-                    <button
+                  <Column>
+                    {new Date(category.createdAt.date).toLocaleString()}
+                  </Column>
+                  <Column>
+                    {category.updatedAt?.date
+                      ? new Date(category.updatedAt.date).toLocaleString()
+                      : 'N/D'}
+                  </Column>
+                  <Column size="40%">
+                    <Action
                       type="button"
                       onClick={() => {
                         modify === category.id
@@ -219,18 +232,19 @@ const Category: FC = () => {
                       }}
                     >
                       <Icon iconName="pencil" />
-                    </button>
-                    <button
+                    </Action>
+                    <Action
                       type="button"
+                      color="danger"
                       onClick={() => deleteCategory(category.id)}
                     >
                       <Icon iconName="trash" />
-                    </button>
-                  </td>
-                </tr>
+                    </Action>
+                  </Column>
+                </Row>
               ))}
-          </tbody>
-        </table>
+          </Body>
+        </Table>
         <datalist id="iconNames">
           {iconNameList.map(fasIcon => (
             <option
