@@ -1,13 +1,22 @@
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
-import { IconName } from '@fortawesome/fontawesome-svg-core';
 import { Link } from 'react-router-dom';
+import { IconName } from '@fortawesome/fontawesome-svg-core';
 import api from '../../services/api';
-import { useModal } from '../../hooks/modal';
-import MainLayout from '../../layouts/MainLayout';
 import { ICategoryProps, IDate, KeyOfId } from '../Category';
-import { Container } from './styles';
+import { useModal } from '../../hooks/modal';
 import { useToast } from '../../hooks/toast';
+import { dateToString, formatterCurrency } from '../../utils';
+import MainLayout from '../../layouts/MainLayout';
 import Icon from '../../components/Icon';
+import Table from '../../components/Table';
+import Head from '../../components/Table/Head';
+import Body from '../../components/Table/Body';
+import Row from '../../components/Table/Row';
+import Column from '../../components/Table/Row/Column';
+import ActionLink from '../../components/Table/Row/Column/ActionLink';
+import ActionButton from '../../components/Table/Row/Column/ActionButton';
+import Badge from '../../components/Badge';
+import { Container } from './styles';
 
 interface IProductProps {
   category: ICategoryProps;
@@ -15,7 +24,7 @@ interface IProductProps {
   name: string;
   price: number;
   active: boolean;
-  createdAt?: IDate;
+  createdAt: IDate;
   updatedAt?: IDate;
 }
 
@@ -136,25 +145,25 @@ const Product: FC = () => {
             Adicionar
           </Link>
         </div>
-        <table>
-          <thead>
-            <tr>
-              <th>Produtos</th>
-              <th>Categoria</th>
-              <th>Preço</th>
-              <th>Ativo</th>
-              <th>Data Criação</th>
-              <th>Data Atualizado</th>
-              <th>Opções</th>
-            </tr>
-          </thead>
-          <tbody>
+        <Table>
+          <Head>
+            <Row>
+              <Column>Nome</Column>
+              <Column>Categoria</Column>
+              <Column>Preço</Column>
+              <Column>Ativo</Column>
+              <Column>Data de criação</Column>
+              <Column>Data de atualização</Column>
+              <Column>Ações</Column>
+            </Row>
+          </Head>
+          <Body>
             {products &&
               products.map((product: IProductProps) => (
-                <tr key={product.id}>
+                <Row key={product.id}>
                   {product.id === modify ? (
                     <>
-                      <td>
+                      <Column>
                         <input
                           type="text"
                           ref={e => {
@@ -162,8 +171,8 @@ const Product: FC = () => {
                           }}
                           defaultValue={product.name}
                         />
-                      </td>
-                      <td>
+                      </Column>
+                      <Column>
                         <Icon iconName={iconName || product.category.icon} />
                         <select
                           ref={e => {
@@ -187,8 +196,8 @@ const Product: FC = () => {
                               />
                             ))}
                         </select>
-                      </td>
-                      <td>
+                      </Column>
+                      <Column>
                         <input
                           type="text"
                           ref={e => {
@@ -196,8 +205,8 @@ const Product: FC = () => {
                           }}
                           defaultValue={product.price}
                         />
-                      </td>
-                      <td>
+                      </Column>
+                      <Column>
                         <input
                           ref={e => {
                             activeRef[product.id] = e;
@@ -205,45 +214,40 @@ const Product: FC = () => {
                           type="checkbox"
                           defaultChecked={product.active}
                         />
-                      </td>
-
-                      <td>
-                        {product.createdAt?.date &&
-                          new Date(product.createdAt.date).toLocaleString()}
-                      </td>
-                      <td>
-                        {product.updatedAt?.date &&
-                          new Date(product.updatedAt.date).toLocaleString()}
-                      </td>
+                      </Column>
                     </>
                   ) : (
                     <>
-                      <td>{product.name}</td>
-                      <td>
-                        <Icon iconName={product.category.icon} />
-                        {product.category.name}
-                      </td>
-                      <td>{product.price}</td>
-                      <td>
-                        <input
-                          type="checkbox"
-                          disabled
-                          defaultChecked={product.active}
-                        />
-                      </td>
-                      <td>
-                        {product.createdAt?.date &&
-                          new Date(product.createdAt.date).toLocaleString()}
-                      </td>
-                      <td>
-                        {product.updatedAt?.date &&
-                          new Date(product.updatedAt.date).toLocaleString()}
-                      </td>
+                      <Column>{product.name}</Column>
+                      <Column>{product.category.name}</Column>
+                      <Column>{formatterCurrency(product.price)}</Column>
+                      <Column>
+                        {product.active ? (
+                          <div>
+                            <Badge active />
+                            Sim
+                          </div>
+                        ) : (
+                          <div>
+                            <Badge />
+                            Não
+                          </div>
+                        )}
+                      </Column>
                     </>
                   )}
-                  <td>
-                    <button
-                      type="button"
+                  <Column>
+                    {product.createdAt?.date &&
+                      dateToString(product.createdAt.date)}
+                  </Column>
+                  <Column>
+                    {product.updatedAt?.date
+                      ? dateToString(product.updatedAt.date)
+                      : 'N/D'}
+                  </Column>
+                  <Column>
+                    <ActionLink
+                      to="/"
                       onClick={() => {
                         modify === product.id
                           ? modifyProduct(product.id, 'apply')
@@ -251,18 +255,19 @@ const Product: FC = () => {
                       }}
                     >
                       <Icon iconName="pencil" />
-                    </button>
-                    <button
+                    </ActionLink>
+                    <ActionButton
+                      color="danger"
                       type="button"
                       onClick={() => deleteProduct(product.id)}
                     >
                       <Icon iconName="trash" />
-                    </button>
-                  </td>
-                </tr>
+                    </ActionButton>
+                  </Column>
+                </Row>
               ))}
-          </tbody>
-        </table>
+          </Body>
+        </Table>
       </Container>
     </MainLayout>
   );
