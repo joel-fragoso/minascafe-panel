@@ -30,6 +30,7 @@ export type KeyOfId = keyof MutableRefObject<HTMLInputElement | null>;
 
 export interface IDate {
   date: string;
+  timezoneType: string;
   timezone: string;
 }
 
