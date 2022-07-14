@@ -1,5 +1,5 @@
-import { shade } from 'polished';
 import styled from 'styled-components';
+import { shade } from 'polished';
 
 export const Container = styled.div`
   padding: 3rem;
@@ -9,13 +9,6 @@ export const Container = styled.div`
   form {
     display: flex;
     flex-direction: column;
-
-    label {
-      padding: 0.8rem 1.2rem;
-      color: ${({ theme }) => theme.pallete.primary.main};
-      align-self: flex-start;
-      margin-right: 1rem;
-    }
 
     a {
       color: ${({ theme }) => theme.pallete.secondary?.main};

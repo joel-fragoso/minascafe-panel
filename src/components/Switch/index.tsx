@@ -8,16 +8,18 @@ import {
 } from 'react';
 import { useField } from '@unform/core';
 import Icon from '../Icon';
-import { Container, Error } from './styles';
+import { Container, Error, Group } from './styles';
 
 interface ICheckboxProps extends InputHTMLAttributes<HTMLInputElement> {
   name: string;
-  label: string;
+  value?: string;
+  label?: string;
   containerStyle?: object;
 }
 
 const Switch: FC<ICheckboxProps> = ({
   name,
+  value,
   label,
   containerStyle = {},
   ...rest
@@ -26,21 +28,28 @@ const Switch: FC<ICheckboxProps> = ({
 
   const [isFocused, setIsFocused] = useState(false);
   const [isFilled, setIsFilled] = useState(false);
-  const [isChecked, setIsChecked] = useState(rest.defaultChecked || false);
 
   const { fieldName, defaultValue, error, registerField } = useField(name);
+
+  const defaultChecked = defaultValue === value;
 
   useEffect(() => {
     registerField({
       name: fieldName,
-      ref: checkboxRef.current,
-      path: 'checked',
+      ref: checkboxRef,
+      getValue: ref => {
+        return ref.current.checked;
+      },
+      clearValue: ref => {
+        const clearRef = ref;
+        clearRef.current.checked = defaultChecked;
+      },
+      setValue: (ref, valor) => {
+        const setRef = ref;
+        setRef.current.checked = valor;
+      },
     });
-  }, [fieldName, registerField]);
-
-  const handleChecked = useCallback(() => {
-    setIsChecked(!isChecked);
-  }, [isChecked]);
+  }, [defaultChecked, fieldName, registerField]);
 
   const handleCheckboxFocus = useCallback(() => {
     setIsFocused(true);
@@ -58,26 +67,23 @@ const Switch: FC<ICheckboxProps> = ({
       isErrored={!!error}
       isFocused={isFocused}
       isFilled={isFilled}
-      isChecked={isChecked}
       data-testid="switch-container"
     >
-      <label htmlFor={name}>
-        {label}
-        <div>
-          <Icon iconName={isChecked ? 'toggle-on' : 'toggle-off'} />
-        </div>
-      </label>
-      <input
-        id={name}
-        name={name}
-        type="checkbox"
-        onChange={handleChecked}
-        onFocus={handleCheckboxFocus}
-        onBlur={handleCheckboxBlur}
-        defaultValue={defaultValue}
-        ref={checkboxRef}
-        {...rest}
-      />
+      <Group label={label}>
+        <span>{label}</span>
+        <input
+          id={name}
+          name={name}
+          value={value}
+          type="checkbox"
+          onFocus={handleCheckboxFocus}
+          onBlur={handleCheckboxBlur}
+          defaultChecked={defaultChecked}
+          ref={checkboxRef}
+          {...rest}
+        />
+        <label htmlFor={name}>{null}</label>
+      </Group>
       {error && (
         <Error title={error}>
           <Icon iconName="circle-exclamation" />

@@ -33,7 +33,7 @@ export const Container = styled.div`
       }
 
       svg {
-        padding-right: 1rem;
+        padding-right: 0.8rem;
       }
     }
   }

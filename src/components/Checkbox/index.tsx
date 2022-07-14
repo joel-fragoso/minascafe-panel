@@ -12,12 +12,14 @@ import { Container, Error } from './styles';
 
 interface ICheckboxProps extends InputHTMLAttributes<HTMLInputElement> {
   name: string;
+  value?: string;
   label: string;
   containerStyle?: object;
 }
 
 const Checkbox: FC<ICheckboxProps> = ({
   name,
+  value,
   label,
   containerStyle = {},
   ...rest
@@ -29,13 +31,25 @@ const Checkbox: FC<ICheckboxProps> = ({
 
   const { fieldName, defaultValue, error, registerField } = useField(name);
 
+  const defaultChecked = defaultValue === value;
+
   useEffect(() => {
     registerField({
       name: fieldName,
-      ref: checkboxRef.current,
-      path: 'checked',
+      ref: checkboxRef,
+      getValue: ref => {
+        return ref.current.checked;
+      },
+      clearValue: ref => {
+        const clearRef = ref;
+        clearRef.current.checked = defaultChecked;
+      },
+      setValue: (ref, valor) => {
+        const setRef = ref;
+        setRef.current.checked = valor;
+      },
     });
-  }, [fieldName, registerField]);
+  }, [defaultChecked, fieldName, registerField]);
 
   const handleCheckboxFocus = useCallback(() => {
     setIsFocused(true);
@@ -59,10 +73,11 @@ const Checkbox: FC<ICheckboxProps> = ({
       <input
         id={name}
         name={name}
+        value={value}
         type="checkbox"
         onFocus={handleCheckboxFocus}
         onBlur={handleCheckboxBlur}
-        defaultValue={defaultValue}
+        defaultChecked={defaultChecked}
         ref={checkboxRef}
         {...rest}
       />

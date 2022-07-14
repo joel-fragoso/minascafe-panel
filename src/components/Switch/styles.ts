@@ -1,39 +1,48 @@
 import styled, { css } from 'styled-components';
-import { darken } from 'polished';
 import Tooltip from '../Tooltip';
 
 interface ContainerProps {
   isFocused: boolean;
   isFilled: boolean;
   isErrored: boolean;
-  isChecked: boolean;
 }
 
 export const Container = styled.div<ContainerProps>`
-  background: ${({ theme }) => darken(0.025, theme.background.default)};
-  border-radius: 0.8rem;
-  border: 2px solid ${({ theme }) => darken(0.025, theme.background.default)};
-  padding: 1.6rem;
   width: 100%;
   color: ${({ theme }) => theme.pallete.secondary?.main};
   display: flex;
 
-  label {
-    padding-right: 1rem;
-    display: flex;
-    flex: 1;
-    align-items: center;
-    justify-content: space-between;
+  input {
+    display: none;
 
-    svg {
-      font-size: 2.4rem;
-      vertical-align: bottom;
-      cursor: pointer;
+    &:checked + label {
+      background-color: ${({ theme }) => theme.pallete.success?.main};
+    }
+
+    &:checked + label::before {
+      right: 0.2rem;
     }
   }
 
-  input {
-    visibility: hidden;
+  label {
+    width: 4.2rem;
+    height: 2.8rem;
+    display: flex;
+    background-color: ${({ theme }) => theme.pallete.danger?.main};
+    border-radius: 0.8rem;
+    position: relative;
+    padding: 0.2rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+
+    &::before {
+      content: '';
+      width: 2.4rem;
+      height: 2.4rem;
+      position: absolute;
+      background-color: ${({ theme }) => theme.background.default};
+      border-radius: 0.8rem;
+    }
   }
 
   &:not(:last-child) {
@@ -58,14 +67,24 @@ export const Container = styled.div<ContainerProps>`
     css`
       color: ${({ theme }) => theme.pallete.primary.main};
     `}
+`;
 
-  ${props =>
-    props.isChecked &&
-    css`
-      svg {
-        color: green;
-      }
-    `}
+interface IGroupProps {
+  label?: string;
+}
+
+export const Group = styled.div<IGroupProps>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  > span {
+    ${({ label }) =>
+      label &&
+      css`
+        margin-right: 0.8rem;
+      `}
+  }
 `;
 
 export const Error = styled(Tooltip)`

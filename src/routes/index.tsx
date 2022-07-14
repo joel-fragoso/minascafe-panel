@@ -45,6 +45,14 @@ const Routes: FC = () => {
         }
       />
       <Route
+        path="categorias/editar/:id"
+        element={
+          <PrivateRoute>
+            <FormCategory />
+          </PrivateRoute>
+        }
+      />
+      <Route
         path="produtos"
         element={
           <PrivateRoute>
@@ -54,6 +62,14 @@ const Routes: FC = () => {
       />
       <Route
         path="produtos/adicionar"
+        element={
+          <PrivateRoute>
+            <FormProduct />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="produtos/editar/:id"
         element={
           <PrivateRoute>
             <FormProduct />

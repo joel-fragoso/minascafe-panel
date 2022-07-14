@@ -1,16 +1,17 @@
-import { FC, useCallback, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { FC, useCallback, useEffect, useRef, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import * as Yup from 'yup';
-import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
+import { Form } from '@unform/web';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import api from '../../services/api';
 import { useLoading } from '../../hooks/loading';
+import { useToast } from '../../hooks/toast';
 import isIconName from '../../utils/getIconsNames';
 import { Errors } from '../../utils/getValidationErrors';
 import MainLayout from '../../layouts/MainLayout';
-import Input from '../../components/Input';
 import Button from '../../components/Button';
+import Input from '../../components/Input';
 import Switch from '../../components/Switch';
 import { Container } from './style';
 
@@ -24,8 +25,36 @@ const FormCategory: FC = () => {
   const [iconName, setIconName] = useState<string | undefined>(undefined);
   const formRef = useRef<FormHandles>(null);
   const iconNameList = [...new Set(Object.values(fas))];
+
+  const { addToast } = useToast();
   const { loading, setLoading } = useLoading();
+  const { id } = useParams();
+
   const navigate = useNavigate();
+
+  useEffect(() => {
+    async function getCategory() {
+      try {
+        setLoading(true);
+
+        const response = await api.get(`/categorias/${id}`);
+
+        formRef.current?.setData(response.data.data);
+      } catch {
+        addToast({
+          type: 'error',
+          title: 'Erro ao buscar categoria',
+          description: `Ocorreu um erro ao tentar buscar a categoria ${id}, tente novamente`,
+        });
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    if (id) {
+      getCategory();
+    }
+  }, [addToast, id, setLoading]);
 
   const handleSubmit = useCallback(
     async (data: ICategoryFormData) => {
@@ -45,10 +74,17 @@ const FormCategory: FC = () => {
           abortEarly: false,
         });
 
-        await api.post('/categorias', {
-          ...data,
-          active: data.active ?? false,
-        });
+        if (id) {
+          await api.put(`/categorias/${id}`, {
+            ...data,
+            active: data.active ?? false,
+          });
+        } else {
+          await api.post('/categorias', {
+            ...data,
+            active: data.active ?? false,
+          });
+        }
 
         navigate('/categorias');
       } catch (err) {
@@ -65,7 +101,7 @@ const FormCategory: FC = () => {
         setLoading(false);
       }
     },
-    [setLoading, navigate],
+    [setLoading, id, navigate],
   );
 
   return (
@@ -81,7 +117,7 @@ const FormCategory: FC = () => {
             iconName={isIconName(iconName) ? iconName : undefined}
           />
           <Input name="name" type="text" placeholder="Nome" />
-          <Switch name="active" label="Ativo:" defaultChecked />
+          <Switch name="active" label="Ativo:" />
           <Button
             type="submit"
             isResponsive
