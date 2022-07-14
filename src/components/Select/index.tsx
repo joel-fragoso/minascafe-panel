@@ -20,12 +20,14 @@ interface IOption {
 interface ISelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   name: string;
   options: Array<IOption>;
+  iconAlign?: 'left' | 'right';
   containerStyle?: object;
 }
 
 const Select: FC<ISelectProps> = ({
   name,
   options,
+  iconAlign,
   containerStyle = {},
   ...rest
 }) => {
@@ -68,7 +70,9 @@ const Select: FC<ISelectProps> = ({
       isFilled={isFilled}
       data-testid="select-container"
     >
-      {iconName && <Icon iconName={iconName} fixedWidth />}
+      {iconName && iconAlign !== 'right' && (
+        <Icon iconName={iconName} fixedWidth />
+      )}
       <select
         onFocus={handleInputFocus}
         onBlur={handleInputBlur}
@@ -87,6 +91,9 @@ const Select: FC<ISelectProps> = ({
           </option>
         ))}
       </select>
+      {iconName && iconAlign === 'right' && (
+        <Icon iconName={iconName} fixedWidth />
+      )}
       {error && (
         <Error title={error}>
           <Icon iconName="circle-exclamation" />
