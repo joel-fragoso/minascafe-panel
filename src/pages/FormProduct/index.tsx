@@ -92,7 +92,9 @@ const FormProduct: FC = () => {
         const schema = Yup.object().shape({
           categoryId: Yup.string().required('Categoria obrigatório'),
           name: Yup.string().required('Nome obrigatório'),
-          price: Yup.string().required('Preço obrigatório'),
+          price: Yup.number()
+            .typeError('Precisa ser um número')
+            .required('Preço obrigatório'),
         });
 
         await schema.validate(data, {
