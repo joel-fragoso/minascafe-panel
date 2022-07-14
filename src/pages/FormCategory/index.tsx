@@ -79,6 +79,7 @@ const FormCategory: FC = () => {
             placeholder="Nome ícone"
             onChange={e => setIconName(e.target.value)}
             iconName={isIconName(iconName) ? iconName : undefined}
+            iconAlign="right"
           />
           <Input name="name" type="text" placeholder="Nome" />
           <Switch name="active" label="Ativo:" defaultChecked />
