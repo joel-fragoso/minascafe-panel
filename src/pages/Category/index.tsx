@@ -8,11 +8,9 @@ import {
 } from 'react';
 import { Link } from 'react-router-dom';
 import { IconName } from '@fortawesome/fontawesome-svg-core';
-import { fas } from '@fortawesome/free-solid-svg-icons';
 import api from '../../services/api';
 import { useModal } from '../../hooks/modal';
 import { useToast } from '../../hooks/toast';
-import isIconName from '../../utils/getIconsNames';
 import { dateToString } from '../../utils';
 import MainLayout from '../../layouts/MainLayout';
 import Icon from '../../components/Icon';
@@ -44,13 +42,7 @@ export interface ICategoryProps {
 }
 
 const Category: FC = () => {
-  const iconNameList = [...new Set(Object.values(fas))];
   const [categories, setCategories] = useState<ICategoryProps[]>([]);
-  const [iconName, setIconName] = useState<string | undefined>(undefined);
-  const nameRef = useRef<HTMLInputElement | null>(null);
-  const iconRef = useRef<HTMLInputElement | null>(null);
-  const activeRef = useRef<HTMLInputElement | null>(null);
-  const [modify, setModify] = useState<string>('');
 
   const { showModal, hideModal } = useModal();
   const { addToast } = useToast();
@@ -70,34 +62,6 @@ const Category: FC = () => {
       });
     }
   }, [addToast]);
-
-  const modifyCategory = useCallback(
-    async (id: KeyOfId, action: string) => {
-      if (action === 'start') {
-        setModify(id);
-      }
-
-      if (action === 'apply') {
-        const icon = iconRef[id]?.value;
-        const name = nameRef[id]?.value;
-        const active = activeRef[id]?.checked;
-
-        if (name && isIconName(icon)) {
-          const formData = {
-            name,
-            icon,
-            active,
-          };
-
-          await api.put(`/categorias/${id}`, formData);
-          await getCategories();
-        }
-
-        setModify('');
-      }
-    },
-    [getCategories],
-  );
 
   const deleteConfirmed = useCallback(async () => {
     try {
@@ -157,63 +121,23 @@ const Category: FC = () => {
             {categories &&
               categories.map(category => (
                 <Row key={category.id}>
-                  {category.id === modify ? (
-                    <>
-                      <Column>
-                        {isIconName(iconName) ? (
-                          <Icon iconName={iconName} />
-                        ) : (
-                          <Icon iconName={category.icon} />
-                        )}
-                        <input
-                          list="iconNames"
-                          ref={e => {
-                            iconRef[category.id] = e;
-                          }}
-                          defaultValue={category.icon}
-                          onChange={e => setIconName(e.target.value)}
-                        />
-                      </Column>
-                      <Column>
-                        <input
-                          type="text"
-                          ref={e => {
-                            nameRef[category.id] = e;
-                          }}
-                          defaultValue={category.name}
-                        />
-                      </Column>
-                      <Column>
-                        <input
-                          ref={e => {
-                            activeRef[category.id] = e;
-                          }}
-                          type="checkbox"
-                          defaultChecked={category.active}
-                        />
-                      </Column>
-                    </>
-                  ) : (
-                    <>
-                      <Column>
-                        <Icon iconName={category.icon} />
-                      </Column>
-                      <Column>{category.name}</Column>
-                      <Column>
-                        {category.active ? (
-                          <div>
-                            <Badge active />
-                            Sim
-                          </div>
-                        ) : (
-                          <div>
-                            <Badge />
-                            Não
-                          </div>
-                        )}
-                      </Column>
-                    </>
-                  )}
+                  <Column>
+                    <Icon iconName={category.icon} />
+                  </Column>
+                  <Column>{category.name}</Column>
+                  <Column>
+                    {category.active ? (
+                      <div>
+                        <Badge active />
+                        Sim
+                      </div>
+                    ) : (
+                      <div>
+                        <Badge />
+                        Não
+                      </div>
+                    )}
+                  </Column>
                   <Column>{dateToString(category.createdAt.date)}</Column>
                   <Column>
                     {category.updatedAt?.date
@@ -221,14 +145,7 @@ const Category: FC = () => {
                       : 'N/D'}
                   </Column>
                   <Column>
-                    <ActionLink
-                      to="/"
-                      onClick={() => {
-                        modify === category.id
-                          ? modifyCategory(category.id, 'apply')
-                          : modifyCategory(category.id, 'start');
-                      }}
-                    >
+                    <ActionLink to={`/categorias/editar/${category.id}`}>
                       <Icon iconName="pencil" />
                     </ActionLink>
                     <ActionButton
@@ -243,15 +160,6 @@ const Category: FC = () => {
               ))}
           </Body>
         </Table>
-        <datalist id="iconNames">
-          {iconNameList.map(fasIcon => (
-            <option
-              key={fasIcon.iconName}
-              value={fasIcon.iconName}
-              label={fasIcon.iconName}
-            />
-          ))}
-        </datalist>
       </Container>
     </MainLayout>
   );

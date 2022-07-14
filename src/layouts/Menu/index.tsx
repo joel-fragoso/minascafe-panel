@@ -31,7 +31,7 @@ const Menu: FC = () => {
         {menuItems.map(menu => (
           <MenuItem
             key={menu.title}
-            active={menu.to === location.pathname}
+            active={menu.to === `/${location.pathname.split('/')[1]}`}
             to={menu.to}
             iconName={menu.iconName as IconName}
           >

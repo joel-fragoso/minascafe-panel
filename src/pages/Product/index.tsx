@@ -1,6 +1,5 @@
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { IconName } from '@fortawesome/fontawesome-svg-core';
 import api from '../../services/api';
 import { ICategoryProps, IDate, KeyOfId } from '../Category';
 import { useModal } from '../../hooks/modal';
@@ -30,13 +29,6 @@ interface IProductProps {
 
 const Product: FC = () => {
   const [products, setProducts] = useState<IProductProps[]>([]);
-  const [categories, setCategories] = useState<ICategoryProps[]>([]);
-  const [iconName, setIconName] = useState<IconName | undefined>(undefined);
-  const categoryRef = useRef<HTMLSelectElement | null>(null);
-  const nameRef = useRef<HTMLInputElement | null>(null);
-  const priceRef = useRef<HTMLInputElement | null>(null);
-  const activeRef = useRef<HTMLInputElement | null>(null);
-  const [modify, setModify] = useState<string>('');
 
   const { showModal, hideModal } = useModal();
   const { addToast } = useToast();
@@ -56,50 +48,6 @@ const Product: FC = () => {
       });
     }
   }, [addToast]);
-
-  const getCategories = useCallback(async () => {
-    try {
-      const response = await api.get('/categorias');
-
-      setCategories(response.data.data);
-    } catch (error) {
-      addToast({
-        type: 'error',
-        title: 'Erro ao carregar',
-        description: 'Ocorreu um erro ao tentar carregar as categorias',
-      });
-    }
-  }, [addToast]);
-
-  const modifyProduct = useCallback(
-    async (id: KeyOfId, action: string) => {
-      if (action === 'start') {
-        setModify(id);
-      }
-
-      if (action === 'apply') {
-        const categoryId = categoryRef[id]?.value;
-        const name = nameRef[id]?.value;
-        const price = parseFloat(priceRef[id]?.value as string);
-        const active = activeRef[id]?.checked;
-
-        if (name) {
-          const formData = {
-            categoryId,
-            name,
-            price,
-            active,
-          };
-
-          await api.put(`/produtos/${id}`, formData);
-          await getProducts();
-        }
-
-        setModify('');
-      }
-    },
-    [getProducts],
-  );
 
   const deleteConfirmed = useCallback(async () => {
     try {
@@ -132,8 +80,7 @@ const Product: FC = () => {
 
   useEffect(() => {
     getProducts();
-    getCategories();
-  }, [getCategories, getProducts]);
+  }, [getProducts]);
 
   return (
     <MainLayout>
@@ -161,81 +108,22 @@ const Product: FC = () => {
             {products &&
               products.map((product: IProductProps) => (
                 <Row key={product.id}>
-                  {product.id === modify ? (
-                    <>
-                      <Column>
-                        <input
-                          type="text"
-                          ref={e => {
-                            nameRef[product.id] = e;
-                          }}
-                          defaultValue={product.name}
-                        />
-                      </Column>
-                      <Column>
-                        <Icon iconName={iconName || product.category.icon} />
-                        <select
-                          ref={e => {
-                            categoryRef[product.id] = e;
-                          }}
-                          onChange={e =>
-                            setIconName(
-                              categories.find(
-                                category => category.id === e.target.value,
-                              )?.icon,
-                            )
-                          }
-                          defaultValue={product.category.id}
-                        >
-                          {categories &&
-                            categories.map(category => (
-                              <option
-                                key={category.id}
-                                value={category.id}
-                                label={category.name}
-                              />
-                            ))}
-                        </select>
-                      </Column>
-                      <Column>
-                        <input
-                          type="text"
-                          ref={e => {
-                            priceRef[product.id] = e;
-                          }}
-                          defaultValue={product.price}
-                        />
-                      </Column>
-                      <Column>
-                        <input
-                          ref={e => {
-                            activeRef[product.id] = e;
-                          }}
-                          type="checkbox"
-                          defaultChecked={product.active}
-                        />
-                      </Column>
-                    </>
-                  ) : (
-                    <>
-                      <Column>{product.name}</Column>
-                      <Column>{product.category.name}</Column>
-                      <Column>{formatterCurrency(product.price)}</Column>
-                      <Column>
-                        {product.active ? (
-                          <div>
-                            <Badge active />
-                            Sim
-                          </div>
-                        ) : (
-                          <div>
-                            <Badge />
-                            Não
-                          </div>
-                        )}
-                      </Column>
-                    </>
-                  )}
+                  <Column>{product.name}</Column>
+                  <Column>{product.category.name}</Column>
+                  <Column>{formatterCurrency(product.price)}</Column>
+                  <Column>
+                    {product.active ? (
+                      <div>
+                        <Badge active />
+                        Sim
+                      </div>
+                    ) : (
+                      <div>
+                        <Badge />
+                        Não
+                      </div>
+                    )}
+                  </Column>
                   <Column>
                     {product.createdAt?.date &&
                       dateToString(product.createdAt.date)}
@@ -246,14 +134,7 @@ const Product: FC = () => {
                       : 'N/D'}
                   </Column>
                   <Column>
-                    <ActionLink
-                      to="/"
-                      onClick={() => {
-                        modify === product.id
-                          ? modifyProduct(product.id, 'apply')
-                          : modifyProduct(product.id, 'start');
-                      }}
-                    >
+                    <ActionLink to={`/produtos/editar/${product.id}`}>
                       <Icon iconName="pencil" />
                     </ActionLink>
                     <ActionButton
