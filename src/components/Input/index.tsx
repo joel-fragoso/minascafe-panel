@@ -15,12 +15,14 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   name: string;
   containerStyle?: object;
   iconName?: IconName;
+  iconAlign?: 'left' | 'right';
 }
 
 const Input: FC<InputProps> = ({
   name,
   containerStyle = {},
   iconName,
+  iconAlign,
   ...rest
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -56,7 +58,7 @@ const Input: FC<InputProps> = ({
       isFilled={isFilled}
       data-testid="input-container"
     >
-      {iconName && (
+      {iconName && iconAlign !== 'right' && (
         <FontAwesomeIcon icon={{ prefix: 'fas', iconName }} size="1x" />
       )}
       <input
@@ -66,6 +68,9 @@ const Input: FC<InputProps> = ({
         ref={inputRef}
         {...rest}
       />
+      {iconName && iconAlign === 'right' && (
+        <FontAwesomeIcon icon={{ prefix: 'fas', iconName }} size="1x" />
+      )}
       {error && (
         <Error title={error}>
           <FontAwesomeIcon
