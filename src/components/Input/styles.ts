@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import { darken } from 'polished';
+import { darken, shade } from 'polished';
 import Tooltip from '../Tooltip';
 
 interface ContainerProps {
@@ -48,6 +48,12 @@ export const Container = styled.div<ContainerProps>`
 
     &::placeholder {
       color: ${({ theme }) => theme.pallete.secondary?.main};
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      color: ${({ theme }) =>
+        shade(0.4, theme.pallete.secondary?.main as string)};
     }
   }
 

@@ -13,6 +13,7 @@ import FormCategory from '../pages/FormCategory';
 import Product from '../pages/Product';
 import ForgotPassword from '../pages/ForgotPassword';
 import ResetPassword from '../pages/ResetPassword';
+import Perfil from '../pages/Perfil';
 
 const Routes: FC = () => {
   return (
@@ -73,6 +74,14 @@ const Routes: FC = () => {
         element={
           <PrivateRoute>
             <FormProduct />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="usuario/perfil"
+        element={
+          <PrivateRoute>
+            <Perfil />
           </PrivateRoute>
         }
       />
