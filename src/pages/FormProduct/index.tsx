@@ -8,12 +8,12 @@ import { useLoading } from '../../hooks/loading';
 import { useToast } from '../../hooks/toast';
 import { Errors } from '../../utils/getValidationErrors';
 import MainLayout from '../../layouts/MainLayout';
-import { ICategoryProps } from '../Category';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Select from '../../components/Select';
 import Switch from '../../components/Switch';
 import { Container } from './styles';
+import { ICategory } from '../../hooks/categories';
 
 interface IProductFormData {
   categoryId: string;
@@ -24,8 +24,8 @@ interface IProductFormData {
 
 const FormProduct: FC = () => {
   const formRef = useRef<FormHandles>(null);
-  const [categories, setCategories] = useState<ICategoryProps[]>([]);
-  const [product, setProduct] = useState<ICategoryProps[]>([]);
+  const [categories, setCategories] = useState<ICategory[]>([]);
+  const [product, setProduct] = useState<ICategory[]>([]);
   const { loading, setLoading } = useLoading();
   const navigate = useNavigate();
 

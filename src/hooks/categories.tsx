@@ -14,7 +14,7 @@ import { useLoading } from './loading';
 import { useModal } from './modal';
 import { useToast } from './toast';
 
-interface IDate {
+export interface IDate {
   date: Date;
   timezone_type: number;
   timezone: string;
