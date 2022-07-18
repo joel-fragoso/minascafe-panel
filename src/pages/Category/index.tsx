@@ -1,100 +1,31 @@
-import {
-  FC,
-  MutableRefObject,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { FC, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { IconName } from '@fortawesome/fontawesome-svg-core';
-import api from '../../services/api';
-import { useModal } from '../../hooks/modal';
-import { useToast } from '../../hooks/toast';
-import { dateToString } from '../../utils';
-import MainLayout from '../../layouts/MainLayout';
+import Badge from '../../components/Badge';
 import Icon from '../../components/Icon';
 import Table from '../../components/Table';
-import Head from '../../components/Table/Head';
 import Body from '../../components/Table/Body';
+import Head from '../../components/Table/Head';
 import Row from '../../components/Table/Row';
 import Column from '../../components/Table/Row/Column';
 import ActionButton from '../../components/Table/Row/Column/ActionButton';
 import ActionLink from '../../components/Table/Row/Column/ActionLink';
-import Badge from '../../components/Badge';
+import { useAuth } from '../../hooks/auth';
+import { useCategories } from '../../hooks/categories';
+import MainLayout from '../../layouts/MainLayout';
+import { dateToString } from '../../utils';
 import { Container } from './styles';
 
-export type KeyOfId = keyof MutableRefObject<HTMLInputElement | null>;
-
-export interface IDate {
-  date: Date;
-  timezoneType: string;
-  timezone: string;
-}
-
-export interface ICategoryProps {
-  id: KeyOfId;
-  name: string;
-  icon: IconName;
-  active: boolean;
-  createdAt: IDate;
-  updatedAt?: IDate;
-}
-
 const Category: FC = () => {
-  const [categories, setCategories] = useState<ICategoryProps[]>([]);
+  const { user, signOut } = useAuth();
 
-  const { showModal, hideModal } = useModal();
-  const { addToast } = useToast();
-
-  const deleteIdRef = useRef<string>('');
-
-  const getCategories = useCallback(async () => {
-    try {
-      const response = await api.get('/categorias');
-
-      setCategories(response.data.data);
-    } catch (error) {
-      addToast({
-        type: 'error',
-        title: 'Erro ao carregar',
-        description: 'Ocorreu um erro ao tentar carregar as categorias',
-      });
-    }
-  }, [addToast]);
-
-  const deleteConfirmed = useCallback(async () => {
-    try {
-      await api.delete(`/categorias/${deleteIdRef.current}`);
-    } catch (error) {
-      addToast({
-        type: 'error',
-        title: 'Erro ao exluir',
-        description: 'Ocorreu um erro ao tentar excluir o registro',
-      });
-    }
-
-    getCategories();
-    hideModal();
-  }, [addToast, getCategories, hideModal]);
-
-  const deleteCategory = useCallback(
-    (id: string) => {
-      deleteIdRef.current = id;
-
-      showModal({
-        type: 'error',
-        title: 'Excluir item',
-        description: 'Você deseja excluir esse item?',
-        onConfirmation: deleteConfirmed,
-      });
-    },
-    [deleteConfirmed, showModal],
-  );
+  const { categories, getCategories, deleteCategory } = useCategories();
 
   useEffect(() => {
+    if (!user) {
+      signOut();
+    }
     getCategories();
-  }, [getCategories]);
+  }, [getCategories, signOut, user]);
 
   return (
     <MainLayout>
