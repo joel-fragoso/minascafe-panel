@@ -1,18 +1,17 @@
+import { fas } from '@fortawesome/free-solid-svg-icons';
+import { FormHandles } from '@unform/core';
+import { Form } from '@unform/web';
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import * as Yup from 'yup';
-import { FormHandles } from '@unform/core';
-import { Form } from '@unform/web';
-import { fas } from '@fortawesome/free-solid-svg-icons';
-import api from '../../services/api';
-import { useLoading } from '../../hooks/loading';
-import { useToast } from '../../hooks/toast';
-import isIconName from '../../utils/getIconsNames';
-import { Errors } from '../../utils/getValidationErrors';
-import MainLayout from '../../layouts/MainLayout';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Switch from '../../components/Switch';
+import { ICategory, useCategories } from '../../hooks/categories';
+import { useLoading } from '../../hooks/loading';
+import MainLayout from '../../layouts/MainLayout';
+import isIconName from '../../utils/getIconsNames';
+import { Errors } from '../../utils/getValidationErrors';
 import { Container } from './style';
 
 interface ICategoryFormData {
@@ -26,35 +25,22 @@ const FormCategory: FC = () => {
   const formRef = useRef<FormHandles>(null);
   const iconNameList = [...new Set(Object.values(fas))];
 
-  const { addToast } = useToast();
   const { loading, setLoading } = useLoading();
   const { id } = useParams();
+  const { getCategory, updateCategory, createCategory, category } =
+    useCategories();
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    async function getCategory() {
-      try {
-        setLoading(true);
-
-        const response = await api.get(`/categorias/${id}`);
-
-        formRef.current?.setData(response.data.data);
-      } catch {
-        addToast({
-          type: 'error',
-          title: 'Erro ao buscar categoria',
-          description: `Ocorreu um erro ao tentar buscar a categoria ${id}, tente novamente`,
-        });
-      } finally {
-        setLoading(false);
-      }
-    }
-
     if (id) {
-      getCategory();
+      getCategory(id);
     }
-  }, [addToast, id, setLoading]);
+  }, [getCategory, id]);
+
+  useEffect(() => {
+    formRef.current?.setData(category);
+  }, [category]);
 
   const handleSubmit = useCallback(
     async (data: ICategoryFormData) => {
@@ -75,15 +61,9 @@ const FormCategory: FC = () => {
         });
 
         if (id) {
-          await api.put(`/categorias/${id}`, {
-            ...data,
-            active: data.active ?? false,
-          });
+          updateCategory(id, data as ICategory);
         } else {
-          await api.post('/categorias', {
-            ...data,
-            active: data.active ?? false,
-          });
+          createCategory(data as ICategory);
         }
 
         navigate('/categorias');
@@ -101,14 +81,13 @@ const FormCategory: FC = () => {
         setLoading(false);
       }
     },
-    [setLoading, id, navigate],
+    [setLoading, id, navigate, updateCategory, createCategory],
   );
 
   return (
     <MainLayout>
       <Container>
         <Form ref={formRef} onSubmit={handleSubmit}>
-          {}
           <Input
             name="icon"
             list="iconNames"

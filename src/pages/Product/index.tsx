@@ -1,25 +1,25 @@
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import api from '../../services/api';
-import { ICategoryProps, IDate, KeyOfId } from '../Category';
-import { useModal } from '../../hooks/modal';
-import { useToast } from '../../hooks/toast';
-import { dateToString, formatterCurrency } from '../../utils';
-import MainLayout from '../../layouts/MainLayout';
+import Badge from '../../components/Badge';
 import Icon from '../../components/Icon';
 import Table from '../../components/Table';
-import Head from '../../components/Table/Head';
 import Body from '../../components/Table/Body';
+import Head from '../../components/Table/Head';
 import Row from '../../components/Table/Row';
 import Column from '../../components/Table/Row/Column';
-import ActionLink from '../../components/Table/Row/Column/ActionLink';
 import ActionButton from '../../components/Table/Row/Column/ActionButton';
-import Badge from '../../components/Badge';
+import ActionLink from '../../components/Table/Row/Column/ActionLink';
+import { ICategory, IDate } from '../../hooks/categories';
+import { useModal } from '../../hooks/modal';
+import { useToast } from '../../hooks/toast';
+import MainLayout from '../../layouts/MainLayout';
+import api from '../../services/api';
+import { dateToString, formatterCurrency } from '../../utils';
 import { Container } from './styles';
 
 interface IProductProps {
-  category: ICategoryProps;
-  id: KeyOfId;
+  category: ICategory;
+  id: string;
   name: string;
   price: number;
   active: boolean;
