@@ -7,14 +7,14 @@ import * as Yup from 'yup';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Switch from '../../components/Switch';
-import { ICategory, useCategories } from '../../hooks/categories';
+import { useCategories } from '../../hooks/categories';
 import { useLoading } from '../../hooks/loading';
 import MainLayout from '../../layouts/MainLayout';
 import isIconName from '../../utils/getIconsNames';
 import { Errors } from '../../utils/getValidationErrors';
 import { Container } from './style';
 
-interface ICategoryFormData {
+export interface ICategoryFormData {
   name: string;
   icon: string;
   active: boolean;
@@ -25,22 +25,33 @@ const FormCategory: FC = () => {
   const formRef = useRef<FormHandles>(null);
   const iconNameList = [...new Set(Object.values(fas))];
 
-  const { loading, setLoading } = useLoading();
   const { id } = useParams();
+
+  const { loading, setLoading } = useLoading();
   const { getCategory, updateCategory, createCategory, category } =
     useCategories();
 
   const navigate = useNavigate();
 
   useEffect(() => {
+    setLoading(true);
+
     if (id) {
       getCategory(id);
+    } else {
+      setLoading(false);
     }
-  }, [getCategory, id]);
+  }, [getCategory, id, setLoading]);
 
   useEffect(() => {
-    formRef.current?.setData(category);
-  }, [category]);
+    if (id === category.id) {
+      formRef.current?.setData(category);
+
+      setIconName(category.icon);
+
+      setLoading(false);
+    }
+  }, [category, id, setLoading]);
 
   const handleSubmit = useCallback(
     async (data: ICategoryFormData) => {
@@ -61,9 +72,9 @@ const FormCategory: FC = () => {
         });
 
         if (id) {
-          updateCategory(id, data as ICategory);
+          updateCategory(id, data);
         } else {
-          createCategory(data as ICategory);
+          createCategory(data);
         }
 
         navigate('/categorias');
@@ -93,7 +104,9 @@ const FormCategory: FC = () => {
             list="iconNames"
             placeholder="Nome ícone"
             onChange={e => setIconName(e.target.value)}
-            iconName={isIconName(iconName) ? iconName : undefined}
+            iconName={
+              isIconName(iconName) && category.icon ? iconName : undefined
+            }
             iconAlign="right"
           />
           <Input name="name" type="text" placeholder="Nome" />

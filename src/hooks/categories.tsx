@@ -9,8 +9,8 @@ import {
   useRef,
   useState,
 } from 'react';
+import { ICategoryFormData } from '../pages/FormCategory';
 import api from '../services/api';
-import { useLoading } from './loading';
 import { useModal } from './modal';
 import { useToast } from './toast';
 
@@ -34,8 +34,8 @@ interface ICategoriesContext {
   category: ICategory;
   getCategories(): void;
   getCategory(id: string): void;
-  updateCategory(id: string, category: ICategory): void;
-  createCategory(category: ICategory): void;
+  updateCategory(id: string, category: ICategoryFormData): void;
+  createCategory(category: ICategoryFormData): void;
   deleteCategory(id: string): void;
 }
 
@@ -56,13 +56,10 @@ export const CategoriesProvider: FC<ICategoriesProviderProps> = ({
   const deleteIdRef = useRef<string>('');
 
   const { addToast } = useToast();
-  const { setLoading } = useLoading();
   const { showModal, hideModal } = useModal();
 
   const getCategories = useCallback(async () => {
     try {
-      setLoading(true);
-
       const response = await api.get('/categorias');
 
       setDataCollection(response.data.data);
@@ -72,16 +69,12 @@ export const CategoriesProvider: FC<ICategoriesProviderProps> = ({
         title: 'Erro ao buscar categorias',
         description: `Ocorreu um erro ao tentar buscar as categorias, tente novamente`,
       });
-    } finally {
-      setLoading(false);
     }
-  }, [addToast, setLoading]);
+  }, [addToast]);
 
   const getCategory = useCallback(
     async (id: string) => {
       try {
-        setLoading(true);
-
         const response = await api.get(`/categorias/${id}`);
 
         setData(response.data.data);
@@ -91,18 +84,14 @@ export const CategoriesProvider: FC<ICategoriesProviderProps> = ({
           title: 'Erro ao buscar categoria',
           description: `Ocorreu um erro ao tentar buscar a categoria ${id}, tente novamente`,
         });
-      } finally {
-        setLoading(false);
       }
     },
-    [addToast, setLoading],
+    [addToast],
   );
 
   const updateCategory = useCallback(
-    async (id: string, category: ICategory) => {
+    async (id: string, category: ICategoryFormData) => {
       try {
-        setLoading(true);
-
         await api.put(`/categorias/${id}`, {
           ...category,
           active: category.active ?? false,
@@ -113,20 +102,16 @@ export const CategoriesProvider: FC<ICategoriesProviderProps> = ({
           title: 'Erro ao modificar categoria',
           description: `Ocorreu um erro ao tentar modificar a categoria ${id}, tente novamente`,
         });
-      } finally {
-        setLoading(false);
       }
 
       getCategories();
     },
-    [addToast, getCategories, setLoading],
+    [addToast, getCategories],
   );
 
   const createCategory = useCallback(
-    async (category: ICategory) => {
+    async (category: ICategoryFormData) => {
       try {
-        setLoading(true);
-
         await api.post('/categorias', {
           ...category,
           active: category.active ?? false,
@@ -137,19 +122,15 @@ export const CategoriesProvider: FC<ICategoriesProviderProps> = ({
           title: 'Erro ao criar categoria',
           description: `Ocorreu um erro ao tentar criar a categoria, tente novamente`,
         });
-      } finally {
-        setLoading(false);
       }
 
       getCategories();
     },
-    [addToast, getCategories, setLoading],
+    [addToast, getCategories],
   );
 
   const deleteConfirmed = useCallback(async () => {
     try {
-      setLoading(true);
-
       await api.delete(`/categorias/${deleteIdRef.current}`);
     } catch (error) {
       addToast({
@@ -157,13 +138,11 @@ export const CategoriesProvider: FC<ICategoriesProviderProps> = ({
         title: 'Erro ao exluir',
         description: 'Ocorreu um erro ao tentar excluir o registro',
       });
-    } finally {
-      setLoading(false);
     }
 
     getCategories();
     hideModal();
-  }, [addToast, getCategories, hideModal, setLoading]);
+  }, [addToast, getCategories, hideModal]);
 
   const deleteCategory = useCallback(
     (id: string) => {

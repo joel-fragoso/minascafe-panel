@@ -1,21 +1,20 @@
-import { FC, useCallback, useEffect, useRef, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import * as Yup from 'yup';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
-import api from '../../services/api';
-import { useLoading } from '../../hooks/loading';
-import { useToast } from '../../hooks/toast';
-import { Errors } from '../../utils/getValidationErrors';
-import MainLayout from '../../layouts/MainLayout';
+import { FC, useCallback, useEffect, useRef } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import * as Yup from 'yup';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Select from '../../components/Select';
 import Switch from '../../components/Switch';
+import { useCategories } from '../../hooks/categories';
+import { useLoading } from '../../hooks/loading';
+import { useProducts } from '../../hooks/products';
+import MainLayout from '../../layouts/MainLayout';
+import { Errors } from '../../utils/getValidationErrors';
 import { Container } from './styles';
-import { ICategory } from '../../hooks/categories';
 
-interface IProductFormData {
+export interface IProductFormData {
   categoryId: string;
   name: string;
   price: string;
@@ -24,63 +23,36 @@ interface IProductFormData {
 
 const FormProduct: FC = () => {
   const formRef = useRef<FormHandles>(null);
-  const [categories, setCategories] = useState<ICategory[]>([]);
-  const [product, setProduct] = useState<ICategory[]>([]);
   const { loading, setLoading } = useLoading();
   const navigate = useNavigate();
 
   const { id } = useParams();
-  const { addToast } = useToast();
+
+  const { categories, getCategories } = useCategories();
+  const { product, getProduct, updateProduct, createProduct } = useProducts();
 
   useEffect(() => {
-    async function getCategories() {
-      try {
-        setLoading(true);
-
-        const response = await api.get('/categorias');
-
-        setCategories(response.data.data);
-      } catch {
-        addToast({
-          type: 'error',
-          title: 'Erro ao buscar categorias',
-          description: `Ocorreu um erro ao tentar buscar as categorias, tente novamente`,
-        });
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    async function getProduct() {
-      await getCategories();
-      try {
-        setLoading(true);
-
-        const response = await api.get(`/produtos/${id}`);
-
-        formRef.current?.setData({
-          ...response.data.data,
-          categoryId: response.data.data.category.id,
-        });
-
-        setProduct(response.data.data);
-      } catch {
-        addToast({
-          type: 'error',
-          title: 'Erro ao buscar produto',
-          description: `Ocorreu um erro ao tentar buscar a produto ${id}, tente novamente`,
-        });
-      } finally {
-        setLoading(false);
-      }
-    }
+    setLoading(true);
 
     getCategories();
 
     if (id) {
-      getProduct();
+      getProduct(id);
+    } else {
+      setLoading(false);
     }
-  }, [addToast, id, setCategories, setLoading]);
+  }, [getCategories, getProduct, id, setLoading]);
+
+  useEffect(() => {
+    if (id === product?.id) {
+      formRef.current?.setData({
+        ...product,
+        categoryId: product?.category?.id,
+      });
+
+      setLoading(false);
+    }
+  }, [id, product, setLoading]);
 
   const handleSubmit = useCallback(
     async (data: IProductFormData) => {
@@ -102,17 +74,9 @@ const FormProduct: FC = () => {
         });
 
         if (id) {
-          await api.put(`/produtos/${id}`, {
-            ...data,
-            price: parseFloat(data.price),
-            active: data.active ?? false,
-          });
+          updateProduct(id, data);
         } else {
-          await api.post('/produtos', {
-            ...data,
-            price: parseFloat(data.price),
-            active: data.active ?? false,
-          });
+          createProduct(data);
         }
 
         navigate('/produtos');
@@ -130,7 +94,7 @@ const FormProduct: FC = () => {
         setLoading(false);
       }
     },
-    [setLoading, id, navigate],
+    [setLoading, id, navigate, updateProduct, createProduct],
   );
 
   return (

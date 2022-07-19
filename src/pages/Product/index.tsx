@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useRef, useState } from 'react';
+import { FC, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Badge from '../../components/Badge';
 import Icon from '../../components/Icon';
@@ -9,78 +9,24 @@ import Row from '../../components/Table/Row';
 import Column from '../../components/Table/Row/Column';
 import ActionButton from '../../components/Table/Row/Column/ActionButton';
 import ActionLink from '../../components/Table/Row/Column/ActionLink';
-import { ICategory, IDate } from '../../hooks/categories';
-import { useModal } from '../../hooks/modal';
-import { useToast } from '../../hooks/toast';
+import { useAuth } from '../../hooks/auth';
+import { IProduct, useProducts } from '../../hooks/products';
 import MainLayout from '../../layouts/MainLayout';
-import api from '../../services/api';
 import { dateToString, formatterCurrency } from '../../utils';
 import { Container } from './styles';
 
-interface IProductProps {
-  category: ICategory;
-  id: string;
-  name: string;
-  price: number;
-  active: boolean;
-  createdAt: IDate;
-  updatedAt?: IDate;
-}
-
 const Product: FC = () => {
-  const [products, setProducts] = useState<IProductProps[]>([]);
+  const { getProducts, deleteProduct, products } = useProducts();
 
-  const { showModal, hideModal } = useModal();
-  const { addToast } = useToast();
-
-  const deleteIdRef = useRef<string>('');
-
-  const getProducts = useCallback(async () => {
-    try {
-      const response = await api.get('/produtos');
-
-      setProducts(response.data.data);
-    } catch (error) {
-      addToast({
-        type: 'error',
-        title: 'Erro ao carregar',
-        description: 'Ocorreu um erro ao tentar carregar os produtos',
-      });
-    }
-  }, [addToast]);
-
-  const deleteConfirmed = useCallback(async () => {
-    try {
-      await api.delete(`/produtos/${deleteIdRef.current}`);
-    } catch (error) {
-      addToast({
-        type: 'error',
-        title: 'Erro ao excluir',
-        description: 'Ocorreu um erro ao tentar excluir o registro',
-      });
-    }
-
-    getProducts();
-    hideModal();
-  }, [addToast, getProducts, hideModal]);
-
-  const deleteProduct = useCallback(
-    (id: string) => {
-      deleteIdRef.current = id;
-
-      showModal({
-        type: 'error',
-        title: 'Excluir item',
-        description: 'Você deseja excluir esse item?',
-        onConfirmation: deleteConfirmed,
-      });
-    },
-    [deleteConfirmed, showModal],
-  );
+  const { user, signOut } = useAuth();
 
   useEffect(() => {
+    if (!user) {
+      signOut();
+    }
+
     getProducts();
-  }, [getProducts]);
+  }, [getProducts, signOut, user]);
 
   return (
     <MainLayout>
@@ -106,7 +52,7 @@ const Product: FC = () => {
           </Head>
           <Body>
             {products &&
-              products.map((product: IProductProps) => (
+              products.map((product: IProduct) => (
                 <Row key={product.id}>
                   <Column>{product.name}</Column>
                   <Column>{product.category.name}</Column>
