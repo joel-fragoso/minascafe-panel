@@ -24,6 +24,7 @@ const Category: FC = () => {
     if (!user) {
       signOut();
     }
+
     getCategories();
   }, [getCategories, signOut, user]);
 
