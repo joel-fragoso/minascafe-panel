@@ -2,6 +2,7 @@ import { FC, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Badge from '../../components/Badge';
 import Icon from '../../components/Icon';
+import Loading from '../../components/Loading';
 import Table from '../../components/Table';
 import Body from '../../components/Table/Body';
 import Head from '../../components/Table/Head';
@@ -10,6 +11,7 @@ import Column from '../../components/Table/Row/Column';
 import ActionButton from '../../components/Table/Row/Column/ActionButton';
 import ActionLink from '../../components/Table/Row/Column/ActionLink';
 import { useAuth } from '../../hooks/auth';
+import { useLoading } from '../../hooks/loading';
 import { IProduct, useProducts } from '../../hooks/products';
 import MainLayout from '../../layouts/MainLayout';
 import { dateToString, formatterCurrency } from '../../utils';
@@ -19,14 +21,22 @@ const Product: FC = () => {
   const { getProducts, deleteProduct, products } = useProducts();
 
   const { user, signOut } = useAuth();
+  const { loading, setLoading } = useLoading();
 
   useEffect(() => {
+    setLoading(true);
+
     if (!user) {
       signOut();
     }
 
-    getProducts();
-  }, [getProducts, signOut, user]);
+    async function getData() {
+      await getProducts();
+      setLoading(false);
+    }
+
+    getData();
+  }, [getProducts, setLoading, signOut, user]);
 
   return (
     <MainLayout>
@@ -50,50 +60,60 @@ const Product: FC = () => {
               <Column>Ações</Column>
             </Row>
           </Head>
-          <Body>
-            {products &&
-              products.map((product: IProduct) => (
-                <Row key={product.id}>
-                  <Column>{product.name}</Column>
-                  <Column>{product.category.name}</Column>
-                  <Column>{formatterCurrency(product.price)}</Column>
-                  <Column>
-                    {product.active ? (
-                      <div>
-                        <Badge active />
-                        Sim
-                      </div>
-                    ) : (
-                      <div>
-                        <Badge />
-                        Não
-                      </div>
-                    )}
-                  </Column>
-                  <Column>
-                    {product.createdAt?.date &&
-                      dateToString(product.createdAt.date)}
-                  </Column>
-                  <Column>
-                    {product.updatedAt?.date
-                      ? dateToString(product.updatedAt.date)
-                      : 'N/D'}
-                  </Column>
-                  <Column>
-                    <ActionLink to={`/produtos/editar/${product.id}`}>
-                      <Icon iconName="pencil" />
-                    </ActionLink>
-                    <ActionButton
-                      color="danger"
-                      type="button"
-                      onClick={() => deleteProduct(product.id)}
-                    >
-                      <Icon iconName="trash" />
-                    </ActionButton>
-                  </Column>
-                </Row>
-              ))}
-          </Body>
+          {loading ? (
+            <Head>
+              <Row>
+                <Column colSpan={7}>
+                  <Loading />
+                </Column>
+              </Row>
+            </Head>
+          ) : (
+            <Body>
+              {products &&
+                products.map((product: IProduct) => (
+                  <Row key={product.id}>
+                    <Column>{product.name}</Column>
+                    <Column>{product.category.name}</Column>
+                    <Column>{formatterCurrency(product.price)}</Column>
+                    <Column>
+                      {product.active ? (
+                        <div>
+                          <Badge active />
+                          Sim
+                        </div>
+                      ) : (
+                        <div>
+                          <Badge />
+                          Não
+                        </div>
+                      )}
+                    </Column>
+                    <Column>
+                      {product.createdAt?.date &&
+                        dateToString(product.createdAt.date)}
+                    </Column>
+                    <Column>
+                      {product.updatedAt?.date
+                        ? dateToString(product.updatedAt.date)
+                        : 'N/D'}
+                    </Column>
+                    <Column>
+                      <ActionLink to={`/produtos/editar/${product.id}`}>
+                        <Icon iconName="pencil" />
+                      </ActionLink>
+                      <ActionButton
+                        color="danger"
+                        type="button"
+                        onClick={() => deleteProduct(product.id)}
+                      >
+                        <Icon iconName="trash" />
+                      </ActionButton>
+                    </Column>
+                  </Row>
+                ))}
+            </Body>
+          )}
         </Table>
       </Container>
     </MainLayout>
