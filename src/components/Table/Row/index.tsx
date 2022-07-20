@@ -1,7 +1,7 @@
-import { FC, TableHTMLAttributes } from 'react';
+import { FC, HTMLAttributes } from 'react';
 import { Container } from './styles';
 
-const Row: FC<TableHTMLAttributes<HTMLTableRowElement>> = ({
+const Row: FC<HTMLAttributes<HTMLTableRowElement>> = ({
   children,
   ...rest
 }) => {

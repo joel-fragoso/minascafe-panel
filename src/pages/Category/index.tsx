@@ -2,6 +2,7 @@ import { FC, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Badge from '../../components/Badge';
 import Icon from '../../components/Icon';
+import Loading from '../../components/Loading';
 import Table from '../../components/Table';
 import Body from '../../components/Table/Body';
 import Head from '../../components/Table/Head';
@@ -11,6 +12,7 @@ import ActionButton from '../../components/Table/Row/Column/ActionButton';
 import ActionLink from '../../components/Table/Row/Column/ActionLink';
 import { useAuth } from '../../hooks/auth';
 import { useCategories } from '../../hooks/categories';
+import { useLoading } from '../../hooks/loading';
 import MainLayout from '../../layouts/MainLayout';
 import { dateToString } from '../../utils';
 import { Container } from './styles';
@@ -19,14 +21,22 @@ const Category: FC = () => {
   const { user, signOut } = useAuth();
 
   const { categories, getCategories, deleteCategory } = useCategories();
+  const { loading, setLoading } = useLoading();
 
   useEffect(() => {
+    setLoading(true);
+
     if (!user) {
       signOut();
     }
 
-    getCategories();
-  }, [getCategories, signOut, user]);
+    async function getData() {
+      await getCategories();
+      setLoading(false);
+    }
+
+    getData();
+  }, [getCategories, setLoading, signOut, user]);
 
   return (
     <MainLayout>
@@ -49,48 +59,58 @@ const Category: FC = () => {
               <Column>Ações</Column>
             </Row>
           </Head>
-          <Body>
-            {categories &&
-              categories.map(category => (
-                <Row key={category.id}>
-                  <Column>
-                    <Icon iconName={category.icon} />
-                  </Column>
-                  <Column>{category.name}</Column>
-                  <Column>
-                    {category.active ? (
-                      <div>
-                        <Badge active />
-                        Sim
-                      </div>
-                    ) : (
-                      <div>
-                        <Badge />
-                        Não
-                      </div>
-                    )}
-                  </Column>
-                  <Column>{dateToString(category.createdAt.date)}</Column>
-                  <Column>
-                    {category.updatedAt?.date
-                      ? dateToString(category.updatedAt.date)
-                      : 'N/D'}
-                  </Column>
-                  <Column>
-                    <ActionLink to={`/categorias/editar/${category.id}`}>
-                      <Icon iconName="pencil" />
-                    </ActionLink>
-                    <ActionButton
-                      type="button"
-                      color="danger"
-                      onClick={() => deleteCategory(category.id)}
-                    >
-                      <Icon iconName="trash" />
-                    </ActionButton>
-                  </Column>
-                </Row>
-              ))}
-          </Body>
+          {loading ? (
+            <Head>
+              <Row>
+                <Column colSpan={6}>
+                  <Loading />
+                </Column>
+              </Row>
+            </Head>
+          ) : (
+            <Body>
+              {categories &&
+                categories.map(category => (
+                  <Row key={category.id}>
+                    <Column>
+                      <Icon iconName={category.icon} />
+                    </Column>
+                    <Column>{category.name}</Column>
+                    <Column>
+                      {category.active ? (
+                        <div>
+                          <Badge active />
+                          Sim
+                        </div>
+                      ) : (
+                        <div>
+                          <Badge />
+                          Não
+                        </div>
+                      )}
+                    </Column>
+                    <Column>{dateToString(category.createdAt.date)}</Column>
+                    <Column>
+                      {category.updatedAt?.date
+                        ? dateToString(category.updatedAt.date)
+                        : 'N/D'}
+                    </Column>
+                    <Column>
+                      <ActionLink to={`/categorias/editar/${category.id}`}>
+                        <Icon iconName="pencil" />
+                      </ActionLink>
+                      <ActionButton
+                        type="button"
+                        color="danger"
+                        onClick={() => deleteCategory(category.id)}
+                      >
+                        <Icon iconName="trash" />
+                      </ActionButton>
+                    </Column>
+                  </Row>
+                ))}
+            </Body>
+          )}
         </Table>
       </Container>
     </MainLayout>

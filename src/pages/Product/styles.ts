@@ -1,5 +1,5 @@
-import styled from 'styled-components';
 import { shade } from 'polished';
+import styled from 'styled-components';
 
 export const Container = styled.div`
   padding: 1.6rem;
@@ -35,6 +35,12 @@ export const Container = styled.div`
       svg {
         padding-right: 0.8rem;
       }
+    }
+  }
+
+  thead:not(:first-of-type) {
+    td > div {
+      margin: auto;
     }
   }
 `;
