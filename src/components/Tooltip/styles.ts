@@ -28,17 +28,6 @@ export const Container = styled.div`
       position: absolute;
       top: 100%;
       left: 73%;
-
-      @media (min-width: 767px) {
-        left: 50%;
-        transform: translateX(-50%);
-      }
-    }
-
-    @media (min-width: 767px) {
-      right: unset;
-      left: 50%;
-      transform: translateX(-50%);
     }
   }
 
