@@ -104,7 +104,7 @@ const FormCategory: FC = () => {
           <Input
             name="icon"
             list="iconNames"
-            placeholder="Nome ícone"
+            placeholder="Nome do ícone"
             onChange={e => setIconName(e.target.value)}
             iconName={
               isIconName(iconName) && category.icon ? iconName : undefined
