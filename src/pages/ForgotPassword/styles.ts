@@ -9,6 +9,18 @@ export const Container = styled.div`
   height: 100%;
   padding: 0 1.6rem;
 
+  img {
+    width: 6.4rem;
+    height: 6.4rem;
+    border-radius: 0.8rem;
+    margin-bottom: 2.4rem;
+
+    @media (min-width: 767px) {
+      width: 7.2rem;
+      height: 7.2rem;
+    }
+  }
+
   form {
     width: 100%;
     text-align: center;
