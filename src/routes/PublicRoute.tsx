@@ -3,11 +3,17 @@ import { Navigate } from 'react-router-dom';
 import { useAuth } from '../hooks/auth';
 import SignIn from '../pages/SignIn';
 
-const PublicRoute: FC = () => {
+interface IPublicRouteProps {
+  children?: JSX.Element;
+}
+
+const PublicRoute: FC<IPublicRouteProps> = ({
+  children,
+}: IPublicRouteProps) => {
   const { user } = useAuth();
 
   if (!user) {
-    return <SignIn />;
+    return children || <SignIn />;
   }
 
   return <Navigate to="/dashboard" />;
