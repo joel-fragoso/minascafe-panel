@@ -48,6 +48,7 @@ export const Container = styled.div<ContainerProps>`
   select {
     flex: 1;
     color: ${({ theme }) => theme.common.white};
+    background-color: ${({ theme }) => darken(0.025, theme.background.default)};
     width: 100%;
   }
 `;
