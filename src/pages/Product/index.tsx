@@ -1,6 +1,7 @@
 import { FC, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Badge from '../../components/Badge';
+import Breadcrumb from '../../components/Breadcrumb';
 import Icon from '../../components/Icon';
 import Loading from '../../components/Loading';
 import Table from '../../components/Table';
@@ -41,6 +42,7 @@ const Product: FC = () => {
   return (
     <MainLayout>
       <Container>
+        <Breadcrumb />
         <div>
           <h1>Produtos</h1>
           <Link to="adicionar">

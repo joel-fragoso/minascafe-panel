@@ -3,6 +3,7 @@ import { Form } from '@unform/web';
 import { FC, useCallback, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import * as Yup from 'yup';
+import Breadcrumb from '../../components/Breadcrumb';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Select from '../../components/Select';
@@ -100,6 +101,7 @@ const FormProduct: FC = () => {
   return (
     <MainLayout>
       <Container>
+        <Breadcrumb maxDepth={3} />
         <Form ref={formRef} onSubmit={handleSubmit}>
           <Select
             name="categoryId"

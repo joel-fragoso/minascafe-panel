@@ -11,6 +11,7 @@ import { useLoading } from '../../hooks/loading';
 import { useToast } from '../../hooks/toast';
 import { Errors } from '../../utils/getValidationErrors';
 import { Container } from './styles';
+import Breadcrumb from '../../components/Breadcrumb';
 
 interface IPerfilFormData {
   name: string;
@@ -78,6 +79,7 @@ const Perfil: FC = () => {
   return (
     <MainLayout>
       <Container>
+        <Breadcrumb maxDepth={2} />
         <Form
           ref={formRef}
           initialData={{ name: user.name, email: user.email }}
