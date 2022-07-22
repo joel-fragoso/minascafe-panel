@@ -1,15 +1,16 @@
+import { FormHandles } from '@unform/core';
+import { Form } from '@unform/web';
 import { FC, useCallback, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
-import { FormHandles } from '@unform/core';
-import { Form } from '@unform/web';
-import api from '../../services/api';
-import { useLoading } from '../../hooks/loading';
-import { useToast } from '../../hooks/toast';
-import { Errors } from '../../utils/getValidationErrors';
-import Input from '../../components/Input';
+import LogoImg from '../../assets/img/perfil.png';
 import Button from '../../components/Button';
 import Icon from '../../components/Icon';
+import Input from '../../components/Input';
+import { useLoading } from '../../hooks/loading';
+import { useToast } from '../../hooks/toast';
+import api from '../../services/api';
+import { Errors } from '../../utils/getValidationErrors';
 import { Container } from './styles';
 
 interface IResetPassword {
@@ -91,6 +92,7 @@ const ResetPassword: FC = () => {
 
   return (
     <Container>
+      <img src={LogoImg} alt="Minas Café" />
       <Form ref={formRef} onSubmit={handleSubmit} noValidate>
         <h1>Resetar senha</h1>
         <Input
