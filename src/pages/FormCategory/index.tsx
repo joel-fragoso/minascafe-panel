@@ -4,6 +4,7 @@ import { Form } from '@unform/web';
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import * as Yup from 'yup';
+import Breadcrumb from '../../components/Breadcrumb';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Switch from '../../components/Switch';
@@ -98,6 +99,7 @@ const FormCategory: FC = () => {
   return (
     <MainLayout>
       <Container>
+        <Breadcrumb maxDepth={3} />
         <Form ref={formRef} onSubmit={handleSubmit}>
           <Input
             name="icon"

@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { shade } from 'polished';
 
 export const Container = styled.div`
-  padding: 3rem;
+  padding: 1.6rem;
   flex: 1;
   color: ${({ theme }) => theme.pallete.primary.main};
 
