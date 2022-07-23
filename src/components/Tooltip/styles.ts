@@ -17,6 +17,7 @@ export const Container = styled.div`
     position: absolute;
     bottom: calc(100% + 12px);
     right: -180%;
+    text-align: center;
 
     color: ${({ theme }) => theme.background.default};
 
