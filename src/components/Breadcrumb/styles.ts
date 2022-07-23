@@ -19,6 +19,8 @@ export const Container = styled.span`
     }
 
     &:last-child {
+      font-size: 1.4rem;
+      color: inherit;
       opacity: 0.5;
     }
 
