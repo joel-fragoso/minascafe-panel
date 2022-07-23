@@ -27,8 +27,22 @@ const Routes: FC = () => {
           </PrivateRoute>
         }
       />
-      <Route path="senha/esqueci" element={<ForgotPassword />} />
-      <Route path="senha/reseta" element={<ResetPassword />} />
+      <Route
+        path="senha/esqueci"
+        element={
+          <PublicRoute>
+            <ForgotPassword />
+          </PublicRoute>
+        }
+      />
+      <Route
+        path="senha/reseta"
+        element={
+          <PublicRoute>
+            <ResetPassword />
+          </PublicRoute>
+        }
+      />
       <Route
         path="categorias"
         element={
