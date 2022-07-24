@@ -37,6 +37,8 @@ interface ICategoriesContext {
   updateCategory(id: string, category: ICategoryFormData): void;
   createCategory(category: ICategoryFormData): void;
   deleteCategory(id: string): void;
+  countCategories(): Promise<number>;
+  countActiveCategories(): Promise<number>;
 }
 
 interface ICategoriesProviderProps {
@@ -166,6 +168,45 @@ export const CategoriesProvider: FC<ICategoriesProviderProps> = ({
     [addToast, deleteConfirmed, showModal],
   );
 
+  const countCategories = useCallback(async (): Promise<number> => {
+    try {
+      const response = await api.get('/categorias');
+
+      return response.data.data.length;
+    } catch (error) {
+      addToast({
+        type: 'error',
+        title: 'Erro ao buscar categorias',
+        description: `Ocorreu um erro ao tentar buscar as categorias, tente novamente`,
+      });
+
+      return 0;
+    }
+  }, [addToast]);
+
+  const countActiveCategories = useCallback(async (): Promise<number> => {
+    try {
+      const response = await api.get('/categorias');
+
+      const count = response.data.data.reduce(
+        (counter: number, category: ICategory) => {
+          return category.active ? counter + 1 : counter;
+        },
+        0,
+      );
+
+      return count;
+    } catch (error) {
+      addToast({
+        type: 'error',
+        title: 'Erro ao buscar categorias',
+        description: `Ocorreu um erro ao tentar buscar as categorias, tente novamente`,
+      });
+
+      return 0;
+    }
+  }, [addToast]);
+
   const categoriesMemo = useMemo(
     () => ({
       categories: dataCollection,
@@ -175,15 +216,19 @@ export const CategoriesProvider: FC<ICategoriesProviderProps> = ({
       updateCategory,
       createCategory,
       deleteCategory,
+      countCategories,
+      countActiveCategories,
     }),
     [
-      data,
       dataCollection,
+      data,
       getCategories,
       getCategory,
       updateCategory,
       createCategory,
       deleteCategory,
+      countCategories,
+      countActiveCategories,
     ],
   );
 

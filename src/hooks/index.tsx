@@ -1,5 +1,6 @@
 import { FC, ReactNode } from 'react';
 import { AuthProvider } from './auth';
+import { CardProvider } from './card';
 import { CategoriesProvider } from './categories';
 import { LoadingProvider } from './loading';
 import { ModalProvider } from './modal';
@@ -18,9 +19,11 @@ const AppProvider: FC<IAppProviderProps> = ({
       <AuthProvider>
         <ModalProvider>
           <ToastProvider>
-            <CategoriesProvider>
-              <ProductsProvider>{children}</ProductsProvider>
-            </CategoriesProvider>
+            <CardProvider>
+              <CategoriesProvider>
+                <ProductsProvider>{children}</ProductsProvider>
+              </CategoriesProvider>
+            </CardProvider>
           </ToastProvider>
         </ModalProvider>
       </AuthProvider>
