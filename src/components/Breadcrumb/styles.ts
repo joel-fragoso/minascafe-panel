@@ -4,6 +4,8 @@ export const Container = styled.span`
   display: flex;
   align-items: center;
   padding-bottom: 1.6rem;
+  /* refatorar */
+  /* text-transform: capitalize; */
 
   > div {
     a {

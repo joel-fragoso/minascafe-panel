@@ -32,6 +32,8 @@ interface IProductsContext {
   updateProduct(id: string, product: IProductFormData): void;
   createProduct(product: IProductFormData): void;
   deleteProduct(id: string): void;
+  countProducts(): Promise<number>;
+  countActiveProducts(): Promise<number>;
 }
 
 interface IProductsProviderProps {
@@ -161,6 +163,44 @@ export const ProductsProvider: FC<IProductsProviderProps> = ({
     [addToast, deleteConfirmed, showModal],
   );
 
+  const countProducts = useCallback(async (): Promise<number> => {
+    try {
+      const response = await api.get('/produtos');
+
+      return response.data.data.length;
+    } catch (error) {
+      addToast({
+        type: 'error',
+        title: 'Erro ao buscar produtos',
+        description: `Ocorreu um erro ao tentar buscar os produtos, tente novamente`,
+      });
+
+      return 0;
+    }
+  }, [addToast]);
+
+  const countActiveProducts = useCallback(async (): Promise<number> => {
+    try {
+      const response = await api.get('/produtos');
+
+      const count = response.data.data.reduce(
+        (counter: number, product: IProduct) => {
+          return product.active ? counter + 1 : counter;
+        },
+        0,
+      );
+
+      return count;
+    } catch (error) {
+      addToast({
+        type: 'error',
+        title: 'Erro ao buscar produtos',
+        description: `Ocorreu um erro ao tentar buscar os produtos, tente novamente`,
+      });
+      return 0;
+    }
+  }, [addToast]);
+
   const productsMemo = useMemo(
     () => ({
       products: dataCollection,
@@ -170,15 +210,19 @@ export const ProductsProvider: FC<IProductsProviderProps> = ({
       updateProduct,
       createProduct,
       deleteProduct,
+      countProducts,
+      countActiveProducts,
     }),
     [
-      data,
       dataCollection,
+      data,
       getProducts,
       getProduct,
       updateProduct,
       createProduct,
       deleteProduct,
+      countProducts,
+      countActiveProducts,
     ],
   );
 
