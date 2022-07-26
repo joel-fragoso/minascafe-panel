@@ -1,4 +1,5 @@
 import { IconName } from '@fortawesome/fontawesome-svg-core';
+import { AxiosError } from 'axios';
 import {
   createContext,
   FC,
@@ -11,6 +12,7 @@ import {
 } from 'react';
 import { ICategoryFormData } from '../pages/FormCategory';
 import api from '../services/api';
+import { useAuth } from './auth';
 import { useModal } from './modal';
 import { useToast } from './toast';
 
@@ -59,6 +61,7 @@ export const CategoriesProvider: FC<ICategoriesProviderProps> = ({
 
   const { addToast } = useToast();
   const { showModal, hideModal } = useModal();
+  const { signOut } = useAuth();
 
   const getCategories = useCallback(async () => {
     try {
@@ -118,7 +121,19 @@ export const CategoriesProvider: FC<ICategoriesProviderProps> = ({
           ...category,
           active: category.active ?? false,
         });
-      } catch (error) {
+      } catch (err) {
+        if (err instanceof AxiosError) {
+          addToast({
+            type: 'error',
+            title: 'Erro na autenticação',
+            description:
+              'Ocorreu um erro ao fazer criar a categoria, cheque as credenciais',
+          });
+
+          signOut();
+          return;
+        }
+
         addToast({
           type: 'error',
           title: 'Erro ao criar categoria',
@@ -128,7 +143,7 @@ export const CategoriesProvider: FC<ICategoriesProviderProps> = ({
 
       getCategories();
     },
-    [addToast, getCategories],
+    [addToast, getCategories, signOut],
   );
 
   const deleteConfirmed = useCallback(async () => {
