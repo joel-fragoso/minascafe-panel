@@ -28,9 +28,6 @@ const Breadcrumb: FC<BreadcrumbProps> = ({ maxDepth }: BreadcrumbProps) => {
           [, linkPath] = pathname.split(regPath);
         }
 
-        formatedPath =
-          formatedPath[0].toUpperCase() + formatedPath.substring(1);
-
         return (
           <div key={path}>
             {i !== pathNames.length - 1 ? (
