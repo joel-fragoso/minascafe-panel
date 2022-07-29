@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios';
 import {
   createContext,
   FC,
@@ -10,9 +11,17 @@ import {
 } from 'react';
 import { IProductFormData } from '../pages/FormProduct';
 import api from '../services/api';
+import {
+  axiosErrorHandler,
+  HttpMessage,
+  isErrorMessage,
+  isServerErrorMessage,
+  ServerStatusCode,
+} from '../utils/errorHandler';
+import { useAuth } from './auth';
 import { ICategory, IDate } from './categories';
 import { useModal } from './modal';
-import { useToast } from './toast';
+import { IToastMessage, useToast } from './toast';
 
 export interface IProduct {
   id: string;
@@ -52,6 +61,48 @@ export const ProductsProvider: FC<IProductsProviderProps> = ({
 
   const { addToast } = useToast();
   const { showModal, hideModal } = useModal();
+  const { signOut } = useAuth();
+
+  const handleError = useCallback(
+    (err: unknown, toast: Omit<IToastMessage, 'id'>) => {
+      let toastMessage = toast;
+
+      if (err instanceof AxiosError) {
+        const errorHandler = axiosErrorHandler(err);
+
+        if (errorHandler.type === HttpMessage.Unauthorized) {
+          if (isErrorMessage(errorHandler.response)) {
+            toastMessage = {
+              type: 'error',
+              title: 'Erro ao verificar as credênciais',
+              description: `Ocorreu um erro ao verificar as credênciais. ${errorHandler.response.error}`,
+            };
+
+            signOut();
+          }
+        }
+
+        if (errorHandler.type === HttpMessage.ServerError) {
+          if (isServerErrorMessage(errorHandler.response)) {
+            if (
+              errorHandler.response.error.code ===
+                ServerStatusCode.NumberValueOutOfRange ||
+              errorHandler.response.error.code === ServerStatusCode.DataTooLong
+            ) {
+              toastMessage = {
+                type: 'error',
+                title: 'Erro ao atualizar/criar produto',
+                description: `Ocorreu um erro ao atualizar/criar um produto, um campo extrapolou o limite`,
+              };
+            }
+          }
+        }
+      }
+
+      addToast(toastMessage);
+    },
+    [addToast, signOut],
+  );
 
   const getProducts = useCallback(async () => {
     try {
@@ -59,13 +110,13 @@ export const ProductsProvider: FC<IProductsProviderProps> = ({
 
       setDataCollection(response.data.data);
     } catch (error) {
-      addToast({
+      handleError(error, {
         type: 'error',
         title: 'Erro ao buscar produtos',
         description: `Ocorreu um erro ao tentar buscar os produtos, tente novamente`,
       });
     }
-  }, [addToast]);
+  }, [handleError]);
 
   const getProduct = useCallback(
     async (id: string) => {
@@ -74,14 +125,14 @@ export const ProductsProvider: FC<IProductsProviderProps> = ({
 
         setData(response.data.data);
       } catch (error) {
-        addToast({
+        handleError(error, {
           type: 'error',
           title: 'Erro ao buscar produto',
           description: `Ocorreu um erro ao tentar buscar o produto ${id}, tente novamente`,
         });
       }
     },
-    [addToast],
+    [handleError],
   );
 
   const updateProduct = useCallback(
@@ -93,7 +144,7 @@ export const ProductsProvider: FC<IProductsProviderProps> = ({
           active: product.active ?? false,
         });
       } catch (error) {
-        addToast({
+        handleError(error, {
           type: 'error',
           title: 'Erro ao modificar produto',
           description: `Ocorreu um erro ao tentar modificar o produto ${id}, tente novamente`,
@@ -102,7 +153,7 @@ export const ProductsProvider: FC<IProductsProviderProps> = ({
 
       getProducts();
     },
-    [addToast, getProducts],
+    [getProducts, handleError],
   );
 
   const createProduct = useCallback(
@@ -114,7 +165,7 @@ export const ProductsProvider: FC<IProductsProviderProps> = ({
           active: product.active ?? false,
         });
       } catch (error) {
-        addToast({
+        handleError(error, {
           type: 'error',
           title: 'Erro ao criar produto',
           description: `Ocorreu um erro ao tentar criar o produto, tente novamente`,
@@ -123,14 +174,14 @@ export const ProductsProvider: FC<IProductsProviderProps> = ({
 
       getProducts();
     },
-    [addToast, getProducts],
+    [getProducts, handleError],
   );
 
   const deleteConfirmed = useCallback(async () => {
     try {
       await api.delete(`/produtos/${deleteIdRef.current}`);
     } catch (error) {
-      addToast({
+      handleError(error, {
         type: 'error',
         title: 'Erro ao exluir',
         description: 'Ocorreu um erro ao tentar excluir o registro',
@@ -139,7 +190,7 @@ export const ProductsProvider: FC<IProductsProviderProps> = ({
 
     getProducts();
     hideModal();
-  }, [addToast, getProducts, hideModal]);
+  }, [getProducts, handleError, hideModal]);
 
   const deleteProduct = useCallback(
     (id: string) => {
@@ -153,14 +204,14 @@ export const ProductsProvider: FC<IProductsProviderProps> = ({
           onConfirmation: deleteConfirmed,
         });
       } catch (error) {
-        addToast({
+        handleError(error, {
           type: 'error',
           title: 'Erro ao deletar produto',
           description: `Ocorreu um erro ao tentar deletar o produto, tente novamente`,
         });
       }
     },
-    [addToast, deleteConfirmed, showModal],
+    [deleteConfirmed, handleError, showModal],
   );
 
   const countProducts = useCallback(async (): Promise<number> => {
@@ -169,7 +220,7 @@ export const ProductsProvider: FC<IProductsProviderProps> = ({
 
       return response.data.data.length;
     } catch (error) {
-      addToast({
+      handleError(error, {
         type: 'error',
         title: 'Erro ao buscar produtos',
         description: `Ocorreu um erro ao tentar buscar os produtos, tente novamente`,
@@ -177,7 +228,7 @@ export const ProductsProvider: FC<IProductsProviderProps> = ({
 
       return 0;
     }
-  }, [addToast]);
+  }, [handleError]);
 
   const countActiveProducts = useCallback(async (): Promise<number> => {
     try {
@@ -192,14 +243,15 @@ export const ProductsProvider: FC<IProductsProviderProps> = ({
 
       return count;
     } catch (error) {
-      addToast({
+      handleError(error, {
         type: 'error',
         title: 'Erro ao buscar produtos',
         description: `Ocorreu um erro ao tentar buscar os produtos, tente novamente`,
       });
+
       return 0;
     }
-  }, [addToast]);
+  }, [handleError]);
 
   const productsMemo = useMemo(
     () => ({

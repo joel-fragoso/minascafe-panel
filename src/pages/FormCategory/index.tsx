@@ -62,9 +62,12 @@ const FormCategory: FC = () => {
         formRef.current?.setErrors({});
 
         const schema = Yup.object().shape({
-          name: Yup.string().required('Nome obrigatório'),
+          name: Yup.string()
+            .max(45, 'Limite de caracteres é 45')
+            .required('Nome obrigatório'),
           icon: Yup.string()
             .test('test-name', 'Ícone inválido', () => isIconName(data.icon))
+            .max(45, 'Limite de caracteres é 45')
             .required('Ícone obrigatório'),
         });
 
