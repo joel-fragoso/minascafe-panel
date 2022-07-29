@@ -64,8 +64,21 @@ const FormProduct: FC = () => {
 
         const schema = Yup.object().shape({
           categoryId: Yup.string().required('Categoria obrigatório'),
-          name: Yup.string().required('Nome obrigatório'),
+          name: Yup.string()
+            .max(45, 'Limite de caracteres é 45')
+            .required('Nome obrigatório'),
           price: Yup.number()
+            .test('fraction', 'Máximo 2 dígitos depois do ponto', value => {
+              if (value) {
+                if (value.toString().split('.')[1]) {
+                  return value.toString().split('.')[1].length <= 2;
+                }
+              }
+              return true;
+            })
+            .test('length', 'Máximo 8 digitos inteiros', value =>
+              value ? value.toFixed(2).length <= 11 : true,
+            )
             .typeError('Precisa ser um número')
             .required('Preço obrigatório'),
         });

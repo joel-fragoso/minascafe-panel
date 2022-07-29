@@ -12,9 +12,16 @@ import {
 } from 'react';
 import { ICategoryFormData } from '../pages/FormCategory';
 import api from '../services/api';
+import {
+  axiosErrorHandler,
+  HttpMessage,
+  isErrorMessage,
+  isServerErrorMessage,
+  ServerStatusCode,
+} from '../utils/errorHandler';
 import { useAuth } from './auth';
 import { useModal } from './modal';
-import { useToast } from './toast';
+import { IToastMessage, useToast } from './toast';
 
 export interface IDate {
   date: Date;
@@ -63,19 +70,70 @@ export const CategoriesProvider: FC<ICategoriesProviderProps> = ({
   const { showModal, hideModal } = useModal();
   const { signOut } = useAuth();
 
+  const handleError = useCallback(
+    (err: unknown, toast: Omit<IToastMessage, 'id'>) => {
+      let toastMessage = toast;
+
+      if (err instanceof AxiosError) {
+        const errorHandler = axiosErrorHandler(err);
+
+        if (errorHandler.type === HttpMessage.Unauthorized) {
+          if (isErrorMessage(errorHandler.response)) {
+            toastMessage = {
+              type: 'error',
+              title: 'Erro ao verificar as credênciais',
+              description: `Ocorreu um erro ao verificar as credênciais. ${errorHandler.response.error}`,
+            };
+
+            signOut();
+          }
+        }
+
+        if (errorHandler.type === HttpMessage.ServerError) {
+          if (isServerErrorMessage(errorHandler.response)) {
+            if (
+              errorHandler.response.error.code ===
+              ServerStatusCode.IntegrityConstraintViolation
+            ) {
+              toastMessage = {
+                type: 'error',
+                title: 'Erro ao excluir categoria',
+                description:
+                  'Ocorreu um erro ao excluir a categoria, a categoria possui produtos.',
+              };
+            }
+
+            if (
+              errorHandler.response.error.code === ServerStatusCode.DataTooLong
+            ) {
+              toastMessage = {
+                type: 'error',
+                title: 'Erro ao atualizar/criar categoria',
+                description: `Ocorreu um erro ao atualizar/criar um categoria, um campo extrapolou o limite`,
+              };
+            }
+          }
+        }
+      }
+
+      addToast(toastMessage);
+    },
+    [addToast, signOut],
+  );
+
   const getCategories = useCallback(async () => {
     try {
       const response = await api.get('/categorias');
 
       setDataCollection(response.data.data);
     } catch (error) {
-      addToast({
+      handleError(error, {
         type: 'error',
         title: 'Erro ao buscar categorias',
         description: `Ocorreu um erro ao tentar buscar as categorias, tente novamente`,
       });
     }
-  }, [addToast]);
+  }, [handleError]);
 
   const getCategory = useCallback(
     async (id: string) => {
@@ -84,14 +142,14 @@ export const CategoriesProvider: FC<ICategoriesProviderProps> = ({
 
         setData(response.data.data);
       } catch (error) {
-        addToast({
+        handleError(error, {
           type: 'error',
           title: 'Erro ao buscar categoria',
           description: `Ocorreu um erro ao tentar buscar a categoria ${id}, tente novamente`,
         });
       }
     },
-    [addToast],
+    [handleError],
   );
 
   const updateCategory = useCallback(
@@ -102,7 +160,7 @@ export const CategoriesProvider: FC<ICategoriesProviderProps> = ({
           active: category.active ?? false,
         });
       } catch (error) {
-        addToast({
+        handleError(error, {
           type: 'error',
           title: 'Erro ao modificar categoria',
           description: `Ocorreu um erro ao tentar modificar a categoria ${id}, tente novamente`,
@@ -111,7 +169,7 @@ export const CategoriesProvider: FC<ICategoriesProviderProps> = ({
 
       getCategories();
     },
-    [addToast, getCategories],
+    [getCategories, handleError],
   );
 
   const createCategory = useCallback(
@@ -121,20 +179,8 @@ export const CategoriesProvider: FC<ICategoriesProviderProps> = ({
           ...category,
           active: category.active ?? false,
         });
-      } catch (err) {
-        if (err instanceof AxiosError) {
-          addToast({
-            type: 'error',
-            title: 'Erro na autenticação',
-            description:
-              'Ocorreu um erro ao fazer criar a categoria, cheque as credenciais',
-          });
-
-          signOut();
-          return;
-        }
-
-        addToast({
+      } catch (error) {
+        handleError(error, {
           type: 'error',
           title: 'Erro ao criar categoria',
           description: `Ocorreu um erro ao tentar criar a categoria, tente novamente`,
@@ -143,14 +189,14 @@ export const CategoriesProvider: FC<ICategoriesProviderProps> = ({
 
       getCategories();
     },
-    [addToast, getCategories, signOut],
+    [getCategories, handleError],
   );
 
   const deleteConfirmed = useCallback(async () => {
     try {
       await api.delete(`/categorias/${deleteIdRef.current}`);
     } catch (error) {
-      addToast({
+      handleError(error, {
         type: 'error',
         title: 'Erro ao exluir',
         description: 'Ocorreu um erro ao tentar excluir o registro',
@@ -159,7 +205,7 @@ export const CategoriesProvider: FC<ICategoriesProviderProps> = ({
 
     getCategories();
     hideModal();
-  }, [addToast, getCategories, hideModal]);
+  }, [getCategories, handleError, hideModal]);
 
   const deleteCategory = useCallback(
     (id: string) => {
@@ -173,14 +219,14 @@ export const CategoriesProvider: FC<ICategoriesProviderProps> = ({
           onConfirmation: deleteConfirmed,
         });
       } catch (error) {
-        addToast({
+        handleError(error, {
           type: 'error',
           title: 'Erro ao deletar categoria',
           description: `Ocorreu um erro ao tentar deletar a categoria, tente novamente`,
         });
       }
     },
-    [addToast, deleteConfirmed, showModal],
+    [deleteConfirmed, handleError, showModal],
   );
 
   const countCategories = useCallback(async (): Promise<number> => {
@@ -189,7 +235,7 @@ export const CategoriesProvider: FC<ICategoriesProviderProps> = ({
 
       return response.data.data.length;
     } catch (error) {
-      addToast({
+      handleError(error, {
         type: 'error',
         title: 'Erro ao buscar categorias',
         description: `Ocorreu um erro ao tentar buscar as categorias, tente novamente`,
@@ -197,7 +243,7 @@ export const CategoriesProvider: FC<ICategoriesProviderProps> = ({
 
       return 0;
     }
-  }, [addToast]);
+  }, [handleError]);
 
   const countActiveCategories = useCallback(async (): Promise<number> => {
     try {
@@ -212,7 +258,7 @@ export const CategoriesProvider: FC<ICategoriesProviderProps> = ({
 
       return count;
     } catch (error) {
-      addToast({
+      handleError(error, {
         type: 'error',
         title: 'Erro ao buscar categorias',
         description: `Ocorreu um erro ao tentar buscar as categorias, tente novamente`,
@@ -220,7 +266,7 @@ export const CategoriesProvider: FC<ICategoriesProviderProps> = ({
 
       return 0;
     }
-  }, [addToast]);
+  }, [handleError]);
 
   const categoriesMemo = useMemo(
     () => ({
