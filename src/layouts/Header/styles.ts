@@ -1,7 +1,11 @@
 import styled, { css } from 'styled-components';
 import { darken, lighten } from 'polished';
 
-export const Container = styled.header`
+interface IContainerProps {
+  expanded?: boolean;
+}
+
+export const Container = styled.header<IContainerProps>`
   width: 100%;
   min-height: 4.8rem;
   padding: 1.6rem;
@@ -12,9 +16,28 @@ export const Container = styled.header`
   border-bottom: 1px solid
     ${({ theme }) => darken(0.05, theme.background.default)};
 
-  > a {
-    font-weight: 700;
-    color: ${({ theme }) => theme.common.white};
+  > div {
+    > button {
+      padding: 0.8rem;
+      margin-right: 2rem;
+
+      ${({ expanded }) =>
+        expanded &&
+        css`
+          background-color: ${({ theme }) =>
+            lighten(0.1, theme.background.default)};
+        `}
+
+      &:hover {
+        background-color: ${({ theme }) =>
+          lighten(0.2, theme.background.default)};
+      }
+    }
+
+    > a {
+      font-weight: 700;
+      color: ${({ theme }) => theme.common.white};
+    }
   }
 `;
 
@@ -75,12 +98,12 @@ export const Dropdown = styled.div<IDropdownProps>`
     border-width: 0 6px 6px 6px;
   }
 
-  a,
-  button {
+  > a,
+  > button {
     color: ${({ theme }) => theme.common.white};
   }
 
-  button {
+  > button {
     display: flex;
     align-items: center;
     justify-content: center;

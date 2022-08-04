@@ -5,6 +5,7 @@ import { CategoriesProvider } from './categories';
 import { LoadingProvider } from './loading';
 import { ModalProvider } from './modal';
 import { ProductsProvider } from './products';
+import { SidebarProvider } from './sidebar';
 import { ToastProvider } from './toast';
 
 interface IAppProviderProps {
@@ -19,11 +20,13 @@ const AppProvider: FC<IAppProviderProps> = ({
       <AuthProvider>
         <ModalProvider>
           <ToastProvider>
-            <CardProvider>
-              <CategoriesProvider>
-                <ProductsProvider>{children}</ProductsProvider>
-              </CategoriesProvider>
-            </CardProvider>
+            <SidebarProvider>
+              <CardProvider>
+                <CategoriesProvider>
+                  <ProductsProvider>{children}</ProductsProvider>
+                </CategoriesProvider>
+              </CardProvider>
+            </SidebarProvider>
           </ToastProvider>
         </ModalProvider>
       </AuthProvider>
