@@ -1,6 +1,6 @@
+import { IconName } from '@fortawesome/fontawesome-svg-core';
 import { FC } from 'react';
 import { useLocation } from 'react-router-dom';
-import { IconName } from '@fortawesome/fontawesome-svg-core';
 import MenuItem from '../MenuItem';
 import { Container } from './styles';
 
@@ -22,7 +22,11 @@ const menuItems = [
   },
 ];
 
-const Menu: FC = () => {
+interface IMenuProps {
+  expanded?: boolean;
+}
+
+const Menu: FC<IMenuProps> = ({ expanded }: IMenuProps) => {
   const location = useLocation();
 
   return (
@@ -30,6 +34,7 @@ const Menu: FC = () => {
       <ul>
         {menuItems.map(menu => (
           <MenuItem
+            expanded={expanded}
             key={menu.title}
             active={menu.to === `/${location.pathname.split('/')[1]}`}
             to={menu.to}

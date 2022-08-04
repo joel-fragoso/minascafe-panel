@@ -1,21 +1,29 @@
 import { FC, useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../../hooks/auth';
-import Icon from '../../components/Icon';
 import perfilImg from '../../assets/img/perfil.jpg';
+import Icon from '../../components/Icon';
+import { useAuth } from '../../hooks/auth';
+import { useSidebar } from '../../hooks/sidebar';
 import { Container, Dropdown, Perfil } from './styles';
 
 const Header: FC = () => {
   const { user, signOut } = useAuth();
   const [open, setOpen] = useState<boolean>(false);
 
+  const { expanded, setExpanded } = useSidebar();
+
   const handleOpened = useCallback(() => {
     setOpen(!open);
   }, [open]);
 
   return (
-    <Container>
-      <Link to="/">Minas Café</Link>
+    <Container expanded={expanded}>
+      <div>
+        <button type="button" onClick={() => setExpanded(!expanded)}>
+          <Icon fixedWidth iconName="bars" />
+        </button>
+        <Link to="/">Minas Café</Link>
+      </div>
       <Perfil onClick={handleOpened}>
         <img
           src={user.avatar ? user.avatarUrl : perfilImg}

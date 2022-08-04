@@ -9,6 +9,7 @@ interface IMenuItemProps {
   to: string;
   iconName?: IconName;
   active?: boolean;
+  expanded?: boolean;
 }
 
 const MenuItem: FC<IMenuItemProps> = ({
@@ -22,7 +23,7 @@ const MenuItem: FC<IMenuItemProps> = ({
     <Container active={active || false} {...rest}>
       <Link to={to}>
         {iconName && <FontAwesomeIcon icon={{ prefix: 'fas', iconName }} />}
-        {children}
+        <span>{children}</span>
       </Link>
     </Container>
   );

@@ -2,6 +2,7 @@ import styled, { css } from 'styled-components';
 
 interface IContainerProps {
   active?: boolean;
+  expanded?: boolean;
 }
 
 export const Container = styled.li<IContainerProps>`
@@ -12,7 +13,7 @@ export const Container = styled.li<IContainerProps>`
     margin-bottom: 0.4rem;
   }
 
-  a {
+  > a {
     flex: 1;
     padding: 1.2rem 1.6rem;
     font-family: 'Nunito', sans-serif;
@@ -20,13 +21,34 @@ export const Container = styled.li<IContainerProps>`
     color: ${({ theme }) => theme.pallete.primary.main};
     border-radius: 0.8rem;
     transition: background-color 0.3s linear;
+    position: relative;
+
+    span {
+      position: absolute;
+      margin-left: 0.8rem;
+      padding: 1.2rem 1.6rem;
+      border-radius: 0.8rem;
+      top: 0;
+      visibility: hidden;
+      transition: background-color 0.3s linear;
+
+      ${({ expanded }) =>
+        expanded &&
+        css`
+          position: relative;
+          visibility: visible;
+          padding: 0;
+        `}
+    }
 
     &:hover {
       background-color: ${({ theme }) => theme.background.paper};
-    }
 
-    svg {
-      margin-right: 0.8rem;
+      span {
+        z-index: 999;
+        visibility: visible;
+        background-color: ${({ theme }) => theme.background.paper};
+      }
     }
 
     ${({ active }) =>
