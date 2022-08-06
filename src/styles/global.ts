@@ -34,6 +34,25 @@ const GlobalStyle = createGlobalStyle`
     color: ${({ theme }) => theme.common.white};
   }
 
+  ::-webkit-scrollbar {
+    width: 0.8rem;
+    height: 0.8rem;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: ${({ theme }) => theme.background.paper};
+    border-radius: 1rem;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: ${({ theme }) => theme.background.default};
+    border-radius: 1rem;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: ${({ theme }) => lighten(0.1, theme.background.default)};
+  }
+
   input,
   select,
   textarea,
