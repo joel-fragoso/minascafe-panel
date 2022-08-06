@@ -17,7 +17,7 @@ const Header: FC = () => {
   }, [open]);
 
   return (
-    <Container expanded={expanded}>
+    <Container>
       <div>
         <button type="button" onClick={() => setExpanded(!expanded)}>
           <Icon fixedWidth iconName="bars" />

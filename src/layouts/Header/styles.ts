@@ -1,11 +1,7 @@
-import styled, { css } from 'styled-components';
 import { darken, lighten } from 'polished';
+import styled, { css } from 'styled-components';
 
-interface IContainerProps {
-  expanded?: boolean;
-}
-
-export const Container = styled.header<IContainerProps>`
+export const Container = styled.header`
   width: 100%;
   min-height: 4.8rem;
   padding: 1.6rem;
@@ -20,13 +16,7 @@ export const Container = styled.header<IContainerProps>`
     > button {
       padding: 0.8rem;
       margin-right: 2rem;
-
-      ${({ expanded }) =>
-        expanded &&
-        css`
-          background-color: ${({ theme }) =>
-            lighten(0.1, theme.background.default)};
-        `}
+      color: ${({ theme }) => theme.common.white};
 
       &:hover {
         background-color: ${({ theme }) =>

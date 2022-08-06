@@ -7,7 +7,7 @@ const Sidebar: FC = () => {
   const { expanded } = useSidebar();
 
   return (
-    <Container>
+    <Container expanded={expanded}>
       <Menu expanded={expanded} />
     </Container>
   );
