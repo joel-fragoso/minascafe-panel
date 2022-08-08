@@ -17,10 +17,10 @@ export const Container = styled.header`
       padding: 0.8rem;
       margin-right: 2rem;
       color: ${({ theme }) => theme.common.white};
+      border-radius: 0.8rem;
 
       &:hover {
-        background-color: ${({ theme }) =>
-          lighten(0.2, theme.background.default)};
+        background-color: ${({ theme }) => theme.background.paper};
       }
     }
 
