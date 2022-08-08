@@ -1,5 +1,6 @@
 import { FC, ReactNode } from 'react';
 import { AuthProvider } from './auth';
+import { AvatarProvider } from './avatar';
 import { CardProvider } from './card';
 import { CategoriesProvider } from './categories';
 import { LoadingProvider } from './loading';
@@ -18,17 +19,19 @@ const AppProvider: FC<IAppProviderProps> = ({
   return (
     <LoadingProvider>
       <AuthProvider>
-        <ModalProvider>
-          <ToastProvider>
-            <SidebarProvider>
-              <CardProvider>
-                <CategoriesProvider>
-                  <ProductsProvider>{children}</ProductsProvider>
-                </CategoriesProvider>
-              </CardProvider>
-            </SidebarProvider>
-          </ToastProvider>
-        </ModalProvider>
+        <AvatarProvider>
+          <ModalProvider>
+            <ToastProvider>
+              <SidebarProvider>
+                <CardProvider>
+                  <CategoriesProvider>
+                    <ProductsProvider>{children}</ProductsProvider>
+                  </CategoriesProvider>
+                </CardProvider>
+              </SidebarProvider>
+            </ToastProvider>
+          </ModalProvider>
+        </AvatarProvider>
       </AuthProvider>
     </LoadingProvider>
   );

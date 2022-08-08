@@ -23,6 +23,7 @@ export const Container = styled.span`
       font-size: 1.4rem;
       color: inherit;
       opacity: 0.5;
+      align-self: flex-end;
     }
 
     svg {

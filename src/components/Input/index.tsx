@@ -1,3 +1,5 @@
+import { IconName } from '@fortawesome/fontawesome-svg-core';
+import { useField } from '@unform/core';
 import {
   FC,
   InputHTMLAttributes,
@@ -6,9 +8,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import { IconName } from '@fortawesome/fontawesome-svg-core';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useField } from '@unform/core';
+import Icon from '../Icon';
 import { Container, Error } from './styles';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -59,7 +59,7 @@ const Input: FC<InputProps> = ({
       data-testid="input-container"
     >
       {iconName && iconAlign !== 'right' && (
-        <FontAwesomeIcon icon={{ prefix: 'fas', iconName }} size="1x" />
+        <Icon iconName={iconName} size="1x" />
       )}
       <input
         onFocus={handleInputFocus}
@@ -69,14 +69,11 @@ const Input: FC<InputProps> = ({
         {...rest}
       />
       {iconName && iconAlign === 'right' && (
-        <FontAwesomeIcon icon={{ prefix: 'fas', iconName }} size="1x" />
+        <Icon iconName={iconName} size="1x" />
       )}
       {error && (
         <Error title={error}>
-          <FontAwesomeIcon
-            icon={{ prefix: 'fas', iconName: 'circle-exclamation' }}
-            size="1x"
-          />
+          <Icon iconName="circle-exclamation" size="1x" />
         </Error>
       )}
     </Container>
