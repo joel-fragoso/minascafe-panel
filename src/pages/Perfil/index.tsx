@@ -1,20 +1,23 @@
-import { FC, useCallback, useRef } from 'react';
-import * as Yup from 'yup';
-import { useNavigate } from 'react-router-dom';
-import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
-import MainLayout from '../../layouts/MainLayout';
+import { Form } from '@unform/web';
+import { FC, useCallback, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import * as Yup from 'yup';
+import Breadcrumb from '../../components/Breadcrumb';
 import Button from '../../components/Button';
+import ImageInput from '../../components/ImageInput';
 import Input from '../../components/Input';
 import { useAuth } from '../../hooks/auth';
+import { useAvatar } from '../../hooks/avatar';
 import { useLoading } from '../../hooks/loading';
 import { useToast } from '../../hooks/toast';
+import MainLayout from '../../layouts/MainLayout';
 import { Errors } from '../../utils/getValidationErrors';
 import { Container } from './styles';
-import Breadcrumb from '../../components/Breadcrumb';
 
 interface IPerfilFormData {
   name: string;
+  avatar?: string;
 }
 
 const Perfil: FC = () => {
@@ -24,6 +27,7 @@ const Perfil: FC = () => {
   const { loading, setLoading } = useLoading();
   const { user, updateUser } = useAuth();
   const { addToast } = useToast();
+  const { updateAvatar } = useAvatar();
 
   const handleSubmit = useCallback(
     async (data: IPerfilFormData) => {
@@ -34,13 +38,25 @@ const Perfil: FC = () => {
 
         const schema = Yup.object().shape({
           name: Yup.string().required('Nome obrigatório'),
+          avatar: Yup.mixed().test(
+            'type',
+            'Formato de arquivo não suportado',
+            file => (file ? file.type === 'image/jpeg' : true),
+          ),
         });
 
         await schema.validate(data, {
           abortEarly: false,
         });
 
-        await updateUser({ ...user, name: data.name });
+        await updateUser({
+          ...user,
+          name: data.name,
+        });
+
+        if (data.avatar) {
+          await updateAvatar(data.avatar);
+        }
 
         navigate('/dashboard');
 
@@ -73,7 +89,7 @@ const Perfil: FC = () => {
         setLoading(false);
       }
     },
-    [setLoading, updateUser, user, navigate, addToast],
+    [setLoading, updateUser, user, navigate, addToast, updateAvatar],
   );
 
   return (
@@ -86,29 +102,38 @@ const Perfil: FC = () => {
           onSubmit={handleSubmit}
           noValidate
         >
-          <Input
-            spellCheck={false}
-            name="name"
-            type="text"
-            placeholder="Nome"
-            iconName="user"
-          />
-          <Input
-            spellCheck={false}
-            name="email"
-            type="email"
-            placeholder="E-mail"
-            iconName="envelope"
-            disabled
-          />
-          <Button
-            type="submit"
-            isResponsive
-            disabled={loading}
-            loading={loading}
-          >
-            Salvar
-          </Button>
+          <div>
+            <ImageInput
+              name="avatar"
+              accept=".jpg"
+              defaultPreview={user.avatar && user.avatarUrl}
+            />
+          </div>
+          <div>
+            <Input
+              spellCheck={false}
+              name="name"
+              type="text"
+              placeholder="Nome"
+              iconName="user"
+            />
+            <Input
+              spellCheck={false}
+              name="email"
+              type="email"
+              placeholder="E-mail"
+              iconName="envelope"
+              disabled
+            />
+            <Button
+              type="submit"
+              isResponsive
+              disabled={loading}
+              loading={loading}
+            >
+              Salvar
+            </Button>
+          </div>
         </Form>
       </Container>
     </MainLayout>
