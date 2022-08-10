@@ -46,7 +46,7 @@ export const AvatarProvider: FC<IAvatarProviderProps> = ({
 
       setData(avatar);
     },
-    [updateUser, user.id],
+    [updateUser, user],
   );
 
   const avatarMemo = useMemo(
