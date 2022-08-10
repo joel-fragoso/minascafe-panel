@@ -41,7 +41,10 @@ const Perfil: FC = () => {
           avatar: Yup.mixed().test(
             'type',
             'Formato de arquivo não suportado',
-            file => (file ? file.type === 'image/jpeg' : true),
+            file =>
+              file
+                ? file.type === 'image/jpeg' || file.type === 'image/png'
+                : true,
           ),
         });
 
@@ -105,7 +108,7 @@ const Perfil: FC = () => {
           <div>
             <ImageInput
               name="avatar"
-              accept=".jpg"
+              accept="image/jpeg, image/png"
               defaultPreview={user.avatar && user.avatarUrl}
             />
           </div>
