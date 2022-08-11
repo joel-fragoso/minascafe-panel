@@ -57,7 +57,7 @@ export const Container = styled.div<ContainerProps>`
     }
   }
 
-  svg {
+  > svg:first-child {
     margin-right: 1.6rem;
   }
 `;
