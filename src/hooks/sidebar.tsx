@@ -22,9 +22,19 @@ const SidebarContext = createContext<ISidebarContext>({} as ISidebarContext);
 export const SidebarProvider: FC<ISidebarProviderProps> = ({
   children,
 }: ISidebarProviderProps) => {
-  const [data, setData] = useState<boolean>(true);
+  const [data, setData] = useState<boolean>(() => {
+    const sidebar = localStorage.getItem('@MinasCafe:sidebar');
+
+    if (sidebar) {
+      return sidebar === 'true';
+    }
+
+    return true;
+  });
 
   const setExpanded = useCallback((value: boolean) => {
+    localStorage.setItem('@MinasCafe:sidebar', value.toString());
+
     setData(value);
   }, []);
 
