@@ -18,6 +18,7 @@ export const Container = styled.header`
       margin-right: 2rem;
       color: ${({ theme }) => theme.common.white};
       border-radius: 0.8rem;
+      transition: background-color 0.3s linear;
 
       &:hover {
         background-color: ${({ theme }) => theme.background.paper};
