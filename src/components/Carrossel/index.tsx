@@ -1,21 +1,19 @@
-import { FC, useRef } from 'react';
-import { ICardMessage } from '../../hooks/card';
+import { FC, ReactNode, useRef } from 'react';
 import Icon from '../Icon';
-import Card from './Card';
 import { Container, ContainerItem, ContainerNav } from './styles';
 
-interface ICardContainerProps {
-  messages: ICardMessage[];
+interface ICarrosselContainerProps {
+  children: ReactNode;
 }
 
-const CardContainer: FC<ICardContainerProps> = ({
-  messages,
-}: ICardContainerProps) => {
-  const cardRef = useRef<HTMLDivElement>(null);
+const CarrosselContainer: FC<ICarrosselContainerProps> = ({
+  children,
+}: ICarrosselContainerProps) => {
+  const carrosselRef = useRef<HTMLDivElement>(null);
 
   const scroll = (scrollOffset: number) => {
-    if (cardRef && cardRef.current) {
-      cardRef.current.scrollBy({ left: scrollOffset });
+    if (carrosselRef && carrosselRef.current) {
+      carrosselRef.current.scrollBy({ left: scrollOffset });
     }
   };
 
@@ -33,10 +31,7 @@ const CardContainer: FC<ICardContainerProps> = ({
 
   return (
     <Container onWheel={e => handleWheel(e)}>
-      <ContainerItem ref={cardRef}>
-        {messages &&
-          messages.map(message => <Card key={message.id} message={message} />)}
-      </ContainerItem>
+      <ContainerItem ref={carrosselRef}>{children}</ContainerItem>
       <ContainerNav>
         <button
           type="button"
@@ -59,4 +54,4 @@ const CardContainer: FC<ICardContainerProps> = ({
   );
 };
 
-export default CardContainer;
+export default CarrosselContainer;
