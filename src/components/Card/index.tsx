@@ -1,7 +1,7 @@
 import { FC } from 'react';
-import { ICardMessage } from '../../../hooks/card';
-import isIconName from '../../../utils/getIconsNames';
-import Icon from '../../Icon';
+import { ICardMessage } from '../../hooks/card';
+import isIconName from '../../utils/getIconsNames';
+import Icon from '../Icon';
 import { Container } from './styles';
 
 interface ICardProps {

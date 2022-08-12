@@ -6,4 +6,13 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
+  > div {
+    display: flex;
+    flex-direction: row;
+
+    > div {
+      width: 100%;
+    }
+  }
 `;

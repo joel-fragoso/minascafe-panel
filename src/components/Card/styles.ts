@@ -34,6 +34,10 @@ export const Container = styled.div<IContainerProps>`
       opacity: 0.8;
       line-height: 2rem;
     }
+
+    > svg {
+      margin-right: 0.8rem;
+    }
   }
 
   div:last-child {
