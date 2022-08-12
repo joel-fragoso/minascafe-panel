@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components';
 export const Container = styled.header`
   width: 100%;
   min-height: 4.8rem;
-  padding: 1.6rem;
+  padding: 1.2rem 1.6rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -14,7 +14,7 @@ export const Container = styled.header`
 
   > div {
     > button {
-      padding: 0.8rem;
+      padding: 1.2rem;
       margin-right: 2rem;
       color: ${({ theme }) => theme.common.white};
       border-radius: 0.8rem;
