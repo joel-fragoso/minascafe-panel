@@ -30,15 +30,15 @@ const Dashboard: FC = () => {
     createCard({
       id: 'categorias-cadastradas',
       title: 'Categorias',
-      titleIcon: 'archive',
+      titleIcon: 'tags',
       description: 'Quantidade de categorias cadastradas',
       value: categoriesLength.toString(),
     });
 
     createCard({
       id: 'produtos-cadastrados',
-      title: 'produtos',
-      titleIcon: 'briefcase',
+      title: 'Produtos',
+      titleIcon: 'box',
       description: 'Quantidade de produtos cadastrados',
       value: productsLength.toString(),
     });

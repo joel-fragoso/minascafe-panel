@@ -10,6 +10,7 @@ export const Container = styled.div`
   > div {
     display: flex;
     flex-direction: row;
+    gap: 1.6rem;
 
     > div {
       width: 100%;
