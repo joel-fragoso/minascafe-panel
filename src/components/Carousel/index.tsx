@@ -2,18 +2,18 @@ import { FC, ReactNode, useRef } from 'react';
 import Icon from '../Icon';
 import { Container, ContainerItem, ContainerNav } from './styles';
 
-interface ICarrosselContainerProps {
+interface ICarouselContainerProps {
   children: ReactNode;
 }
 
-const CarrosselContainer: FC<ICarrosselContainerProps> = ({
+const CarouselContainer: FC<ICarouselContainerProps> = ({
   children,
-}: ICarrosselContainerProps) => {
-  const carrosselRef = useRef<HTMLDivElement>(null);
+}: ICarouselContainerProps) => {
+  const carouselRef = useRef<HTMLDivElement>(null);
 
   const scroll = (scrollOffset: number) => {
-    if (carrosselRef && carrosselRef.current) {
-      carrosselRef.current.scrollBy({ left: scrollOffset });
+    if (carouselRef && carouselRef.current) {
+      carouselRef.current.scrollBy({ left: scrollOffset });
     }
   };
 
@@ -31,7 +31,7 @@ const CarrosselContainer: FC<ICarrosselContainerProps> = ({
 
   return (
     <Container onWheel={e => handleWheel(e)}>
-      <ContainerItem ref={carrosselRef}>{children}</ContainerItem>
+      <ContainerItem ref={carouselRef}>{children}</ContainerItem>
       <ContainerNav>
         <button
           type="button"
@@ -54,4 +54,4 @@ const CarrosselContainer: FC<ICarrosselContainerProps> = ({
   );
 };
 
-export default CarrosselContainer;
+export default CarouselContainer;
