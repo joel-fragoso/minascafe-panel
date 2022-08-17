@@ -14,7 +14,9 @@ export const Container = styled.header`
 
   > div {
     > button {
-      padding: 1.2rem;
+      line-height: 2.4rem;
+      font-size: 1.4rem;
+      padding: 1.2rem 1.6rem;
       margin-right: 1.6rem;
       color: ${({ theme }) => theme.common.white};
       border-radius: 0.8rem;
