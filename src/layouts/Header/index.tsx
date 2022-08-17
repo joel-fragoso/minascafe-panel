@@ -20,7 +20,7 @@ const Header: FC = () => {
     <Container>
       <div>
         <button type="button" onClick={() => setExpanded(!expanded)}>
-          <Icon fixedWidth iconName="bars" />
+          <Icon fixedWidth iconName="bars" size="1x" />
         </button>
         <Link to="/">Minas Café</Link>
       </div>

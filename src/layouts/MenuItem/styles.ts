@@ -22,6 +22,7 @@ export const Container = styled.li<IContainerProps>`
     border-radius: 0.8rem;
     transition: background-color 0.3s linear;
     position: relative;
+    line-height: 2.4rem;
 
     span {
       position: absolute;

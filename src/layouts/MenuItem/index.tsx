@@ -1,7 +1,7 @@
-import { FC, ReactNode } from 'react';
 import { IconName } from '@fortawesome/fontawesome-svg-core';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { FC, ReactNode } from 'react';
 import { Link } from 'react-router-dom';
+import Icon from '../../components/Icon';
 import { Container } from './styles';
 
 interface IMenuItemProps {
@@ -22,7 +22,7 @@ const MenuItem: FC<IMenuItemProps> = ({
   return (
     <Container active={active || false} {...rest}>
       <Link to={to}>
-        {iconName && <FontAwesomeIcon icon={{ prefix: 'fas', iconName }} />}
+        {iconName && <Icon iconName={iconName} fixedWidth />}
         <span>{children}</span>
       </Link>
     </Container>
