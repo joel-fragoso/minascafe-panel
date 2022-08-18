@@ -13,10 +13,13 @@ export const Container = styled.header`
     ${({ theme }) => darken(0.05, theme.background.default)};
 
   > div {
+    display: flex;
+    align-items: center;
+
     > button {
-      line-height: 2.4rem;
+      display: flex;
       font-size: 1.4rem;
-      padding: 1.2rem 1.6rem;
+      padding: 1.6rem;
       margin-right: 1.6rem;
       color: ${({ theme }) => theme.common.white};
       border-radius: 0.8rem;

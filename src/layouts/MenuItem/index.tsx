@@ -23,7 +23,9 @@ const MenuItem: FC<IMenuItemProps> = ({
     <Container active={active || false} {...rest}>
       <Link to={to}>
         {iconName && <Icon iconName={iconName} fixedWidth />}
-        <span>{children}</span>
+        <div>
+          <span>{children}</span>
+        </div>
       </Link>
     </Container>
   );
