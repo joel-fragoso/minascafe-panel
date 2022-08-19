@@ -53,6 +53,10 @@ const FormProduct: FC = () => {
 
       setLoading(false);
     }
+
+    if (!id) {
+      formRef.current?.setData({ active: true });
+    }
   }, [id, product, setLoading]);
 
   const handleSubmit = useCallback(

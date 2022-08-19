@@ -52,6 +52,10 @@ const FormCategory: FC = () => {
 
       setLoading(false);
     }
+
+    if (!id) {
+      formRef.current?.setData({ active: true });
+    }
   }, [category, id, setLoading]);
 
   const handleSubmit = useCallback(
