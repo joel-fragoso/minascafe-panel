@@ -30,7 +30,7 @@ export const Container = styled.li<IContainerProps>`
       padding: 1.2rem;
       visibility: hidden;
       transition: background-color 0.3s linear;
-      border-radius: 0.8;
+      border-radius: 0.8rem;
       margin-left: 2.4rem;
 
       span {
