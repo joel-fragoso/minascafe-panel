@@ -30,8 +30,9 @@ export const Container = styled.li<IContainerProps>`
       padding: 1.2rem;
       visibility: hidden;
       transition: background-color 0.3s linear;
-      border-radius: 0.8rem;
-      margin-left: 2.4rem;
+      border-top-right-radius: 0.8rem;
+      border-bottom-right-radius: 0.8rem;
+      margin-left: 1.6rem;
 
       span {
         vertical-align: middle;
@@ -43,6 +44,7 @@ export const Container = styled.li<IContainerProps>`
           position: relative;
           visibility: visible;
           line-height: 1.2rem;
+          margin-left: 1.2rem;
           padding: 0;
         `}
     }
