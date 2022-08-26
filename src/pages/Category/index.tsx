@@ -1,21 +1,24 @@
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Badge from '../../components/Badge';
 import Breadcrumb from '../../components/Breadcrumb';
 import Icon from '../../components/Icon';
 import Loading from '../../components/Loading';
+import Pagination from '../../components/Pagination';
 import Table from '../../components/Table';
 import Body from '../../components/Table/Body';
+import Foot from '../../components/Table/Foot';
 import Head from '../../components/Table/Head';
 import Row from '../../components/Table/Row';
 import Column from '../../components/Table/Row/Column';
 import ActionButton from '../../components/Table/Row/Column/ActionButton';
 import ActionLink from '../../components/Table/Row/Column/ActionLink';
 import { useAuth } from '../../hooks/auth';
-import { useCategories } from '../../hooks/categories';
+import { ICategory, useCategories } from '../../hooks/categories';
 import { useLoading } from '../../hooks/loading';
 import MainLayout from '../../layouts/MainLayout';
 import { dateToString } from '../../utils';
+import getArrayInPages from '../../utils/getArrayInPages';
 import { Container } from './styles';
 
 const Category: FC = () => {
@@ -23,6 +26,9 @@ const Category: FC = () => {
 
   const { categories, getCategories, deleteCategory } = useCategories();
   const { loading, setLoading } = useLoading();
+
+  const [tablePages, setTablePages] = useState<ICategory[][] | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     setLoading(true);
@@ -33,11 +39,22 @@ const Category: FC = () => {
 
     async function getData() {
       await getCategories();
-      setLoading(false);
     }
 
     getData();
   }, [getCategories, setLoading, signOut, user]);
+
+  useEffect(() => {
+    async function getPages() {
+      setTablePages(() => getArrayInPages(categories) as ICategory[][]);
+
+      setLoading(false);
+    }
+
+    if (categories[0] && loading) {
+      getPages();
+    }
+  }, [categories, loading, setLoading]);
 
   return (
     <MainLayout>
@@ -70,48 +87,71 @@ const Category: FC = () => {
               </Row>
             </Head>
           ) : (
-            <Body>
-              {categories &&
-                categories.map(category => (
-                  <Row key={category.id}>
-                    <Column>
-                      <Icon iconName={category.icon} />
-                    </Column>
-                    <Column>{category.name}</Column>
-                    <Column>
-                      {category.active ? (
-                        <div>
-                          <Badge active />
-                          Sim
-                        </div>
-                      ) : (
-                        <div>
-                          <Badge />
-                          Não
-                        </div>
-                      )}
-                    </Column>
-                    <Column>{dateToString(category.createdAt.date)}</Column>
-                    <Column>
-                      {category.updatedAt?.date
-                        ? dateToString(category.updatedAt.date)
-                        : 'N/D'}
-                    </Column>
-                    <Column>
-                      <ActionLink to={`/categorias/editar/${category.id}`}>
-                        <Icon iconName="pencil" />
-                      </ActionLink>
-                      <ActionButton
-                        type="button"
-                        color="danger"
-                        onClick={() => deleteCategory(category.id)}
-                      >
-                        <Icon iconName="trash" />
-                      </ActionButton>
+            <>
+              <Body>
+                {tablePages &&
+                  tablePages.map(
+                    (page, i) =>
+                      currentPage === i + 1 &&
+                      page.map(category => (
+                        <Row key={category.id}>
+                          <Column>
+                            <Icon iconName={category.icon} />
+                          </Column>
+                          <Column>{category.name}</Column>
+                          <Column>
+                            {category.active ? (
+                              <div>
+                                <Badge active />
+                                Sim
+                              </div>
+                            ) : (
+                              <div>
+                                <Badge />
+                                Não
+                              </div>
+                            )}
+                          </Column>
+                          <Column>
+                            {dateToString(category.createdAt.date)}
+                          </Column>
+                          <Column>
+                            {category.updatedAt?.date
+                              ? dateToString(category.updatedAt.date)
+                              : 'N/D'}
+                          </Column>
+                          <Column>
+                            <ActionLink
+                              to={`/categorias/editar/${category.id}`}
+                            >
+                              <Icon iconName="pencil" />
+                            </ActionLink>
+                            <ActionButton
+                              type="button"
+                              color="danger"
+                              onClick={() => deleteCategory(category.id)}
+                            >
+                              <Icon iconName="trash" />
+                            </ActionButton>
+                          </Column>
+                        </Row>
+                      )),
+                  )}
+              </Body>
+              {tablePages && tablePages.length > 1 && (
+                <Foot>
+                  <Row>
+                    <Column colSpan={6}>
+                      <Pagination
+                        currentPage={currentPage}
+                        numberOfPages={tablePages.length}
+                        setCurrentPage={setCurrentPage}
+                      />
                     </Column>
                   </Row>
-                ))}
-            </Body>
+                </Foot>
+              )}
+            </>
           )}
         </Table>
       </Container>
