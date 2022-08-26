@@ -51,7 +51,7 @@ const Category: FC = () => {
       setLoading(false);
     }
 
-    if (categories[0] && loading) {
+    if (categories[0]) {
       getPages();
     }
   }, [categories, loading, setLoading]);
