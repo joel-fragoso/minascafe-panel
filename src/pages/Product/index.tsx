@@ -51,7 +51,7 @@ const Product: FC = () => {
       setLoading(false);
     }
 
-    if (products[0] && loading) {
+    if (products[0]) {
       getPages();
     }
   }, [loading, products, setLoading]);
