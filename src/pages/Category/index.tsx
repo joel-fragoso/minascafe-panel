@@ -39,6 +39,8 @@ const Category: FC = () => {
 
     async function getData() {
       await getCategories();
+
+      setLoading(false);
     }
 
     getData();
@@ -47,14 +49,18 @@ const Category: FC = () => {
   useEffect(() => {
     async function getPages() {
       setTablePages(() => getArrayInPages(categories) as ICategory[][]);
-
-      setLoading(false);
     }
 
     if (categories[0]) {
       getPages();
     }
   }, [categories, loading, setLoading]);
+
+  useEffect(() => {
+    if (tablePages && tablePages.length < currentPage) {
+      setCurrentPage(1);
+    }
+  }, [currentPage, tablePages]);
 
   return (
     <MainLayout>
