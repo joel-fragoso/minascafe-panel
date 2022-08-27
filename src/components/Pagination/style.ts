@@ -1,3 +1,4 @@
+import { shade } from 'polished';
 import { ButtonHTMLAttributes } from 'react';
 import styled, { css } from 'styled-components';
 
@@ -29,8 +30,12 @@ export const PageButton = styled.button<IPageButtonProps>`
   ${({ disabledButton }) =>
     disabledButton &&
     css`
-      color: unset;
       cursor: not-allowed;
+      color: ${({ theme }) =>
+        shade(0.1, theme.pallete.secondary?.main as string)};
+      &:hover {
+        background-color: unset;
+      }
     `};
 
   ${({ active }) =>
