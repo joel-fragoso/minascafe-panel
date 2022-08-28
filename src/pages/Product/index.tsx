@@ -39,6 +39,8 @@ const Product: FC = () => {
 
     async function getData() {
       await getProducts();
+
+      setLoading(false);
     }
 
     getData();
@@ -47,14 +49,18 @@ const Product: FC = () => {
   useEffect(() => {
     async function getPages() {
       setTablePages(() => getArrayInPages(products) as IProduct[][]);
-
-      setLoading(false);
     }
 
     if (products[0]) {
       getPages();
     }
   }, [loading, products, setLoading]);
+
+  useEffect(() => {
+    if (tablePages && tablePages.length < currentPage) {
+      setCurrentPage(1);
+    }
+  }, [currentPage, tablePages]);
 
   return (
     <MainLayout>
