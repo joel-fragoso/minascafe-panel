@@ -1,65 +1,176 @@
+import { darken, lighten, shade } from 'polished';
+import { Theme } from 'react-functional-select';
 import styled, { css } from 'styled-components';
-import { darken } from 'polished';
+import { theme } from '../../styles/theme';
 import Tooltip from '../Tooltip';
 
 interface ContainerProps {
-  isFocused: boolean;
-  isFilled: boolean;
-  isErrored: boolean;
+  isDisabled?: boolean;
 }
 
 export const Container = styled.div<ContainerProps>`
-  background: ${({ theme }) => darken(0.025, theme.background.default)};
-  border-radius: 0.8rem;
-  border: 2px solid ${({ theme }) => darken(0.025, theme.background.default)};
-  padding: 1.6rem;
-  width: 100%;
-  color: ${({ theme }) => theme.pallete.secondary?.main};
-  display: flex;
-  align-items: center;
-
-  svg {
-    margin-right: 1.6rem;
-  }
-
-  &:not(:last-child) {
-    margin-bottom: 0.8rem;
-  }
-
-  ${props =>
-    props.isErrored &&
+  position: relative;
+  ${({ isDisabled }) =>
+    isDisabled &&
     css`
-      border-color: ${({ theme }) => theme.pallete.danger?.main};
+      cursor: not-allowed;
     `}
-
-  ${props =>
-    props.isFocused &&
-    css`
-      color: ${({ theme }) => theme.pallete.primary.main};
-      border-color: ${({ theme }) => theme.pallete.primary.main};
-    `}
-
-  ${props =>
-    props.isFilled &&
-    css`
-      color: ${({ theme }) => theme.pallete.primary.main};
-    `}
-
-  select {
-    flex: 1;
-    color: ${({ theme }) => theme.common.white};
-    background-color: ${({ theme }) => darken(0.025, theme.background.default)};
-    width: 100%;
-  }
 `;
 
-export const Error = styled(Tooltip)`
+export const SelectTheme: Theme = {
+  color: {
+    border: css`
+      ${({ theme }) => darken(0.025, theme.background.default)};
+    `,
+    danger: css`
+      ${({ theme }) => theme.pallete.danger?.main};
+    `,
+    primary: css`
+      ${({ theme }) => theme.pallete.primary.main};
+    `,
+    disabled: shade(0.4, darken(0.025, theme.background.default)),
+    placeholder: css`
+      ${({ theme }) => theme.pallete.secondary?.main};
+    `,
+    dangerLight: css`
+      ${({ theme }) => theme.pallete.danger?.light};
+    `,
+  },
+  input: {},
+  select: {
+    css: css`
+      background-color: ${({ theme }) =>
+        darken(0.025, theme.background.default)};
+      border-radius: 0.8rem;
+
+      > div {
+        > div {
+          &:nth-child(2) {
+            > div:empty {
+              background-color: ${({ theme }) => theme.background.paper};
+              margin: 0.8rem 0;
+            }
+          }
+        }
+      }
+    `,
+  },
+  loader: {
+    size: '0.8rem',
+    padding: '0.4rem 0.8rem',
+    color: css`
+      ${({ theme }) => theme.pallete.primary.main}
+    `,
+  },
+  icon: {
+    color: css`
+      ${({ theme }) => theme.pallete.secondary?.main}
+    `,
+    hoverColor: css`
+      ${({ theme }) => lighten(0.1, theme.pallete.secondary?.main as string)}
+    `,
+    padding: '0 1.2rem',
+    clear: {
+      width: '1.6rem',
+      height: '1.6rem',
+    },
+    caret: {
+      size: '0.8rem',
+    },
+  },
+  control: {
+    minHeight: '0',
+    borderWidth: '2px',
+    borderRadius: '0.8rem',
+    boxShadow: '0',
+    padding: '1.6rem',
+    focusedBorderColor: css`
+      ${({ theme }) => theme.pallete.primary.main}
+    `,
+  },
+  menu: {
+    margin: '0.4rem 0',
+    borderRadius: '0.8rem',
+    backgroundColor: css`
+      ${({ theme }) => darken(0.025, theme.background.default)}
+    `,
+    option: {
+      selectedColor: css`
+        ${({ theme }) => theme.pallete.primary.contrastText}
+      `,
+      selectedBgColor: css`
+        ${({ theme }) => theme.pallete.primary.main};
+
+        &:first-child {
+          border-top-left-radius: 0.8rem;
+          border-top-right-radius: 0.8rem;
+        }
+
+        &:last-child {
+          border-bottom-left-radius: 0.8rem;
+          border-bottom-right-radius: 0.8rem;
+        }
+      `,
+      padding: '0.6rem 1.6rem',
+      focusedBgColor: css`
+        ${({ theme }) => theme.background.paper};
+
+        &:first-child {
+          border-top-left-radius: 0.8rem;
+          border-top-right-radius: 0.8rem;
+        }
+
+        &:last-child {
+          border-bottom-left-radius: 0.8rem;
+          border-bottom-right-radius: 0.8rem;
+        }
+      `,
+    },
+  },
+  noOptions: {
+    fontSize: '1.6rem',
+    margin: '0.4rem 0',
+    color: css`
+      ${({ theme }) => theme.pallete.secondary?.main}
+    `,
+    padding: '1.6rem',
+  },
+  multiValue: {
+    margin: '0 0.4rem',
+    borderRadius: '0.4rem',
+    backgroundColor: css`
+      ${({ theme }) => theme.background.paper}
+    `,
+    label: {
+      borderRadius: '0.4rem',
+      fontSize: '1.6rem',
+      padding: '0.4rem 0.8rem',
+    },
+    clear: {
+      padding: '0.4rem 0.8rem',
+      color: css`
+        ${({ theme }) => theme.pallete.secondary?.main}
+      `,
+      fontSize: '1.2rem',
+      focusColor: css`
+        ${({ theme }) => lighten(0.1, theme.pallete.secondary?.main as string)}
+      `,
+    },
+  },
+};
+
+interface IErrorProps {
+  clearable: boolean;
+}
+
+export const Error = styled(Tooltip)<IErrorProps>`
+  position: absolute;
+  right: 12%;
+  top: 31%;
   height: 2rem;
-  margin-left: 1.6rem;
 
   svg {
     color: ${({ theme }) => theme.pallete.danger?.main};
-    margin: 0;
   }
 
   span {
@@ -70,4 +181,10 @@ export const Error = styled(Tooltip)`
       border-color: ${({ theme }) => theme.pallete.danger?.main} transparent;
     }
   }
+
+  ${({ clearable }) =>
+    clearable &&
+    css`
+      right: 8%;
+    `}
 `;

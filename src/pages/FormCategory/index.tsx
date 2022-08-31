@@ -1,12 +1,14 @@
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
-import { FC, useCallback, useEffect, useRef, useState } from 'react';
+import { FC, useCallback, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import * as Yup from 'yup';
 import Breadcrumb from '../../components/Breadcrumb';
 import Button from '../../components/Button';
+import Icon from '../../components/Icon';
 import Input from '../../components/Input';
+import Select from '../../components/Select';
 import Switch from '../../components/Switch';
 import { useCategories } from '../../hooks/categories';
 import { useLoading } from '../../hooks/loading';
@@ -22,7 +24,6 @@ export interface ICategoryFormData {
 }
 
 const FormCategory: FC = () => {
-  const [iconName, setIconName] = useState<string | undefined>(undefined);
   const formRef = useRef<FormHandles>(null);
   const iconNameList = [...new Set(Object.values(fas))];
 
@@ -47,8 +48,6 @@ const FormCategory: FC = () => {
   useEffect(() => {
     if (id === category.id) {
       formRef.current?.setData(category);
-
-      setIconName(category.icon);
 
       setLoading(false);
     }
@@ -108,15 +107,21 @@ const FormCategory: FC = () => {
       <Container>
         <Breadcrumb maxDepth={3} />
         <Form ref={formRef} onSubmit={handleSubmit}>
-          <Input
+          <Select
             name="icon"
-            list="iconNames"
-            placeholder="Nome do ícone"
-            onChange={e => setIconName(e.target.value)}
-            iconName={
-              isIconName(iconName) && category.icon ? iconName : undefined
-            }
-            iconAlign="right"
+            options={iconNameList.map(fasIcon => {
+              return {
+                label: <Icon iconName={fasIcon.iconName} />,
+                value: fasIcon.iconName,
+                data: fasIcon.iconName,
+              };
+            })}
+            isClearable
+            isSearchable
+            placeholder="Selecione um ícone..."
+            noOptionsMsg="Nenhum ícone"
+            loadingMsg="Carregando..."
+            isLoading={loading}
           />
           <Input name="name" type="text" placeholder="Nome" />
           <Switch name="active" label="Ativo:" />
@@ -129,15 +134,6 @@ const FormCategory: FC = () => {
             Salvar
           </Button>
         </Form>
-        <datalist id="iconNames">
-          {iconNameList.map(fasIcon => (
-            <option
-              key={fasIcon.iconName}
-              value={fasIcon.iconName}
-              label={fasIcon.iconName}
-            />
-          ))}
-        </datalist>
       </Container>
     </MainLayout>
   );

@@ -18,10 +18,6 @@ export const Container = styled.div<ContainerProps>`
   display: flex;
   align-items: center;
 
-  &:not(:last-child) {
-    margin-bottom: 0.8rem;
-  }
-
   ${props =>
     props.isErrored &&
     css`

@@ -1,101 +1,68 @@
-import {
-  FC,
-  SelectHTMLAttributes,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
-import { IconName } from '@fortawesome/fontawesome-svg-core';
 import { useField } from '@unform/core';
-import { Container, Error } from './styles';
+import { FC, useCallback, useEffect, useRef, useState } from 'react';
+import {
+  MenuOption,
+  Select as ReactSelect,
+  SelectProps,
+  SelectRef,
+} from 'react-functional-select';
 import Icon from '../Icon';
+import { Container, Error, SelectTheme } from './styles';
 
-interface IOption {
-  value: string | number;
-  label: string;
-  iconName?: IconName;
-}
-
-interface ISelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
+interface ISelectProps extends SelectProps {
   name: string;
-  options: Array<IOption>;
-  iconAlign?: 'left' | 'right';
-  containerStyle?: object;
 }
 
-const Select: FC<ISelectProps> = ({
-  name,
-  options,
-  iconAlign,
-  containerStyle = {},
-  ...rest
-}) => {
-  const selectRef = useRef<HTMLSelectElement>(null);
+const Select: FC<ISelectProps> = ({ name, options, isDisabled, ...rest }) => {
+  const selectRef = useRef<SelectRef | null>(null);
+  const [selectedOption, setSelectedOption] = useState<MenuOption | null>(null);
 
-  const [iconName, setIconName] = useState<IconName | undefined>(undefined);
-  const [isFocused, setIsFocused] = useState(false);
-  const [isFilled, setIsFilled] = useState(false);
+  const { fieldName, error, registerField } = useField(name);
 
-  const { fieldName, defaultValue, error, registerField } = useField(name);
+  const onOptionChange = useCallback(
+    (menuOption: MenuOption | null): void => setSelectedOption(menuOption),
+    [],
+  );
+  const getFilterOptionString = useCallback(
+    (menuOption: MenuOption): string => menuOption.data.data,
+    [],
+  );
+  const getOptionLabel = useCallback(
+    (menuOption: MenuOption) => menuOption.label,
+    [],
+  );
 
   useEffect(() => {
     registerField({
       name: fieldName,
       ref: selectRef.current,
-      path: 'value',
+      getValue: () => {
+        return selectedOption?.value;
+      },
+      setValue: (ref, value) => {
+        ref?.setValue(options?.find(option => option.value === value));
+      },
+      clearValue: ref => {
+        ref?.clearValue();
+      },
     });
-
-    setIconName(
-      options.find(option => option.value === selectRef.current?.value)
-        ?.iconName,
-    );
-  }, [fieldName, options, registerField]);
-
-  const handleInputFocus = useCallback(() => {
-    setIsFocused(true);
-  }, []);
-
-  const handleInputBlur = useCallback(() => {
-    setIsFocused(false);
-
-    setIsFilled(!!selectRef.current?.value);
-  }, []);
+  }, [fieldName, options, registerField, selectedOption]);
 
   return (
-    <Container
-      style={containerStyle}
-      isErrored={!!error}
-      isFocused={isFocused}
-      isFilled={isFilled}
-      data-testid="select-container"
-    >
-      {iconName && iconAlign !== 'right' && (
-        <Icon iconName={iconName} fixedWidth />
-      )}
-      <select
-        onFocus={handleInputFocus}
-        onBlur={handleInputBlur}
-        defaultValue={defaultValue}
+    <Container isDisabled={isDisabled}>
+      <ReactSelect
+        onOptionChange={onOptionChange}
+        themeConfig={SelectTheme}
+        isInvalid={!!error}
+        getFilterOptionString={getFilterOptionString}
+        getOptionLabel={getOptionLabel}
+        options={options}
+        isDisabled={isDisabled}
         ref={selectRef}
-        onChange={e =>
-          setIconName(
-            options.find(option => option.value === e.target.value)?.iconName,
-          )
-        }
         {...rest}
-      >
-        {options.map(option => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
-      {iconName && iconAlign === 'right' && (
-        <Icon iconName={iconName} fixedWidth />
-      )}
+      />
       {error && (
-        <Error title={error}>
+        <Error title={error} clearable={!selectedOption || !rest.isClearable}>
           <Icon iconName="circle-exclamation" />
         </Error>
       )}
