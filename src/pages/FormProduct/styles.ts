@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { shade } from 'polished';
 
 export const Container = styled.div`
   padding: 1.6rem;
@@ -9,17 +8,12 @@ export const Container = styled.div`
   form {
     display: flex;
     flex-direction: column;
-
-    a {
-      color: ${({ theme }) => theme.pallete.secondary?.main};
-      display: block;
-      margin-top: 2.4rem;
-      transition: color 0.2s linear;
-
-      &:hover {
-        color: ${({ theme }) =>
-          shade(0.2, theme.pallete.secondary?.main as string)};
-      }
-    }
+    row-gap: 0.8rem;
   }
+`;
+
+export const LabelContainer = styled.div`
+  display: flex;
+  column-gap: 0.8rem;
+  align-items: center;
 `;

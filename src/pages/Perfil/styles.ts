@@ -11,6 +11,9 @@ export const Container = styled.div`
 
     > div {
       flex: 1;
+      display: flex;
+      flex-direction: column;
+      row-gap: 0.8rem;
     }
 
     > div:first-child {

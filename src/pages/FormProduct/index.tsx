@@ -5,6 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import * as Yup from 'yup';
 import Breadcrumb from '../../components/Breadcrumb';
 import Button from '../../components/Button';
+import Icon from '../../components/Icon';
 import Input from '../../components/Input';
 import Select from '../../components/Select';
 import Switch from '../../components/Switch';
@@ -13,7 +14,7 @@ import { useLoading } from '../../hooks/loading';
 import { useProducts } from '../../hooks/products';
 import MainLayout from '../../layouts/MainLayout';
 import { Errors } from '../../utils/getValidationErrors';
-import { Container } from './styles';
+import { Container, LabelContainer } from './styles';
 
 export interface IProductFormData {
   categoryId: string;
@@ -126,11 +127,21 @@ const FormProduct: FC = () => {
               categories &&
               product &&
               categories.map(category => ({
-                label: category.name,
+                label: (
+                  <LabelContainer>
+                    <Icon fixedWidth iconName={category.icon} />
+                    {category.name}
+                  </LabelContainer>
+                ),
                 value: category.id,
-                iconName: category.icon,
+                data: category.name,
               }))
             }
+            isSearchable
+            placeholder="Selecione uma categoria..."
+            noOptionsMsg="Nenhuma categoria"
+            loadingMsg="Carregando..."
+            isLoading={loading}
           />
           <Input name="name" type="text" placeholder="Nome" />
           <Input name="price" type="text" placeholder="Preço" />
