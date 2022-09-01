@@ -1,4 +1,4 @@
-import { FC, useCallback, useRef } from 'react';
+import { FC, useCallback, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { FormHandles } from '@unform/core';
@@ -24,6 +24,10 @@ const SignIn: FC = () => {
   const { loading, setLoading } = useLoading();
   const { signIn } = useAuth();
   const { addToast } = useToast();
+
+  useEffect(() => {
+    setLoading(false);
+  }, [setLoading]);
 
   const handleSubmit = useCallback(
     async (data: SignInFormData) => {
