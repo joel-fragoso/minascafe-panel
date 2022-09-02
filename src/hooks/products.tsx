@@ -23,6 +23,12 @@ import { ICategory, IDate } from './categories';
 import { useModal } from './modal';
 import { IToastMessage, useToast } from './toast';
 
+export interface IProductQueryParams {
+  active?: 0 | 1;
+  order?: 'name' | 'id';
+  limit?: number;
+  offset?: number;
+}
 export interface IProduct {
   id: string;
   name: string;
@@ -37,6 +43,7 @@ interface IProductsContext {
   products: IProduct[];
   product: IProduct;
   getProducts(): void;
+  getFilteredProducts(params: IProductQueryParams): void;
   getProduct(id: string): void;
   updateProduct(id: string, product: IProductFormData): void;
   createProduct(product: IProductFormData): void;
@@ -117,6 +124,23 @@ export const ProductsProvider: FC<IProductsProviderProps> = ({
       });
     }
   }, [handleError]);
+
+  const getFilteredProducts = useCallback(
+    async (params: IProductQueryParams) => {
+      try {
+        const response = await api.get('/produtos', { params });
+
+        setDataCollection(response.data.data);
+      } catch (error) {
+        handleError(error, {
+          type: 'error',
+          title: 'Erro ao buscar produtos',
+          description: `Ocorreu um erro ao tentar buscar os produtos, tente novamente`,
+        });
+      }
+    },
+    [handleError],
+  );
 
   const getProduct = useCallback(
     async (id: string) => {
@@ -258,6 +282,7 @@ export const ProductsProvider: FC<IProductsProviderProps> = ({
       products: dataCollection,
       product: data,
       getProducts,
+      getFilteredProducts,
       getProduct,
       updateProduct,
       createProduct,
@@ -269,6 +294,7 @@ export const ProductsProvider: FC<IProductsProviderProps> = ({
       dataCollection,
       data,
       getProducts,
+      getFilteredProducts,
       getProduct,
       updateProduct,
       createProduct,

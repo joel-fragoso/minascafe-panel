@@ -30,20 +30,20 @@ const FormProduct: FC = () => {
 
   const { id } = useParams();
 
-  const { categories, getCategories } = useCategories();
+  const { categories, getFilteredCategories } = useCategories();
   const { product, getProduct, updateProduct, createProduct } = useProducts();
 
   useEffect(() => {
     setLoading(true);
 
-    getCategories();
+    getFilteredCategories({ active: 1 });
 
     if (id) {
       getProduct(id);
     } else {
       setLoading(false);
     }
-  }, [getCategories, getProduct, id, setLoading]);
+  }, [getFilteredCategories, getProduct, id, setLoading]);
 
   useEffect(() => {
     if (id === product?.id) {
