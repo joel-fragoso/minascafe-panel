@@ -23,6 +23,13 @@ import { useAuth } from './auth';
 import { useModal } from './modal';
 import { IToastMessage, useToast } from './toast';
 
+export interface ICategoryQueryParams {
+  active?: 0 | 1;
+  order?: 'name' | 'icon' | 'id';
+  limit?: number;
+  offset?: number;
+}
+
 export interface IDate {
   date: Date;
   timezone_type: number;
@@ -42,6 +49,7 @@ interface ICategoriesContext {
   categories: ICategory[];
   category: ICategory;
   getCategories(): void;
+  getFilteredCategories(params: ICategoryQueryParams): void;
   getCategory(id: string): void;
   updateCategory(id: string, category: ICategoryFormData): void;
   createCategory(category: ICategoryFormData): void;
@@ -134,6 +142,23 @@ export const CategoriesProvider: FC<ICategoriesProviderProps> = ({
       });
     }
   }, [handleError]);
+
+  const getFilteredCategories = useCallback(
+    async (params: ICategoryQueryParams) => {
+      try {
+        const response = await api.get('/categorias', { params });
+
+        setDataCollection(response.data.data);
+      } catch (error) {
+        handleError(error, {
+          type: 'error',
+          title: 'Erro ao buscar categorias',
+          description: `Ocorreu um erro ao tentar buscar as categorias, tente novamente`,
+        });
+      }
+    },
+    [handleError],
+  );
 
   const getCategory = useCallback(
     async (id: string) => {
@@ -273,6 +298,7 @@ export const CategoriesProvider: FC<ICategoriesProviderProps> = ({
       categories: dataCollection,
       category: data,
       getCategories,
+      getFilteredCategories,
       getCategory,
       updateCategory,
       createCategory,
@@ -284,6 +310,7 @@ export const CategoriesProvider: FC<ICategoriesProviderProps> = ({
       dataCollection,
       data,
       getCategories,
+      getFilteredCategories,
       getCategory,
       updateCategory,
       createCategory,
