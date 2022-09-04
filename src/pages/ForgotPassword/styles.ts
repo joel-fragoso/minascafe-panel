@@ -24,12 +24,15 @@ export const Container = styled.div`
   form {
     width: 100%;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.8rem;
 
     h1 {
       font-size: 2.1rem;
       font-weight: 700;
       color: ${({ theme }) => theme.pallete.primary.main};
-      margin-bottom: 2.4rem;
+      margin-bottom: 1.6rem;
 
       @media (min-width: 767px) {
         font-size: 2.4rem;
@@ -39,7 +42,7 @@ export const Container = styled.div`
     a {
       color: ${({ theme }) => theme.pallete.secondary?.main as string};
       display: block;
-      margin-top: 2.4rem;
+      margin-top: 1.6rem;
       transition: color 0.2s linear;
 
       &:hover {
