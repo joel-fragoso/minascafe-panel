@@ -5,6 +5,7 @@ import Breadcrumb from '../../components/Breadcrumb';
 import Icon from '../../components/Icon';
 import Loading from '../../components/Loading';
 import Pagination from '../../components/Pagination';
+import Search from '../../components/Search';
 import Table from '../../components/Table';
 import Body from '../../components/Table/Body';
 import Foot from '../../components/Table/Foot';
@@ -62,10 +63,29 @@ const Category: FC = () => {
     }
   }, [currentPage, tablePages]);
 
+  const filterCategories = (query: string) => {
+    setTablePages(
+      () =>
+        getArrayInPages(
+          categories.filter(category =>
+            category.name.toLowerCase().includes(query.toLowerCase()),
+          ),
+        ) as ICategory[][],
+    );
+  };
+
   return (
     <MainLayout>
       <Container>
         <Breadcrumb />
+        <div>
+          <Search
+            placeholder="Buscar categoria..."
+            minLength={1}
+            debounceTimeout={500}
+            onChange={event => filterCategories(event.target.value)}
+          />
+        </div>
         <div>
           <h1>Categorias</h1>
           <Link to="adicionar">
