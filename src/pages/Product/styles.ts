@@ -6,17 +6,7 @@ export const Container = styled.div`
   flex: 1;
   color: ${({ theme }) => theme.pallete.primary.main};
 
-  > div:first-of-type {
-    display: flex;
-    justify-content: flex-end;
-    padding-bottom: 0.8rem;
-
-    > div {
-      justify-content: flex-end;
-    }
-  }
-
-  > div:not(:first-of-type) {
+  > div {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -25,25 +15,38 @@ export const Container = styled.div`
       margin: 0;
     }
 
-    > a {
-      color: ${({ theme }) => theme.background.default};
-      background-color: ${({ theme }) => theme.pallete.primary.main};
-      border-radius: 0.8rem;
-      height: 4.2rem;
-      padding: 0 1.6rem;
+    > div {
       display: flex;
+      justify-content: flex-end;
       align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      transition: background-color 0.3s linear;
+      column-gap: 0.8rem;
+      width: 100%;
 
-      &:hover {
-        background-color: ${({ theme }) =>
-          shade(0.2, theme.pallete.primary.main as string)};
+      > div:first-child {
+        margin-left: 0.8rem;
+        justify-content: flex-end;
       }
 
-      svg {
-        padding-right: 0.8rem;
+      > a {
+        color: ${({ theme }) => theme.background.default};
+        background-color: ${({ theme }) => theme.pallete.primary.main};
+        border-radius: 0.8rem;
+        height: 4.8rem;
+        padding: 0 1.6rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        transition: background-color 0.3s linear;
+
+        &:hover {
+          background-color: ${({ theme }) =>
+            shade(0.2, theme.pallete.primary.main as string)};
+        }
+
+        svg {
+          padding-right: 0.8rem;
+        }
       }
     }
   }

@@ -79,19 +79,19 @@ const Category: FC = () => {
       <Container>
         <Breadcrumb />
         <div>
-          <Search
-            placeholder="Buscar categoria..."
-            minLength={1}
-            debounceTimeout={500}
-            onChange={event => filterCategories(event.target.value)}
-          />
-        </div>
-        <div>
           <h1>Categorias</h1>
-          <Link to="adicionar">
-            <Icon iconName="plus" />
-            Adicionar
-          </Link>
+          <div>
+            <Search
+              placeholder="Buscar categoria..."
+              minLength={1}
+              debounceTimeout={500}
+              onChange={event => filterCategories(event.target.value)}
+            />
+            <Link to="adicionar">
+              <Icon iconName="plus" />
+              Adicionar
+            </Link>
+          </div>
         </div>
         <Table>
           <Head>
