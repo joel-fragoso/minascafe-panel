@@ -79,19 +79,19 @@ const Product: FC = () => {
       <Container>
         <Breadcrumb />
         <div>
-          <Search
-            placeholder="Buscar produto..."
-            minLength={1}
-            debounceTimeout={500}
-            onChange={event => filterProducts(event.target.value)}
-          />
-        </div>
-        <div>
           <h1>Produtos</h1>
-          <Link to="adicionar">
-            <Icon iconName="plus" />
-            Adicionar
-          </Link>
+          <div>
+            <Search
+              placeholder="Buscar produto..."
+              minLength={1}
+              debounceTimeout={500}
+              onChange={event => filterProducts(event.target.value)}
+            />
+            <Link to="adicionar">
+              <Icon iconName="plus" />
+              Adicionar
+            </Link>
+          </div>
         </div>
         <Table>
           <Head>
