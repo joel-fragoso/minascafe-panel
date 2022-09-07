@@ -59,6 +59,7 @@ export const Container = styled.div<ContainerProps>`
     border-radius: 0.8rem;
     transition: all 0.3s linear;
     font-size: 1.6rem;
+    color: ${({ theme }) => theme.background.default};
 
     &:hover {
       background-color: ${({ theme }) => theme.background.paper};
@@ -68,6 +69,10 @@ export const Container = styled.div<ContainerProps>`
   ${props =>
     !props.isHiding &&
     css`
+      button {
+        color: ${({ theme }) => theme.pallete.primary.main};
+      }
+
       button::before {
         content: '';
         align-self: center;
