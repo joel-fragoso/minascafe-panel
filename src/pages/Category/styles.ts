@@ -6,7 +6,17 @@ export const Container = styled.div`
   flex: 1;
   color: ${({ theme }) => theme.pallete.primary.main};
 
-  > div {
+  > div:first-of-type {
+    display: flex;
+    justify-content: flex-end;
+    padding-bottom: 0.8rem;
+
+    > div {
+      justify-content: flex-end;
+    }
+  }
+
+  > div:not(:first-of-type) {
     display: flex;
     align-items: center;
     justify-content: space-between;

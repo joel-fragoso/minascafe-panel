@@ -5,6 +5,7 @@ import Breadcrumb from '../../components/Breadcrumb';
 import Icon from '../../components/Icon';
 import Loading from '../../components/Loading';
 import Pagination from '../../components/Pagination';
+import Search from '../../components/Search';
 import Table from '../../components/Table';
 import Body from '../../components/Table/Body';
 import Foot from '../../components/Table/Foot';
@@ -62,10 +63,29 @@ const Product: FC = () => {
     }
   }, [currentPage, tablePages]);
 
+  const filterProducts = (query: string) => {
+    setTablePages(
+      () =>
+        getArrayInPages(
+          products.filter(product =>
+            product.name.toLowerCase().includes(query.toLowerCase()),
+          ),
+        ) as IProduct[][],
+    );
+  };
+
   return (
     <MainLayout>
       <Container>
         <Breadcrumb />
+        <div>
+          <Search
+            placeholder="Buscar produto..."
+            minLength={1}
+            debounceTimeout={500}
+            onChange={event => filterProducts(event.target.value)}
+          />
+        </div>
         <div>
           <h1>Produtos</h1>
           <Link to="adicionar">
