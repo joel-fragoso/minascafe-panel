@@ -14,7 +14,13 @@ import { useLoading } from '../../hooks/loading';
 import { useProducts } from '../../hooks/products';
 import MainLayout from '../../layouts/MainLayout';
 import { Errors } from '../../utils/getValidationErrors';
-import { Container, LabelContainer } from './styles';
+import {
+  Container,
+  LabelContainer,
+  PriceContainer,
+  PriceInput,
+  PriceTag,
+} from './styles';
 
 export interface IProductFormData {
   categoryId: string;
@@ -144,7 +150,10 @@ const FormProduct: FC = () => {
             isLoading={loading}
           />
           <Input name="name" type="text" placeholder="Nome" />
-          <Input name="price" type="text" placeholder="Preço" />
+          <PriceContainer>
+            <PriceInput name="price" type="text" placeholder="0.00" />
+            <PriceTag>R$</PriceTag>
+          </PriceContainer>
           <Switch name="active" label="Ativo:" />
           <Button
             type="submit"
