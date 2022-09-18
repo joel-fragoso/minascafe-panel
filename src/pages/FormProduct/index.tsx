@@ -7,6 +7,7 @@ import Breadcrumb from '../../components/Breadcrumb';
 import Button from '../../components/Button';
 import Icon from '../../components/Icon';
 import Input from '../../components/Input';
+import PriceInput from '../../components/PriceInput';
 import Select from '../../components/Select';
 import Switch from '../../components/Switch';
 import { useCategories } from '../../hooks/categories';
@@ -14,13 +15,7 @@ import { useLoading } from '../../hooks/loading';
 import { useProducts } from '../../hooks/products';
 import MainLayout from '../../layouts/MainLayout';
 import { Errors } from '../../utils/getValidationErrors';
-import {
-  Container,
-  LabelContainer,
-  PriceContainer,
-  PriceInput,
-  PriceTag,
-} from './styles';
+import { Container, LabelContainer } from './styles';
 
 export interface IProductFormData {
   categoryId: string;
@@ -55,6 +50,10 @@ const FormProduct: FC = () => {
     if (id === product?.id) {
       formRef.current?.setData({
         ...product,
+        price: product.price.toLocaleString('pt-BR', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }),
         categoryId: product?.category?.id,
       });
 
@@ -72,6 +71,8 @@ const FormProduct: FC = () => {
         setLoading(true);
 
         formRef.current?.setErrors({});
+
+        const price = data.price.replaceAll('.', '').replaceAll(',', '.');
 
         const schema = Yup.object().shape({
           categoryId: Yup.string().required('Categoria obrigatório'),
@@ -94,14 +95,17 @@ const FormProduct: FC = () => {
             .required('Preço obrigatório'),
         });
 
-        await schema.validate(data, {
-          abortEarly: false,
-        });
+        await schema.validate(
+          { ...data, price },
+          {
+            abortEarly: false,
+          },
+        );
 
         if (id) {
-          updateProduct(id, data);
+          updateProduct(id, { ...data, price });
         } else {
-          createProduct(data);
+          createProduct({ ...data, price });
         }
 
         navigate('/produtos');
@@ -150,10 +154,17 @@ const FormProduct: FC = () => {
             isLoading={loading}
           />
           <Input name="name" type="text" placeholder="Nome" />
-          <PriceContainer>
-            <PriceInput name="price" type="text" placeholder="0.00" />
-            <PriceTag>R$</PriceTag>
-          </PriceContainer>
+          <PriceInput
+            name="price"
+            defaultPriceValue={
+              product.id === id
+                ? product.price.toLocaleString('pt-BR', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })
+                : ''
+            }
+          />
           <Switch name="active" label="Ativo:" />
           <Button
             type="submit"
