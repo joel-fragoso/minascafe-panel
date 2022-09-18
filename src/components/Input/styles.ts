@@ -1,5 +1,5 @@
-import styled, { css } from 'styled-components';
 import { darken, shade } from 'polished';
+import styled, { css } from 'styled-components';
 import Tooltip from '../Tooltip';
 
 interface ContainerProps {
@@ -8,7 +8,7 @@ interface ContainerProps {
   isErrored: boolean;
 }
 
-export const Container = styled.div<ContainerProps>`
+export const Container = styled.label<ContainerProps>`
   background: ${({ theme }) => darken(0.025, theme.background.default)};
   border-radius: 0.8rem;
   border: 2px solid ${({ theme }) => darken(0.025, theme.background.default)};
