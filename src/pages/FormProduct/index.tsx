@@ -47,7 +47,7 @@ const FormProduct: FC = () => {
   }, [getFilteredCategories, getProduct, id, setLoading]);
 
   useEffect(() => {
-    if (id === product?.id) {
+    if (id === product?.id && id) {
       formRef.current?.setData({
         ...product,
         price: product.price.toLocaleString('pt-BR', {
@@ -157,7 +157,7 @@ const FormProduct: FC = () => {
           <PriceInput
             name="price"
             defaultPriceValue={
-              product.id === id
+              product.id === id && id
                 ? product.price.toLocaleString('pt-BR', {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
