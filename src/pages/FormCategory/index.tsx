@@ -46,7 +46,7 @@ const FormCategory: FC = () => {
   }, [getCategory, id, setLoading]);
 
   useEffect(() => {
-    if (id === category.id) {
+    if (id === category.id && id) {
       formRef.current?.setData(category);
 
       setLoading(false);
