@@ -77,6 +77,8 @@ export const ProductsProvider: FC<IProductsProviderProps> = ({
       if (err instanceof AxiosError) {
         const errorHandler = axiosErrorHandler(err);
 
+        toastMessage.description = err.response?.data.error.message;
+
         if (errorHandler.type === HttpMessage.Unauthorized) {
           if (isErrorMessage(errorHandler.response)) {
             toastMessage = {
@@ -167,6 +169,12 @@ export const ProductsProvider: FC<IProductsProviderProps> = ({
           price: parseFloat(product.price),
           active: product.active ?? false,
         });
+
+        addToast({
+          type: 'success',
+          title: 'Produto atualizado',
+          description: `Produto ${product.name} atualizado com sucesso`,
+        });
       } catch (error) {
         handleError(error, {
           type: 'error',
@@ -177,7 +185,7 @@ export const ProductsProvider: FC<IProductsProviderProps> = ({
 
       getProducts();
     },
-    [getProducts, handleError],
+    [addToast, getProducts, handleError],
   );
 
   const createProduct = useCallback(
@@ -187,6 +195,12 @@ export const ProductsProvider: FC<IProductsProviderProps> = ({
           ...product,
           price: parseFloat(product.price),
           active: product.active ?? false,
+        });
+
+        addToast({
+          type: 'success',
+          title: 'Produto criado',
+          description: `Produto ${product.name} criado com sucesso`,
         });
       } catch (error) {
         handleError(error, {
@@ -198,12 +212,18 @@ export const ProductsProvider: FC<IProductsProviderProps> = ({
 
       getProducts();
     },
-    [getProducts, handleError],
+    [addToast, getProducts, handleError],
   );
 
   const deleteConfirmed = useCallback(async () => {
     try {
       await api.delete(`/produtos/${deleteIdRef.current}`);
+
+      addToast({
+        type: 'success',
+        title: 'Produto excluído',
+        description: `Produto ${deleteIdRef.current} excluído com sucesso`,
+      });
     } catch (error) {
       handleError(error, {
         type: 'error',
@@ -214,7 +234,7 @@ export const ProductsProvider: FC<IProductsProviderProps> = ({
 
     getProducts();
     hideModal();
-  }, [getProducts, handleError, hideModal]);
+  }, [addToast, getProducts, handleError, hideModal]);
 
   const deleteProduct = useCallback(
     (id: string) => {
