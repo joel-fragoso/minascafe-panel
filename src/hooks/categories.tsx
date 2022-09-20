@@ -85,6 +85,8 @@ export const CategoriesProvider: FC<ICategoriesProviderProps> = ({
       if (err instanceof AxiosError) {
         const errorHandler = axiosErrorHandler(err);
 
+        toastMessage.description = err.response?.data.error.message;
+
         if (errorHandler.type === HttpMessage.Unauthorized) {
           if (isErrorMessage(errorHandler.response)) {
             toastMessage = {
@@ -184,6 +186,12 @@ export const CategoriesProvider: FC<ICategoriesProviderProps> = ({
           ...category,
           active: category.active ?? false,
         });
+
+        addToast({
+          type: 'success',
+          title: 'Categoria atualizada',
+          description: `Categoria ${category.name} atualizada com sucesso`,
+        });
       } catch (error) {
         handleError(error, {
           type: 'error',
@@ -194,7 +202,7 @@ export const CategoriesProvider: FC<ICategoriesProviderProps> = ({
 
       getCategories();
     },
-    [getCategories, handleError],
+    [addToast, getCategories, handleError],
   );
 
   const createCategory = useCallback(
@@ -203,6 +211,12 @@ export const CategoriesProvider: FC<ICategoriesProviderProps> = ({
         await api.post('/categorias', {
           ...category,
           active: category.active ?? false,
+        });
+
+        addToast({
+          type: 'success',
+          title: 'Categoria criada',
+          description: `Categoria ${category.name} criada com sucesso`,
         });
       } catch (error) {
         handleError(error, {
@@ -214,12 +228,18 @@ export const CategoriesProvider: FC<ICategoriesProviderProps> = ({
 
       getCategories();
     },
-    [getCategories, handleError],
+    [addToast, getCategories, handleError],
   );
 
   const deleteConfirmed = useCallback(async () => {
     try {
       await api.delete(`/categorias/${deleteIdRef.current}`);
+
+      addToast({
+        type: 'success',
+        title: 'Categoria excluída',
+        description: `Categoria ${deleteIdRef.current} exluída com sucesso`,
+      });
     } catch (error) {
       handleError(error, {
         type: 'error',
@@ -230,7 +250,7 @@ export const CategoriesProvider: FC<ICategoriesProviderProps> = ({
 
     getCategories();
     hideModal();
-  }, [getCategories, handleError, hideModal]);
+  }, [addToast, getCategories, handleError, hideModal]);
 
   const deleteCategory = useCallback(
     (id: string) => {
