@@ -24,7 +24,3 @@ $ yarn install
 ```bash
 $ yarn dev
 ```
-
----
-
-Desenvolvido com ❤️ por Fragoso Brothers.
